@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Third Floor Doordle — FLCC Daily Wordle</title>
+  <style>
+    /* =========================================
+       Design Tokens & High-Contrast Variables
+       ========================================= */
+    :root {
+      --bg-page: #F8FAFC;
+      --bg-surface: #FFFFFF;
+      --bg-header: #0F172A;
+      --bg-header-btn: #1E293B;
+      --bg-header-btn-hover: #334155;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-on-dark: #F8FAFC;
+      --text-muted-on-dark: #CBD5E1;
+
+      --border-default: #CBD5E1;
+      --border-filled: #475569;
+      --border-subtle: #E2E8F0;
+
+      /* FLCC-Inspired Evaluation Palette */
+      --color-correct: #006B3C;
+      --color-present: #B58105;
+      --color-absent: #4A5568;
+
+      /* Keyboard Tokens */
+      --key-bg: #E2E8F0;
+      --key-bg-active: #CBD5E1;
+      --key-text: #0F172A;
+
+      /* Banner & Badges */
+      --pill-bg: #006B3C;
+      --pill-text: #FFFFFF;
+      --preview-bg: #FEF3C7;
+      --preview-text: #92400E;
+      --banner-bg: #EFF6FF;
+      --banner-border: #BFDBFE;
+      --banner-text: #1E3A8A;
+
+      /* Radii & Shadows */
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.2);
+    }
+
+    /* High-Contrast (Colorblind-Safe) Mode */
+    body[data-contrast="high"] {
+      --color-correct: #1D4ED8;
+      --color-present: #C2410C;
+      --color-absent: #334155;
+      --pill-bg: #1D4ED8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Screen-reader only utility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* =========================================
+       App Shell (100dvh Mobile-First)
+       ========================================= */
+    .app-shell {
+      height: 100dvh;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      background-color: var(--bg-page);
+    }
+
+    /* =========================================
+       Deep Navy / Slate Header Bar
+       ========================================= */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background-color: var(--bg-header);
+      color: var(--text-on-dark);
+      flex-shrink: 0;
+      gap: 8px;
+    }
+
+    .brand-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: var(--text-on-dark);
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+
+    .subtitle-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 3px;
+      flex-wrap: wrap;
+    }
+
+    .date-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      background-color: var(--pill-bg);
+      color: var(--pill-text);
+      white-space: nowrap;
+    }
+
+    .preview-badge {
+      display: none;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      background-color: var(--preview-bg);
+      color: var(--preview-text);
+      white-space: nowrap;
+    }
+
+    .preview-badge.visible {
+      display: inline-flex;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-header {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      padding: 0 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid #334155;
+      background-color: var(--bg-header-btn);
+      color: var(--text-on-dark);
+      font-family: inherit;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn-header:hover {
+      background-color: var(--bg-header-btn-hover);
+    }
+
+    .btn-header:active {
+      transform: scale(0.95);
+    }
+
+    .btn-header:focus-visible,
+    .key:focus-visible,
+    .btn-primary:focus-visible,
+    .btn-secondary:focus-visible,
+    .modal-close:focus-visible {
+      outline: 3px solid #38BDF8;
+      outline-offset: 2px;
+    }
+
+    .btn-header[aria-pressed="true"] {
+      background-color: var(--color-correct);
+      border-color: #FFFFFF;
+    }
+
+    .btn-icon {
+      width: 34px;
+      padding: 0;
+      font-size: 0.92rem;
+    }
+
+    /* =========================================
+       Friendly Top Schedule Banner
+       ========================================= */
+    .status-banner {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6px 12px;
+      background-color: var(--banner-bg);
+      border-bottom: 1px solid var(--banner-border);
+      color: var(--banner-text);
+      font-size: 0.76rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .status-banner.visible {
+      display: flex;
+    }
+
+    /* =========================================
+       Toast Notifications
+       ========================================= */
+    .toast-container {
+      position: absolute;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 80;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      pointer-events: none;
+      width: 90%;
+      max-width: 320px;
+    }
+
+    .toast {
+      background-color: #0F172A;
+      color: #FFFFFF;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.86rem;
+      font-weight: 700;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transform: translateY(-6px);
+      animation: toastIn 0.16s ease forwards;
+      text-align: center;
+    }
+
+    .toast.fade-out {
+      animation: toastOut 0.22s ease forwards;
+    }
+
+    @keyframes toastIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes toastOut {
+      to { opacity: 0; transform: translateY(-6px); }
+    }
+
+    /* =========================================
+       Center Game Board (6x5 Grid)
+       ========================================= */
+    .board-wrapper {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .board {
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+      gap: 6px;
+      width: 100%;
+      max-width: 320px;
+      max-height: min(384px, calc(100dvh - 290px));
+      aspect-ratio: 5 / 6;
+    }
+
+    .board-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .tile {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(1.3rem, 4.4vh, 1.85rem);
+      font-weight: 800;
+      line-height: 1;
+      text-transform: uppercase;
+      user-select: none;
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      border: 2px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      transition: border-color 0.1s ease;
+    }
+
+    .tile[data-state="filled"] {
+      border-color: var(--border-filled);
+    }
+
+    .tile[data-state="correct"] {
+      background-color: var(--color-correct);
+      border-color: var(--color-correct);
+      color: #FFFFFF;
+    }
+
+    .tile[data-state="present"] {
+      background-color: var(--color-present);
+      border-color: var(--color-present);
+      color: #FFFFFF;
+    }
+
+    .tile[data-state="absent"] {
+      background-color: var(--color-absent);
+      border-color: var(--color-absent);
+      color: #FFFFFF;
+    }
+
+    /* Subtle non-color indicator for accessibility */
+    .tile[data-state="correct"]::after {
+      content: "✓";
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      font-size: 0.58rem;
+      font-weight: 800;
+      opacity: 0.9;
+    }
+
+    .tile[data-state="present"]::after {
+      content: "•";
+      position: absolute;
+      top: 1px;
+      right: 5px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      opacity: 0.9;
+    }
+
+    /* Animations */
+    .tile.pop {
+      animation: tilePop 0.12s ease-in-out;
+    }
+
+    @keyframes tilePop {
+      0% { transform: scale(0.9); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .board-row.shake {
+      animation: rowShake 0.42s ease-in-out;
+    }
+
+    @keyframes rowShake {
+      0%, 100% { transform: translateX(0); }
+      15%, 45%, 75% { transform: translateX(-6px); }
+      30%, 60%, 90% { transform: translateX(6px); }
+    }
+
+    .tile.flip {
+      animation: tileFlip 0.5s ease forwards;
+    }
+
+    @keyframes tileFlip {
+      0% { transform: rotateX(0deg); }
+      49% { transform: rotateX(90deg); }
+      51% { transform: rotateX(90deg); }
+      100% { transform: rotateX(0deg); }
+    }
+
+    .tile.win-bounce {
+      animation: winBounce 0.5s ease forwards;
+    }
+
+    @keyframes winBounce {
+      0%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-12px); }
+      70% { transform: translateY(-4px); }
+    }
+
+    /* Post-game quick bar if user closes modal */
+    .post-game-bar {
+      display: none;
+      margin-top: 8px;
+      gap: 8px;
+    }
+
+    .post-game-bar.visible {
+      display: flex;
+    }
+
+    .btn-surface {
+      height: 34px;
+      padding: 0 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-default);
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .btn-surface:hover {
+      background-color: #F1F5F9;
+    }
+
+    /* =========================================
+       On-Screen QWERTY Keyboard
+       ========================================= */
+    .keyboard {
+      width: 100%;
+      padding: 6px 8px calc(10px + env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .kb-row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      width: 100%;
+    }
+
+    .kb-spacer {
+      flex: 0.5;
+    }
+
+    .key {
+      flex: 1;
+      height: 50px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background-color: var(--key-bg);
+      color: var(--key-text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      touch-action: manipulation;
+      transition: background-color 0.15s ease, color 0.15s ease, transform 0.08s ease;
+    }
+
+    .key:active {
+      transform: scale(0.95);
+      background-color: var(--key-bg-active);
+    }
+
+    .key.key-wide {
+      flex: 1.55;
+      font-size: 0.76rem;
+      letter-spacing: 0.02em;
+    }
+
+    .key[data-state="correct"] {
+      background-color: var(--color-correct);
+      color: #FFFFFF;
+    }
+
+    .key[data-state="present"] {
+      background-color: var(--color-present);
+      color: #FFFFFF;
+    }
+
+    .key[data-state="absent"] {
+      background-color: var(--color-absent);
+      color: #FFFFFF;
+    }
+
+    /* =========================================
+       Modals (How to Play & End-of-Game)
+       ========================================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+      animation: fadeIn 0.16s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 400px;
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      max-height: 90dvh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border-default);
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+    }
+
+    .modal-body p {
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .help-examples {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 12px 0 16px;
+      padding: 12px;
+      background-color: var(--bg-page);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .help-example-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.83rem;
+      color: var(--text-primary);
+    }
+
+    .mini-tile {
+      width: 34px;
+      height: 34px;
+      border-radius: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      color: #FFFFFF;
+      flex-shrink: 0;
+    }
+
+    .mini-tile.correct { background-color: var(--color-correct); }
+    .mini-tile.present { background-color: var(--color-present); }
+    .mini-tile.absent { background-color: var(--color-absent); }
+
+    /* End-of-Game Summary */
+    .result-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+
+    .result-badge.win {
+      background-color: #DCFCE7;
+      color: #14532D;
+    }
+
+    .result-badge.loss {
+      background-color: #FEE2E2;
+      color: #991B1B;
+    }
+
+    .result-headline {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .answer-reveal {
+      margin: 10px 0;
+      padding: 10px 14px;
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+
+    .answer-reveal-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .answer-reveal-word {
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      color: var(--text-primary);
+      margin-top: 2px;
+    }
+
+    /* Stats Row */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin: 12px 0;
+    }
+
+    .stat-box {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 8px 4px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .emoji-preview {
+      margin: 10px 0;
+      padding: 10px;
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      text-align: center;
+      font-size: 1.18rem;
+      line-height: 1.35;
+      white-space: pre-line;
+      letter-spacing: 2px;
+    }
+
+    .countdown-box {
+      display: none;
+      margin: 10px 0;
+      padding: 8px 12px;
+      background-color: #F1F5F9;
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+
+    .countdown-box.visible {
+      display: block;
+    }
+
+    .countdown-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+    }
+
+    .countdown-timer {
+      font-size: 1.15rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-primary);
+      margin-top: 2px;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      border: none;
+      background-color: var(--color-correct);
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      touch-action: manipulation;
+      transition: filter 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.08);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-default);
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .btn-secondary:hover {
+      background-color: #F1F5F9;
+    }
+
+    /* Compact viewport tweaks for smaller phones */
+    @media (max-height: 670px) {
+      .header { padding: 8px 10px; }
+      .brand-title { font-size: 0.96rem; }
+      .key { height: 44px; font-size: 0.88rem; }
+      .board { gap: 5px; max-height: calc(100dvh - 255px); }
+      .board-row { gap: 5px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Accessible ARIA Live Region for Screen Readers -->
+  <div id="ariaLive" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="app-shell">
+    <!-- Top Deep Navy Header -->
+    <header class="header">
+      <div class="brand-group">
+        <h1 class="brand-title">THIRD FLOOR DOORDLE</h1>
+        <div class="subtitle-row">
+          <span id="datePill" class="date-pill">Practice Mode</span>
+          <span id="previewBadge" class="preview-badge">Previewing Dec 1</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="modeToggleBtn" class="btn-header" type="button" aria-label="Switch between Daily and Practice mode">
+          Practice
+        </button>
+        <button id="contrastBtn" class="btn-header btn-icon" type="button" aria-label="Toggle high contrast mode" aria-pressed="false" title="High Contrast Mode">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 3v18a9 9 0 0 0 0-18z" fill="currentColor"></path>
+          </svg>
+        </button>
+        <button id="helpBtn" class="btn-header btn-icon" type="button" aria-label="How to play" title="How to Play">
+          ?
+        </button>
+      </div>
+    </header>
+
+    <!-- Friendly Schedule Banner (Shown outside Dec 1–18 when not previewing) -->
+    <div id="statusBanner" class="status-banner" role="status">
+      Daily FLCC puzzles run Dec 1–18! Warm up with Practice Mode.
+    </div>
+
+    <!-- Floating Toast Container -->
+    <div id="toastContainer" class="toast-container" aria-hidden="true"></div>
+
+    <!-- Center 6x5 Wordle Grid -->
+    <main class="board-wrapper">
+      <div id="board" class="board" role="grid" aria-label="Wordle game board"></div>
+
+      <div id="postGameBar" class="post-game-bar">
+        <button id="openResultBtn" class="btn-surface" type="button">View Results</button>
+        <button id="quickResetBtn" class="btn-surface" type="button" style="display: none;">Play Again</button>
+      </div>
+    </main>
+
+    <!-- Bottom On-Screen QWERTY Keyboard -->
+    <section id="keyboard" class="keyboard" aria-label="On-screen keyboard"></section>
+  </div>
+
+  <!-- How-To-Play Modal -->
+  <div id="helpModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="helpTitle" class="modal-title">How to Play</h2>
+        <button id="closeHelpBtn" class="modal-close" type="button" aria-label="Close help">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Guess the <strong>5-letter FLCC-themed word</strong> in 6 tries. Any 5-letter word (A–Z) is accepted so campus terms always count!</p>
+        <p>A new daily puzzle unlocks each morning at midnight Eastern Time from <strong>December 1 to December 18</strong>.</p>
+
+        <div class="help-examples">
+          <div class="help-example-row">
+            <span class="mini-tile correct">A</span>
+            <span><strong>Correct (✓):</strong> Letter is in the word and in the right spot.</span>
+          </div>
+          <div class="help-example-row">
+            <span class="mini-tile present">B</span>
+            <span><strong>Misplaced (•):</strong> Letter is in the word, but in another spot.</span>
+          </div>
+          <div class="help-example-row">
+            <span class="mini-tile absent">C</span>
+            <span><strong>Not in Word:</strong> Letter does not appear in the answer.</span>
+          </div>
+        </div>
+
+        <button id="gotItBtn" class="btn-primary" type="button">Start Playing</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- End-of-Game Modal -->
+  <div id="resultModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="resultHeadline">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="resultModalTitle" class="modal-title">Puzzle Summary</h2>
+        <button id="closeResultBtn" class="modal-close" type="button" aria-label="Close results">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <span id="resultBadge" class="result-badge win">Solved</span>
+        <div id="resultHeadline" class="result-headline">Great job, Laker!</div>
+        <p id="resultSubtext" style="margin-bottom: 6px;"></p>
+
+        <div class="answer-reveal">
+          <div class="answer-reveal-label">Answer</div>
+          <div id="answerRevealWord" class="answer-reveal-word"></div>
+        </div>
+
+        <div class="stats-grid" aria-label="Daily statistics">
+          <div class="stat-box">
+            <div id="statPlayed" class="stat-value">0</div>
+            <div class="stat-label">Played</div>
+          </div>
+          <div class="stat-box">
+            <div id="statWinPct" class="stat-value">0%</div>
+            <div class="stat-label">Win %</div>
+          </div>
+          <div class="stat-box">
+            <div id="statStreak" class="stat-value">0</div>
+            <div class="stat-label">Streak</div>
+          </div>
+          <div class="stat-box">
+            <div id="statMaxStreak" class="stat-value">0</div>
+            <div class="stat-label">Best</div>
+          </div>
+        </div>
+
+        <div id="emojiPreview" class="emoji-preview"></div>
+
+        <div id="countdownBox" class="countdown-box">
+          <div id="countdownLabel" class="countdown-label">Next FLCC Puzzle (Midnight EST)</div>
+          <div id="countdownTimer" class="countdown-timer">00:00:00</div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="shareBtn" class="btn-primary" type="button">
+            <span>Share Result</span>
+          </button>
+          <button id="playAgainBtn" class="btn-secondary" type="button" style="display: none;">
+            Play Practice Again
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* =========================================
+         Verified Obfuscated Puzzle Data
+         ========================================= */
+      const WORD_LENGTH = 5;
+      const MAX_GUESSES = 6;
+
+      const PRACTICE_DATA = [92, 84, 90, 93, 87];
+
+      const DAILY_DATA = {
+        1:  [99, 86, 92, 82, 93],
+        2:  [100, 100, 82, 93, 84],
+        3:  [100, 86, 95, 90, 103],
+        4:  [86, 88, 82, 101, 100],
+        5:  [86, 100, 99, 102, 95],
+        6:  [106, 85, 102, 101, 100],
+        7:  [93, 90, 82, 99, 101],
+        8:  [96, 90, 85, 102, 82],
+        9:  [86, 97, 82, 99, 88],
+        10: [86, 95, 106, 82, 104],
+        11: [100, 86, 86, 99, 101],
+        12: [89, 101, 99, 82, 86],
+        13: [100, 86, 92, 82, 93],
+        14: [84, 90, 100, 102, 94],
+        15: [100, 86, 85, 96, 84],
+        16: [100, 89, 101, 82, 94],
+        17: [95, 99, 82, 86, 93],
+        18: [86, 101, 90, 102, 100]
+      };
+
+      const KEYBOARD_ROWS = [
+        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+        ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACKSPACE']
+      ];
+
+      const WIN_MESSAGES = [
+        'Genius!',
+        'Magnificent!',
+        'Impressive!',
+        'Splendid!',
+        'Great Laker Spirit!',
+        'Phew! Just in time!'
+      ];
+
+      const STATE_PRIORITY = { absent: 1, present: 2, correct: 3 };
+      const STATS_KEY = 'doordle_stats_v1';
+      const CONTRAST_KEY = 'doordle_high_contrast_v1';
+
+      /* =========================================
+         Crash-Proof Storage Helpers
+         ========================================= */
+      function safeGetItem(key) {
+        try {
+          return localStorage.getItem(key);
+        } catch (err) {
+          return null;
+        }
+      }
+
+      function safeSetItem(key, value) {
+        try {
+          localStorage.setItem(key, value);
+        } catch (err) {
+          // Ignore Safari Private Browsing / quota errors
+        }
+      }
+
+      function safeRemoveItem(key) {
+        try {
+          localStorage.removeItem(key);
+        } catch (err) {
+          // Ignore
+        }
+      }
+
+      /* =========================================
+         Eastern Time Date Detection & ?testDay
+         ========================================= */
+      function getEasternDateParts() {
+        try {
+          const fmt = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/New_York',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+          });
+          const parts = fmt.formatToParts(new Date());
+          const year = parseInt(parts.find(p => p.type === 'year').value, 10);
+          const month = parseInt(parts.find(p => p.type === 'month').value, 10);
+          const day = parseInt(parts.find(p => p.type === 'day').value, 10);
+          if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+            return { year, month, day };
+          }
+        } catch (err) {
+          // Fallback to local clock
+        }
+        const local = new Date();
+        return {
+          year: local.getFullYear(),
+          month: local.getMonth() + 1,
+          day: local.getDate()
+        };
+      }
+
+      function getTestDayParam() {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const raw = params.get('testDay');
+          if (!raw) return null;
+          const parsed = parseInt(raw, 10);
+          if (parsed >= 1 && parsed <= 18 && String(parsed) === raw.trim()) {
+            return parsed;
+          }
+        } catch (err) {
+          // Ignore malformed query strings
+        }
+        return null;
+      }
+
+      function resolveScheduleContext() {
+        const testDay = getTestDayParam();
+        const est = getEasternDateParts();
+
+        if (testDay !== null && DAILY_DATA[testDay]) {
+          return {
+            isPreview: true,
+            dailyAvailable: true,
+            year: est.year,
+            day: testDay,
+            label: `Dec ${testDay}`,
+            storageKey: null, // Preview never overwrites real daily localStorage
+            encoded: DAILY_DATA[testDay]
+          };
+        }
+
+        if (est.month === 12 && est.day >= 1 && est.day <= 18 && DAILY_DATA[est.day]) {
+          return {
+            isPreview: false,
+            dailyAvailable: true,
+            year: est.year,
+            day: est.day,
+            label: `Dec ${est.day}`,
+            storageKey: `doordle_${est.year}_dec_${est.day}`,
+            encoded: DAILY_DATA[est.day]
+          };
+        }
+
+        return {
+          isPreview: false,
+          dailyAvailable: false,
+          year: est.year,
+          day: null,
+          label: 'Practice',
+          storageKey: null,
+          encoded: null
+        };
+      }
+
+      /* =========================================
+         DOM References
+         ========================================= */
+      const ariaLiveEl = document.getElementById('ariaLive');
+      const boardEl = document.getElementById('board');
+      const keyboardEl = document.getElementById('keyboard');
+      const datePillEl = document.getElementById('datePill');
+      const previewBadgeEl = document.getElementById('previewBadge');
+      const modeToggleBtn = document.getElementById('modeToggleBtn');
+      const contrastBtn = document.getElementById('contrastBtn');
+      const statusBannerEl = document.getElementById('statusBanner');
+      const toastContainerEl = document.getElementById('toastContainer');
+      const postGameBarEl = document.getElementById('postGameBar');
+      const openResultBtn = document.getElementById('openResultBtn');
+      const quickResetBtn = document.getElementById('quickResetBtn');
+
+      const helpBtn = document.getElementById('helpBtn');
+      const helpModal = document.getElementById('helpModal');
+      const closeHelpBtn = document.getElementById('closeHelpBtn');
+      const gotItBtn = document.getElementById('gotItBtn');
+
+      const resultModal = document.getElementById('resultModal');
+      const closeResultBtn = document.getElementById('closeResultBtn');
+      const resultBadgeEl = document.getElementById('resultBadge');
+      const resultHeadlineEl = document.getElementById('resultHeadline');
+      const resultSubtextEl = document.getElementById('resultSubtext');
+      const answerRevealWordEl = document.getElementById('answerRevealWord');
+      const statPlayedEl = document.getElementById('statPlayed');
+      const statWinPctEl = document.getElementById('statWinPct');
+      const statStreakEl = document.getElementById('statStreak');
+      const statMaxStreakEl = document.getElementById('statMaxStreak');
+      const emojiPreviewEl = document.getElementById('emojiPreview');
+      const countdownBoxEl = document.getElementById('countdownBox');
+      const countdownLabelEl = document.getElementById('countdownLabel');
+      const countdownTimerEl = document.getElementById('countdownTimer');
+      const shareBtn = document.getElementById('shareBtn');
+      const playAgainBtn = document.getElementById('playAgainBtn');
+
+      /* =========================================
+         Game State
+         ========================================= */
+      const schedule = resolveScheduleContext();
+      let activeMode = schedule.dailyAvailable ? 'daily' : 'practice';
+      let activeEncoded = null;
+      let guesses = [];
+      let evaluations = [];
+      let currentGuess = '';
+      let gameStatus = 'playing'; // 'playing' | 'won' | 'lost'
+      let isAnimating = false;
+      let keyStates = {};
+      let countdownInterval = null;
+
+      /* =========================================
+         Two-Pass Wordle Evaluation (Runtime Decode)
+         ========================================= */
+      function evaluateGuess(guess, encodedArr) {
+        const answer = encodedArr.slice().reverse().map(n => String.fromCharCode(n - 17)).join('');
+        const result = new Array(WORD_LENGTH).fill('absent');
+        const freq = {};
+
+        // Pass 1: Exact matches & remaining frequency map
+        for (let i = 0; i < WORD_LENGTH; i++) {
+          if (guess[i] === answer[i]) {
+            result[i] = 'correct';
+          } else {
+            const ch = answer[i];
+            freq[ch] = (freq[ch] || 0) + 1;
+          }
+        }
+
+        // Pass 2: Misplaced matches while frequency > 0
+        for (let i = 0; i < WORD_LENGTH; i++) {
+          if (result[i] !== 'correct') {
+            const ch = guess[i];
+            if (freq[ch] > 0) {
+              result[i] = 'present';
+              freq[ch] -= 1;
+            }
+          }
+        }
+
+        return result;
+      }
+
+      function revealActiveAnswer() {
+        return activeEncoded.slice().reverse().map(n => String.fromCharCode(n - 17)).join('');
+      }
+
+      /* =========================================
+         Stats Persistence
+         ========================================= */
+      function loadStats() {
+        const fallback = { played: 0, won: 0, currentStreak: 0, maxStreak: 0, lastCompletedKey: null };
+        const raw = safeGetItem(STATS_KEY);
+        if (!raw) return fallback;
+        try {
+          const parsed = JSON.parse(raw);
+          return {
+            played: Number(parsed.played) || 0,
+            won: Number(parsed.won) || 0,
+            currentStreak: Number(parsed.currentStreak) || 0,
+            maxStreak: Number(parsed.maxStreak) || 0,
+            lastCompletedKey: parsed.lastCompletedKey || null
+          };
+        } catch (err) {
+          return fallback;
+        }
+      }
+
+      function recordDailyStat(won) {
+        // Only record stats on real daily puzzles (not Practice or ?testDay preview)
+        if (activeMode !== 'daily' || schedule.isPreview || !schedule.storageKey) return;
+        const stats = loadStats();
+        if (stats.lastCompletedKey === schedule.storageKey) return;
+
+        stats.played += 1;
+        if (won) {
+          stats.won += 1;
+          stats.currentStreak += 1;
+          if (stats.currentStreak > stats.maxStreak) {
+            stats.maxStreak = stats.currentStreak;
+          }
+        } else {
+          stats.currentStreak = 0;
+        }
+        stats.lastCompletedKey = schedule.storageKey;
+        safeSetItem(STATS_KEY, JSON.stringify(stats));
+      }
+
+      /* =========================================
+         High Contrast Mode
+         ========================================= */
+      function initHighContrast() {
+        const saved = safeGetItem(CONTRAST_KEY);
+        const enabled = saved === 'true';
+        applyHighContrast(enabled);
+      }
+
+      function applyHighContrast(enabled) {
+        if (enabled) {
+          document.body.setAttribute('data-contrast', 'high');
+        } else {
+          document.body.removeAttribute('data-contrast');
+        }
+        contrastBtn.setAttribute('aria-pressed', String(enabled));
+        safeSetItem(CONTRAST_KEY, String(enabled));
+        if (resultModal.classList.contains('open')) {
+          emojiPreviewEl.textContent = buildEmojiGrid();
+        }
+      }
+
+      function isHighContrast() {
+        return document.body.getAttribute('data-contrast') === 'high';
+      }
+
+      /* =========================================
+         DOM Builders
+         ========================================= */
+      function buildBoardDOM() {
+        boardEl.innerHTML = '';
+        for (let r = 0; r < MAX_GUESSES; r++) {
+          const rowEl = document.createElement('div');
+          rowEl.className = 'board-row';
+          rowEl.id = `row-${r}`;
+          rowEl.setAttribute('role', 'row');
+          for (let c = 0; c < WORD_LENGTH; c++) {
+            const tileEl = document.createElement('div');
+            tileEl.className = 'tile';
+            tileEl.id = `tile-${r}-${c}`;
+            tileEl.setAttribute('role', 'gridcell');
+            tileEl.setAttribute('aria-label', `Row ${r + 1} Column ${c + 1}, empty`);
+            rowEl.appendChild(tileEl);
+          }
+          boardEl.appendChild(rowEl);
+        }
+      }
+
+      function buildKeyboardDOM() {
+        keyboardEl.innerHTML = '';
+        KEYBOARD_ROWS.forEach((rowKeys, rowIndex) => {
+          const rowEl = document.createElement('div');
+          rowEl.className = 'kb-row';
+
+          if (rowIndex === 1) {
+            const leftSpacer = document.createElement('div');
+            leftSpacer.className = 'kb-spacer';
+            rowEl.appendChild(leftSpacer);
+          }
+
+          rowKeys.forEach((keyVal) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'key';
+            btn.dataset.key = keyVal;
+
+            if (keyVal === 'ENTER') {
+              btn.classList.add('key-wide');
+              btn.textContent = 'ENTER';
+              btn.setAttribute('aria-label', 'Enter, submit guess');
+            } else if (keyVal === 'BACKSPACE') {
+              btn.classList.add('key-wide');
+              btn.setAttribute('aria-label', 'Backspace, delete letter');
+              btn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+                  <line x1="18" y1="9" x2="12" y2="15"></line>
+                  <line x1="12" y1="9" x2="18" y2="15"></line>
+                </svg>
+              `;
+            } else {
+              btn.textContent = keyVal;
+              btn.setAttribute('aria-label', keyVal);
+            }
+
+            btn.addEventListener('click', () => handleInput(keyVal));
+            rowEl.appendChild(btn);
+          });
+
+          if (rowIndex === 1) {
+            const rightSpacer = document.createElement('div');
+            rightSpacer.className = 'kb-spacer';
+            rowEl.appendChild(rightSpacer);
+          }
+
+          keyboardEl.appendChild(rowEl);
+        });
+      }
+
+      /* =========================================
+         Puzzle Loading & Persistence
+         ========================================= */
+      function getActiveStorageKey() {
+        if (activeMode === 'daily') {
+          return schedule.isPreview ? null : schedule.storageKey;
+        }
+        return 'doordle_practice_v1';
+      }
+
+      function getActiveLabel() {
+        return activeMode === 'daily' && schedule.dailyAvailable
+          ? schedule.label
+          : 'Practice';
+      }
+
+      function loadActivePuzzle() {
+        activeEncoded = (activeMode === 'daily' && schedule.dailyAvailable)
+          ? schedule.encoded
+          : PRACTICE_DATA;
+
+        guesses = [];
+        evaluations = [];
+        currentGuess = '';
+        gameStatus = 'playing';
+        keyStates = {};
+        isAnimating = false;
+
+        const key = getActiveStorageKey();
+        if (key) {
+          const savedRaw = safeGetItem(key);
+          if (savedRaw) {
+            try {
+              const saved = JSON.parse(savedRaw);
+              if (Array.isArray(saved.guesses)) {
+                saved.guesses.slice(0, MAX_GUESSES).forEach((g) => {
+                  if (typeof g === 'string' && /^[A-Z]{5}$/.test(g.toUpperCase())) {
+                    const upper = g.toUpperCase();
+                    const evalRow = evaluateGuess(upper, activeEncoded);
+                    guesses.push(upper);
+                    evaluations.push(evalRow);
+                    updateKeyStatesFromRow(upper, evalRow);
+                  }
+                });
+                if (guesses.length > 0) {
+                  const lastEval = evaluations[evaluations.length - 1];
+                  if (lastEval.every(s => s === 'correct')) {
+                    gameStatus = 'won';
+                  } else if (guesses.length >= MAX_GUESSES) {
+                    gameStatus = 'lost';
+                  }
+                }
+              }
+            } catch (err) {
+              // Ignore corrupted saved state
+            }
+          }
+        }
+
+        updateHeaderUI();
+        renderBoardImmediate();
+        renderKeyboardStates();
+        updatePostGameBar();
+      }
+
+      function saveProgress() {
+        const key = getActiveStorageKey();
+        if (!key) return; // Do not save in ?testDay preview mode
+        safeSetItem(key, JSON.stringify({ guesses }));
+      }
+
+      function resetPracticeGame() {
+        safeRemoveItem('doordle_practice_v1');
+        closeModal(resultModal);
+        loadActivePuzzle();
+        showToast('Practice board reset!');
+      }
+
+      /* =========================================
+         Keyboard & Board Rendering
+         ========================================= */
+      function updateKeyStatesFromRow(guess, evalRow) {
+        for (let i = 0; i < WORD_LENGTH; i++) {
+          const letter = guess[i];
+          const newState = evalRow[i];
+          const prevState = keyStates[letter];
+          if (!prevState || STATE_PRIORITY[newState] > STATE_PRIORITY[prevState]) {
+            keyStates[letter] = newState;
+          }
+        }
+      }
+
+      function updateHeaderUI() {
+        datePillEl.textContent = activeMode === 'daily' && schedule.dailyAvailable
+          ? `FLCC Daily • ${schedule.label}`
+          : 'Practice Mode';
+
+        if (schedule.isPreview && activeMode === 'daily') {
+          previewBadgeEl.textContent = `Previewing ${schedule.label}`;
+          previewBadgeEl.classList.add('visible');
+        } else {
+          previewBadgeEl.classList.remove('visible');
+        }
+
+        if (schedule.dailyAvailable) {
+          modeToggleBtn.style.display = 'inline-flex';
+          modeToggleBtn.textContent = activeMode === 'daily' ? 'Practice' : 'Daily';
+          modeToggleBtn.setAttribute(
+            'aria-label',
+            activeMode === 'daily' ? 'Switch to Practice Mode' : `Switch to ${schedule.label} Daily Puzzle`
+          );
+          statusBannerEl.classList.remove('visible');
+        } else {
+          modeToggleBtn.style.display = 'none';
+          statusBannerEl.classList.add('visible');
+        }
+      }
+
+      function renderBoardImmediate() {
+        for (let r = 0; r < MAX_GUESSES; r++) {
+          const rowEl = document.getElementById(`row-${r}`);
+          rowEl.classList.remove('shake');
+
+          for (let c = 0; c < WORD_LENGTH; c++) {
+            const tile = document.getElementById(`tile-${r}-${c}`);
+            tile.className = 'tile';
+            tile.removeAttribute('data-state');
+            tile.textContent = '';
+
+            if (r < guesses.length) {
+              const ch = guesses[r][c];
+              const st = evaluations[r][c];
+              tile.textContent = ch;
+              tile.dataset.state = st;
+              tile.setAttribute('aria-label', `${ch}, ${st}`);
+            } else if (r === guesses.length && c < currentGuess.length) {
+              const ch = currentGuess[c];
+              tile.textContent = ch;
+              tile.dataset.state = 'filled';
+              tile.setAttribute('aria-label', `${ch}, entered`);
+            } else {
+              tile.setAttribute('aria-label', `Row ${r + 1} Column ${c + 1}, empty`);
+            }
+          }
+        }
+      }
+
+      function renderCurrentRowTyping(popColIndex) {
+        const r = guesses.length;
+        if (r >= MAX_GUESSES) return;
+        for (let c = 0; c < WORD_LENGTH; c++) {
+          const tile = document.getElementById(`tile-${r}-${c}`);
+          const ch = currentGuess[c] || '';
+          tile.textContent = ch;
+          if (ch) {
+            tile.dataset.state = 'filled';
+            tile.setAttribute('aria-label', `${ch}, entered`);
+          } else {
+            tile.removeAttribute('data-state');
+            tile.setAttribute('aria-label', `Row ${r + 1} Column ${c + 1}, empty`);
+          }
+          if (c === popColIndex) {
+            tile.classList.remove('pop');
+            void tile.offsetWidth;
+            tile.classList.add('pop');
+          }
+        }
+      }
+
+      function renderKeyboardStates() {
+        const keyButtons = keyboardEl.querySelectorAll('.key');
+        keyButtons.forEach((btn) => {
+          const k = btn.dataset.key;
+          if (keyStates[k]) {
+            btn.dataset.state = keyStates[k];
+            btn.setAttribute('aria-label', `${k}, ${keyStates[k]}`);
+          } else {
+            btn.removeAttribute('data-state');
+            if (k.length === 1) {
+              btn.setAttribute('aria-label', k);
+            }
+          }
+        });
+      }
+
+      function updatePostGameBar() {
+        if (gameStatus !== 'playing') {
+          postGameBarEl.classList.add('visible');
+          quickResetBtn.style.display = activeMode === 'practice' ? 'inline-flex' : 'none';
+        } else {
+          postGameBarEl.classList.remove('visible');
+        }
+      }
+
+      /* =========================================
+         Input Handling & Submission
+         ========================================= */
+      function handleInput(key) {
+        if (isAnimating || gameStatus !== 'playing') return;
+        if (helpModal.classList.contains('open') || resultModal.classList.contains('open')) return;
+
+        if (key === 'BACKSPACE') {
+          if (currentGuess.length > 0) {
+            currentGuess = currentGuess.slice(0, -1);
+            renderCurrentRowTyping(-1);
+          }
+          return;
+        }
+
+        if (key === 'ENTER') {
+          submitCurrentGuess();
+          return;
+        }
+
+        if (/^[A-Z]$/.test(key) && currentGuess.length < WORD_LENGTH) {
+          currentGuess += key;
+          renderCurrentRowTyping(currentGuess.length - 1);
+        }
+      }
+
+      function triggerRowShake(rowIndex) {
+        const rowEl = document.getElementById(`row-${rowIndex}`);
+        if (!rowEl) return;
+        rowEl.classList.remove('shake');
+        void rowEl.offsetWidth;
+        rowEl.classList.add('shake');
+      }
+
+      function submitCurrentGuess() {
+        const rowIndex = guesses.length;
+
+        if (currentGuess.length < WORD_LENGTH) {
+          triggerRowShake(rowIndex);
+          showToast('Not enough letters');
+          return;
+        }
+
+        if (!/^[A-Z]{5}$/.test(currentGuess)) {
+          triggerRowShake(rowIndex);
+          showToast('Use letters A–Z only');
+          return;
+        }
+
+        isAnimating = true;
+        const submittedGuess = currentGuess;
+        const evalRow = evaluateGuess(submittedGuess, activeEncoded);
+
+        guesses.push(submittedGuess);
+        evaluations.push(evalRow);
+        currentGuess = '';
+        saveProgress();
+
+        const FLIP_STEP_MS = 230;
+        const FLIP_HALF_MS = 250;
+
+        for (let c = 0; c < WORD_LENGTH; c++) {
+          const tile = document.getElementById(`tile-${rowIndex}-${c}`);
+          setTimeout(() => {
+            tile.classList.add('flip');
+            setTimeout(() => {
+              tile.dataset.state = evalRow[c];
+              tile.setAttribute('aria-label', `${submittedGuess[c]}, ${evalRow[c]}`);
+            }, FLIP_HALF_MS);
+          }, c * FLIP_STEP_MS);
+        }
+
+        const totalRevealMs = (WORD_LENGTH - 1) * FLIP_STEP_MS + 520;
+
+        setTimeout(() => {
+          updateKeyStatesFromRow(submittedGuess, evalRow);
+          renderKeyboardStates();
+          isAnimating = false;
+
+          const won = evalRow.every(s => s === 'correct');
+          if (won) {
+            gameStatus = 'won';
+            recordDailyStat(true);
+            updatePostGameBar();
+            for (let c = 0; c < WORD_LENGTH; c++) {
+              const tile = document.getElementById(`tile-${rowIndex}-${c}`);
+              setTimeout(() => {
+                tile.classList.remove('flip');
+                tile.classList.add('win-bounce');
+              }, c * 85);
+            }
+            const msg = WIN_MESSAGES[Math.min(guesses.length - 1, WIN_MESSAGES.length - 1)];
+            showToast(msg, 1800);
+            setTimeout(() => openResultModal(), 1050);
+          } else if (guesses.length >= MAX_GUESSES) {
+            gameStatus = 'lost';
+            recordDailyStat(false);
+            updatePostGameBar();
+            showToast(`Answer: ${revealActiveAnswer()}`, 2200);
+            setTimeout(() => openResultModal(), 950);
+          } else {
+            announce(`Guess ${guesses.length} submitted.`);
+          }
+        }, totalRevealMs);
+      }
+
+      /* =========================================
+         Eastern Time Midnight Countdown
+         ========================================= */
+      function getEasternTimeToMidnight() {
+        try {
+          const fmt = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/New_York',
+            hour12: false,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          });
+          const parts = fmt.formatToParts(new Date());
+          let h = parseInt(parts.find(p => p.type === 'hour').value, 10);
+          const m = parseInt(parts.find(p => p.type === 'minute').value, 10);
+          const s = parseInt(parts.find(p => p.type === 'second').value, 10);
+          if (h === 24) h = 0;
+          const remaining = Math.max(0, 86400 - (h * 3600 + m * 60 + s));
+          const hh = String(Math.floor(remaining / 3600)).padStart(2, '0');
+          const mm = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
+          const ss = String(remaining % 60).padStart(2, '0');
+          return `${hh}:${mm}:${ss}`;
+        } catch (err) {
+          return '--:--:--';
+        }
+      }
+
+      function startCountdown() {
+        stopCountdown();
+        if (activeMode !== 'daily' || !schedule.dailyAvailable) {
+          countdownBoxEl.classList.remove('visible');
+          return;
+        }
+        countdownBoxEl.classList.add('visible');
+        if (schedule.day === 18) {
+          countdownLabelEl.textContent = 'Final Day of Third Floor Doordle!';
+          countdownTimerEl.textContent = 'Thanks for playing!';
+          return;
+        }
+        countdownLabelEl.textContent = 'Next FLCC Puzzle (Midnight EST)';
+        countdownTimerEl.textContent = getEasternTimeToMidnight();
+        countdownInterval = setInterval(() => {
+          countdownTimerEl.textContent = getEasternTimeToMidnight();
+        }, 1000);
+      }
+
+      function stopCountdown() {
+        if (countdownInterval) {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+        }
+      }
+
+      /* =========================================
+         Toasts, ARIA Live & Modals
+         ========================================= */
+      function announce(text) {
+        ariaLiveEl.textContent = '';
+        setTimeout(() => {
+          ariaLiveEl.textContent = text;
+        }, 30);
+      }
+
+      function showToast(message, duration = 1750) {
+        announce(message);
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        toastContainerEl.appendChild(toast);
+
+        setTimeout(() => {
+          toast.classList.add('fade-out');
+          setTimeout(() => toast.remove(), 240);
+        }, duration);
+      }
+
+      function openModal(modalEl) {
+        modalEl.classList.add('open');
+      }
+
+      function closeModal(modalEl) {
+        modalEl.classList.remove('open');
+        if (modalEl === resultModal) {
+          stopCountdown();
+        }
+      }
+
+      function buildEmojiGrid() {
+        const hc = isHighContrast();
+        const correctChar = hc ? '🟦' : '🟩';
+        const presentChar = hc ? '🟧' : '🟨';
+        const absentChar = '⬜';
+
+        return evaluations
+          .map(row =>
+            row.map(state => {
+              if (state === 'correct') return correctChar;
+              if (state === 'present') return presentChar;
+              return absentChar;
+            }).join('')
+          )
+          .join('\n');
+      }
+
+      function openResultModal() {
+        const label = getActiveLabel();
+        const isWin = gameStatus === 'won';
+
+        resultBadgeEl.textContent = isWin ? 'Solved' : 'Out of Tries';
+        resultBadgeEl.className = `result-badge ${isWin ? 'win' : 'loss'}`;
+
+        if (isWin) {
+          resultHeadlineEl.textContent = WIN_MESSAGES[Math.min(guesses.length - 1, WIN_MESSAGES.length - 1)];
+          resultSubtextEl.textContent = `You solved ${label} in ${guesses.length}/${MAX_GUESSES} tries.`;
+        } else {
+          resultHeadlineEl.textContent = 'So close!';
+          resultSubtextEl.textContent = `You completed the ${label} puzzle.`;
+        }
+
+        answerRevealWordEl.textContent = revealActiveAnswer();
+
+        const stats = loadStats();
+        const winPct = stats.played > 0 ? Math.round((stats.won / stats.played) * 100) : 0;
+        statPlayedEl.textContent = String(stats.played);
+        statWinPctEl.textContent = `${winPct}%`;
+        statStreakEl.textContent = String(stats.currentStreak);
+        statMaxStreakEl.textContent = String(stats.maxStreak);
+
+        emojiPreviewEl.textContent = buildEmojiGrid();
+        playAgainBtn.style.display = activeMode === 'practice' ? 'block' : 'none';
+
+        startCountdown();
+        openModal(resultModal);
+      }
+
+      /* =========================================
+         Two-Tier Mobile-Safe Share Result
+         ========================================= */
+      function fallbackCopyText(text) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.setAttribute('readonly', '');
+        textArea.style.position = 'fixed';
+        textArea.style.top = '-9999px';
+        textArea.style.left = '-9999px';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        let ok = false;
+        try {
+          ok = document.execCommand('copy');
+        } catch (err) {
+          ok = false;
+        }
+        document.body.removeChild(textArea);
+        return ok;
+      }
+
+      function shareResult() {
+        const label = getActiveLabel();
+        const score = gameStatus === 'won' ? `${guesses.length}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
+        const emojiGrid = buildEmojiGrid();
+        const shareText = `Third Floor Doordle — ${label} (${score})\n\n${emojiGrid}\n\nYou can test your FLCC knowledge at thirdfloordoordle.com`;
+
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          navigator.clipboard.writeText(shareText)
+            .then(() => {
+              showToast('Copied to clipboard!');
+            })
+            .catch(() => {
+              if (fallbackCopyText(shareText)) {
+                showToast('Copied to clipboard!');
+              } else {
+                showToast('Unable to copy automatically');
+              }
+            });
+        } else {
+          if (fallbackCopyText(shareText)) {
+            showToast('Copied to clipboard!');
+          } else {
+            showToast('Unable to copy automatically');
+          }
+        }
+      }
+
+      /* =========================================
+         Event Listeners
+         ========================================= */
+      document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+        if (e.key === 'Escape') {
+          closeModal(helpModal);
+          closeModal(resultModal);
+          return;
+        }
+
+        const key = e.key.toUpperCase();
+        if (key === 'ENTER' || key === 'BACKSPACE' || /^[A-Z]$/.test(key)) {
+          if (!helpModal.classList.contains('open') && !resultModal.classList.contains('open')) {
+            e.preventDefault();
+            handleInput(key);
+          }
+        }
+      });
+
+      modeToggleBtn.addEventListener('click', () => {
+        if (isAnimating || !schedule.dailyAvailable) return;
+        activeMode = activeMode === 'daily' ? 'practice' : 'daily';
+        loadActivePuzzle();
+      });
+
+      contrastBtn.addEventListener('click', () => {
+        const next = !isHighContrast();
+        applyHighContrast(next);
+        showToast(next ? 'High Contrast Mode: ON' : 'High Contrast Mode: OFF');
+      });
+
+      helpBtn.addEventListener('click', () => openModal(helpModal));
+      closeHelpBtn.addEventListener('click', () => closeModal(helpModal));
+      gotItBtn.addEventListener('click', () => closeModal(helpModal));
+      helpModal.addEventListener('click', (e) => {
+        if (e.target === helpModal) closeModal(helpModal);
+      });
+
+      openResultBtn.addEventListener('click', () => openResultModal());
+      closeResultBtn.addEventListener('click', () => closeModal(resultModal));
+      resultModal.addEventListener('click', (e) => {
+        if (e.target === resultModal) closeModal(resultModal);
+      });
+
+      shareBtn.addEventListener('click', shareResult);
+      playAgainBtn.addEventListener('click', resetPracticeGame);
+      quickResetBtn.addEventListener('click', resetPracticeGame);
+
+      /* =========================================
+         Initialize Immediately on Load
+         ========================================= */
+      initHighContrast();
+      buildBoardDOM();
+      buildKeyboardDOM();
+      loadActivePuzzle();
+    })();
+  </script>
+</body>
+</html>
