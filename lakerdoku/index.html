@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="Play FLCC Lakerdoku — a 6x6 Mini Sudoku holiday puzzle in L-A-K-E-R-S or 1-6 mode at thirdfloordoordle.com." />
-  <title>FLCC Lakerdoku — Third Floor Doordle</title>
+  <meta name="description" content="Play Lakerdoku — a 6x6 Mini Sudoku holiday puzzle in L-A-K-E-R-S or 1-6 mode at thirdfloordoordle.com." />
+  <title>Lakerdoku — Third Floor Doordle</title>
 
   <!-- Snowflake Emoji Favicon via Inline SVG Data URI -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%E2%9D%84%EF%B8%8F%3C/text%3E%3C/svg%3E" />
@@ -1070,10 +1070,10 @@
           </a>
         </div>
 
-        <h1 class="game-title">FLCC Lakerdoku</h1>
+        <h1 class="game-title">Lakerdoku</h1>
 
         <div class="header-actions">
-          <button id="helpBtn" class="icon-btn" type="button" aria-label="How to play FLCC Lakerdoku">?</button>
+          <button id="helpBtn" class="icon-btn" type="button" aria-label="How to play Lakerdoku">?</button>
           <button id="themeToggleBtn" class="icon-btn" type="button" aria-pressed="false" aria-label="Switch to dark mode">
             <span id="themeIcon" aria-hidden="true"></span>
           </button>
@@ -1112,7 +1112,7 @@
 
     <!-- Main 6x6 Sudoku Grid -->
     <main class="board-container">
-      <div id="sudokuGrid" class="sudoku-grid" role="grid" aria-label="6 by 6 FLCC Lakerdoku puzzle board"></div>
+      <div id="sudokuGrid" class="sudoku-grid" role="grid" aria-label="6 by 6 Lakerdoku puzzle board"></div>
     </main>
 
     <!-- Action Toolbar -->
@@ -2308,8 +2308,8 @@
         const cfg = BOARD_CONFIG[state.boardId];
         const modeText = (state.completedMode || state.mode) === 'lakers' ? 'L-A-K-E-R-S' : '1\u20136';
         const header = cfg.id === 'practice'
-          ? 'FLCC Lakerdoku \u2014 Practice Mode'
-          : ('FLCC Lakerdoku \u2014 ' + cfg.label + ' (' + cfg.difficulty + ')');
+          ? 'Lakerdoku \u2014 Practice Mode'
+          : ('Lakerdoku \u2014 ' + cfg.label + ' (' + cfg.difficulty + ')');
 
         return [
           header,
@@ -2328,7 +2328,7 @@
         renderInputPad();
 
         playWaveAnimation();
-        announce('Congratulations! You solved FLCC Lakerdoku in ' + formatTime(state.elapsedSec) + '.');
+        announce('Congratulations! You solved Lakerdoku in ' + formatTime(state.elapsedSec) + '.');
 
         window.setTimeout(function () {
           openWinModal();
