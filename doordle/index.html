@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="Play FLCC Wordle — a daily 5-letter holiday word puzzle at thirdfloordoordle.com." />
-  <title>FLCC Wordle — Third Floor Doordle</title>
+  <meta name="description" content="Play Doordle — a daily 5-letter holiday guessing game at thirdfloordoordle.com." />
+  <title>Doordle — Third Floor Doordle</title>
 
   <!-- Snowflake Emoji Favicon via Inline SVG Data URI -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%E2%9D%84%EF%B8%8F%3C/text%3E%3C/svg%3E" />
@@ -25,32 +25,32 @@
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
       /* Page & Surfaces */
-      --bg-page: #f0f6fc;
-      --bg-surface: #ffffff;
-      --bg-surface-alt: #e2eefb;
-      --bg-control: #ffffff;
-      --bg-control-hover: #dbeafe;
+      --bg-page: #EEF6FD;
+      --bg-surface: #FFFFFF;
+      --bg-surface-alt: #E2EEFB;
+      --bg-control: #FFFFFF;
+      --bg-control-hover: #DBEAFE;
 
       /* Typography (WCAG AAA) */
-      --text-primary: #0f294a;
-      --text-secondary: #33537a;
-      --text-muted: #46668c;
+      --text-primary: #091C38;
+      --text-secondary: #224268;
+      --text-muted: #35557A;
 
-      /* Brand Accents */
-      --brand-blue: #1d4ed8;
-      --brand-blue-hover: #1e40af;
-      --brand-pill-bg: #dbeafe;
-      --brand-pill-border: #60a5fa;
-      --brand-pill-text: #1e3a8a;
+      /* Brand Accents (Royal Blue -> Cobalt) */
+      --brand-blue: #0E4A99;
+      --brand-blue-hover: #083573;
+      --brand-pill-bg: #DCEBFB;
+      --brand-pill-border: #6DA4DF;
+      --brand-pill-text: #083573;
 
       /* Borders */
-      --border-subtle: #c5dbf2;
-      --border-control: #6c8eb5;
-      --tile-border: #a8c4e0;
-      --tile-active-border: #1d4ed8;
-      --tile-bg: #ffffff;
+      --border-subtle: #C2DAF2;
+      --border-control: #6C8EB5;
+      --tile-border: #A8C4E0;
+      --tile-active-border: #0E4A99;
+      --tile-bg: #FFFFFF;
 
-      /* Standard Wordle Tile & Key Colors */
+      /* Standard Tile & Key Feedback Colors */
       --color-correct: #538d4e;
       --color-correct-text: #ffffff;
       --color-present: #b59f3b;
@@ -59,21 +59,21 @@
       --color-absent-text: #ffffff;
 
       /* On-Screen Keyboard */
-      --key-bg: #d6e6f6;
-      --key-hover: #c2daf2;
-      --key-text: #0f294a;
+      --key-bg: #D6E6F6;
+      --key-hover: #C2DAF2;
+      --key-text: #091C38;
 
       /* Toast & Preview Banner */
-      --toast-bg: #0f294a;
-      --toast-text: #ffffff;
-      --preview-bg: #dbeafe;
-      --preview-border: #1d4ed8;
-      --preview-text: #0f294a;
+      --toast-bg: #091C38;
+      --toast-text: #FFFFFF;
+      --preview-bg: #DBEAFE;
+      --preview-border: #0E4A99;
+      --preview-text: #091C38;
 
       /* Focus Ring & Shadows */
-      --focus-ring: #1d4ed8;
-      --shadow-sm: 0 2px 8px rgba(15, 41, 74, 0.08);
-      --shadow-md: 0 12px 32px rgba(15, 41, 74, 0.22);
+      --focus-ring: #0E4A99;
+      --shadow-sm: 0 2px 8px rgba(9, 28, 56, 0.08);
+      --shadow-md: 0 12px 32px rgba(9, 28, 56, 0.22);
 
       /* Radii */
       --radius-sm: 8px;
@@ -86,59 +86,59 @@
        Design Tokens — Dark Mode (Synced via 'thirdfloordoordle_theme')
        ===================================================================== */
     :root[data-theme="dark"] {
-      --bg-page: #0b192c;
-      --bg-surface: #132743;
-      --bg-surface-alt: #1b3559;
-      --bg-control: #132743;
-      --bg-control-hover: #1d3a63;
+      --bg-page: #071426;
+      --bg-surface: #0F2442;
+      --bg-surface-alt: #16335C;
+      --bg-control: #0F2442;
+      --bg-control-hover: #193966;
 
-      --text-primary: #f0f6fc;
-      --text-secondary: #bfd7f2;
-      --text-muted: #94b4d8;
+      --text-primary: #F0F7FF;
+      --text-secondary: #BDD8F5;
+      --text-muted: #9BBEDF;
 
-      --brand-blue: #60a5fa;
-      --brand-blue-hover: #93c5fd;
-      --brand-pill-bg: #173359;
-      --brand-pill-border: #60a5fa;
-      --brand-pill-text: #e0f2fe;
+      --brand-blue: #66B5FF;
+      --brand-blue-hover: #85C4FF;
+      --brand-pill-bg: #163661;
+      --brand-pill-border: #5C9FE6;
+      --brand-pill-text: #E6F2FF;
 
-      --border-subtle: #25446e;
-      --border-control: #4f77a8;
+      --border-subtle: #244778;
+      --border-control: #4F77A8;
       --tile-border: #335785;
-      --tile-active-border: #60a5fa;
-      --tile-bg: #0f2138;
+      --tile-active-border: #66B5FF;
+      --tile-bg: #0D203B;
 
       --color-correct: #538d4e;
       --color-correct-text: #ffffff;
       --color-present: #b59f3b;
       --color-present-text: #ffffff;
       --color-absent: #3b4a5e;
-      --color-absent-text: #f0f6fc;
+      --color-absent-text: #f0f7ff;
 
-      --key-bg: #1c3961;
-      --key-hover: #274d80;
-      --key-text: #f0f6fc;
+      --key-bg: #1B3963;
+      --key-hover: #264D82;
+      --key-text: #F0F7FF;
 
-      --toast-bg: #f0f6fc;
-      --toast-text: #0b192c;
-      --preview-bg: #153057;
-      --preview-border: #60a5fa;
-      --preview-text: #f0f6fc;
+      --toast-bg: #F0F7FF;
+      --toast-text: #071426;
+      --preview-bg: #132E57;
+      --preview-border: #66B5FF;
+      --preview-text: #F0F7FF;
 
-      --focus-ring: #93c5fd;
+      --focus-ring: #85C4FF;
       --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.36);
       --shadow-md: 0 14px 36px rgba(0, 0, 0, 0.6);
     }
 
     /* =====================================================================
        High Contrast Mode (Synced via 'thirdfloordoordle_hc')
-       Orange (#f5793a) & Sky Blue (#85c0f9) with Dark Ink for AAA Contrast
+       Accessible Orange (#f5793a) & Sky Blue (#85c0f9) with Dark Ink
        ===================================================================== */
     :root[data-contrast="high"] {
       --color-correct: #f5793a;
       --color-correct-text: #111827;
       --color-present: #85c0f9;
-      --color-present-text: #0b192c;
+      --color-present-text: #071426;
     }
 
     /* =====================================================================
@@ -243,13 +243,13 @@
     }
 
     .preview-dismiss {
-      min-width: 34px;
-      min-height: 34px;
+      min-width: 36px;
+      min-height: 36px;
       border-radius: var(--radius-sm);
       border: 1.5px solid var(--preview-border);
       background: transparent;
       color: var(--preview-text);
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 900;
       cursor: pointer;
     }
@@ -286,7 +286,7 @@
     }
 
     /* =====================================================================
-       Main App Shell — Mobile-First Viewport Fit
+       Main App Shell — Mobile-First Single-Viewport Fit (320px-430px)
        ===================================================================== */
     .app-shell {
       width: 100%;
@@ -301,7 +301,7 @@
     }
 
     /* =====================================================================
-       Header Landmark & Tappable Date/Mode Pill
+       Top Header Landmark & Tappable Date/Mode Pill
        ===================================================================== */
     .top-header {
       display: flex;
@@ -344,7 +344,7 @@
 
     .game-title {
       font-family: var(--font-display);
-      font-size: clamp(1.16rem, 4.6vw, 1.42rem);
+      font-size: clamp(1.24rem, 4.8vw, 1.52rem);
       font-weight: 800;
       letter-spacing: -0.02em;
       color: var(--text-primary);
@@ -385,7 +385,7 @@
       color: #ffffff;
     }
     :root[data-theme="dark"] .icon-btn[aria-pressed="true"].hc-btn {
-      color: #0b192c;
+      color: #071426;
     }
 
     .mode-bar {
@@ -396,7 +396,7 @@
     }
 
     .mode-pill-btn {
-      min-height: 34px;
+      min-height: 36px;
       padding: 4px 13px;
       border-radius: var(--radius-pill);
       background-color: var(--brand-pill-bg);
@@ -419,7 +419,7 @@
 
     .results-shortcut-btn {
       display: none;
-      min-height: 34px;
+      min-height: 36px;
       padding: 4px 12px;
       border-radius: var(--radius-pill);
       background-color: var(--brand-blue);
@@ -432,12 +432,12 @@
       touch-action: manipulation;
     }
     :root[data-theme="dark"] .results-shortcut-btn {
-      color: #0b192c;
+      color: #071426;
     }
     .results-shortcut-btn.visible { display: inline-flex; align-items: center; }
 
     /* =====================================================================
-       6x5 Wordle Grid
+       6x5 Doordle Grid (Responsive Scaling Without Vertical Overflow)
        ===================================================================== */
     .board-stage {
       flex: 1 1 auto;
@@ -448,22 +448,22 @@
       padding: 4px 0;
     }
 
-    .wordle-board {
+    .doordle-board {
       display: grid;
       grid-template-rows: repeat(6, 1fr);
       gap: clamp(4px, 1.1vh, 7px);
-      width: min(100%, 332px, calc((100dvh - 308px) * 5 / 6));
-      min-width: 240px;
+      width: min(100%, 332px, calc((100dvh - 310px) * 5 / 6));
+      min-width: 230px;
       aspect-ratio: 5 / 6;
     }
 
-    .wordle-row {
+    .doordle-row {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: clamp(4px, 1.1vh, 7px);
     }
 
-    .wordle-tile {
+    .doordle-tile {
       width: 100%;
       height: 100%;
       border: 2px solid var(--tile-border);
@@ -471,7 +471,7 @@
       background-color: var(--tile-bg);
       color: var(--text-primary);
       font-family: var(--font-mono);
-      font-size: clamp(1.35rem, 5.6vw, 1.95rem);
+      font-size: clamp(1.3rem, 5.4vw, 1.9rem);
       font-weight: 700;
       text-transform: uppercase;
       display: flex;
@@ -482,33 +482,33 @@
       transition: border-color 0.12s ease, background-color 0.15s ease, color 0.15s ease;
     }
 
-    .wordle-tile.is-filled {
+    .doordle-tile.is-filled {
       border-color: var(--tile-active-border);
     }
 
-    .wordle-tile.state-correct {
+    .doordle-tile.state-correct {
       background-color: var(--color-correct);
       border-color: var(--color-correct);
       color: var(--color-correct-text);
     }
-    .wordle-tile.state-present {
+    .doordle-tile.state-present {
       background-color: var(--color-present);
       border-color: var(--color-present);
       color: var(--color-present-text);
     }
-    .wordle-tile.state-absent {
+    .doordle-tile.state-absent {
       background-color: var(--color-absent);
       border-color: var(--color-absent);
       color: var(--color-absent-text);
     }
 
-    /* Tile Animations */
+    /* Subtle Tile & Row Animations */
     @keyframes tilePop {
       0% { transform: scale(0.88); }
       50% { transform: scale(1.1); }
       100% { transform: scale(1); }
     }
-    .wordle-tile.animate-pop {
+    .doordle-tile.animate-pop {
       animation: tilePop 0.12s ease-out;
     }
 
@@ -518,7 +518,7 @@
       51% { transform: rotateX(90deg); }
       100% { transform: rotateX(0deg); }
     }
-    .wordle-tile.animate-flip {
+    .doordle-tile.animate-flip {
       animation: tileFlip 0.48s ease-in-out forwards;
     }
 
@@ -529,7 +529,7 @@
       60% { transform: translateX(-5px); }
       80% { transform: translateX(5px); }
     }
-    .wordle-row.animate-shake {
+    .doordle-row.animate-shake {
       animation: rowShake 0.36s ease-in-out;
     }
 
@@ -538,7 +538,7 @@
       40% { transform: translateY(-12px); }
       70% { transform: translateY(3px); }
     }
-    .wordle-tile.animate-bounce {
+    .doordle-tile.animate-bounce {
       animation: tileBounce 0.45s ease-out;
     }
 
@@ -564,7 +564,7 @@
 
     .kb-key {
       flex: 1 1 0;
-      min-height: 50px;
+      min-height: 48px;
       max-width: 44px;
       border: none;
       border-radius: var(--radius-sm);
@@ -614,7 +614,7 @@
       position: fixed;
       inset: 0;
       z-index: 400;
-      background-color: rgba(11, 25, 44, 0.76);
+      background-color: rgba(7, 20, 38, 0.76);
       padding: 14px;
       align-items: center;
       justify-content: center;
@@ -659,7 +659,7 @@
       gap: 10px;
     }
 
-    /* Help Example Tiles */
+    /* Help Example Tiles (Neutral Non-Answer Words: CRANE, PILOT, MANGO) */
     .example-row {
       display: flex;
       gap: 5px;
@@ -714,7 +714,7 @@
       color: #ffffff;
     }
     :root[data-theme="dark"] .archive-btn.is-current {
-      color: #0b192c;
+      color: #071426;
     }
     .archive-btn:disabled {
       opacity: 0.45;
@@ -847,7 +847,7 @@
     }
     .primary-btn:hover { background-color: var(--brand-blue-hover); }
     :root[data-theme="dark"] .primary-btn {
-      color: #0b192c;
+      color: #071426;
     }
 
     .secondary-btn {
@@ -869,6 +869,14 @@
       text-decoration: none;
     }
     .secondary-btn:hover { background-color: var(--bg-control-hover); }
+    .secondary-btn.is-current {
+      background-color: var(--brand-blue);
+      border-color: var(--brand-blue);
+      color: #ffffff;
+    }
+    :root[data-theme="dark"] .secondary-btn.is-current {
+      color: #071426;
+    }
 
     .share-feedback {
       text-align: center;
@@ -896,13 +904,13 @@
       .app-shell { padding: 4px 6px calc(8px + env(safe-area-inset-bottom)); }
       .icon-btn { min-width: 40px; min-height: 40px; }
       .back-link { font-size: 0.8rem; padding: 0 5px; }
-      .kb-key { min-height: 46px; }
+      .kb-key { min-height: 45px; }
       .kb-row { gap: 4px; }
     }
   </style>
 </head>
 <body>
-  <a href="#wordleBoard" class="skip-link">Skip to Wordle board</a>
+  <a href="#doordleBoard" class="skip-link">Skip to Doordle board</a>
 
   <!-- Dismissible Preview Banner (?testDay=0..18) -->
   <div id="previewBanner" class="preview-banner" role="status" aria-live="polite">
@@ -912,7 +920,7 @@
     </div>
   </div>
 
-  <!-- Floating Toast -->
+  <!-- Floating Toast Feedback -->
   <div class="toast-slot" aria-hidden="true">
     <div id="toastMsg" class="toast-msg"></div>
   </div>
@@ -927,11 +935,11 @@
           </a>
         </div>
 
-        <h1 class="game-title">FLCC Wordle</h1>
+        <h1 class="game-title">Doordle</h1>
 
         <div class="header-actions">
-          <button id="helpBtn" class="icon-btn" type="button" aria-label="How to play FLCC Wordle">?</button>
-          <button id="statsBtn" class="icon-btn" type="button" aria-label="View statistics">
+          <button id="helpBtn" class="icon-btn" type="button" aria-label="How to play Doordle">?</button>
+          <button id="statsBtn" class="icon-btn" type="button" aria-label="View Doordle statistics">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <line x1="18" y1="20" x2="18" y2="10"></line>
               <line x1="12" y1="20" x2="12" y2="4"></line>
@@ -960,15 +968,15 @@
       </div>
     </header>
 
-    <!-- 6x5 Wordle Grid -->
+    <!-- 6x5 Doordle Grid -->
     <main class="board-stage">
-      <div id="wordleBoard" class="wordle-board" role="region" aria-label="6 by 5 FLCC Wordle letter grid"></div>
+      <div id="doordleBoard" class="doordle-board" role="region" aria-label="6 by 5 Doordle letter grid"></div>
     </main>
 
     <!-- On-Screen QWERTY Keyboard -->
     <section id="keyboard" class="keyboard" aria-label="On-screen keyboard"></section>
 
-    <!-- Screen Reader Live Region -->
+    <!-- Polite Screen Reader Live Region -->
     <div id="liveRegion" class="sr-only" aria-live="polite" aria-atomic="true"></div>
   </div>
 
@@ -976,7 +984,7 @@
   <div id="helpModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 id="helpTitle" class="modal-title">How to Play FLCC Wordle</h2>
+        <h2 id="helpTitle" class="modal-title">How to Play Doordle</h2>
         <button id="closeHelpBtn" class="icon-btn" type="button" aria-label="Close help dialog">&times;</button>
       </div>
       <div class="modal-body">
@@ -1043,7 +1051,7 @@
   <div id="statsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 id="statsTitle" class="modal-title">Your Wordle Stats</h2>
+        <h2 id="statsTitle" class="modal-title">Your Doordle Stats</h2>
         <button id="closeStatsBtn" class="icon-btn" type="button" aria-label="Close statistics dialog">&times;</button>
       </div>
       <div class="stats-grid">
@@ -1127,102 +1135,104 @@
       'use strict';
 
       /* ===================================================================
-         Storage Keys & Constants
+         Storage Keys & Core Constants
          =================================================================== */
       const THEME_KEY = 'thirdfloordoordle_theme';
       const HC_KEY = 'thirdfloordoordle_hc';
-      const STORE_KEY = 'flcc_wordle_v1';
+      const STORE_KEY = 'flcc_doordle_v1';
+      const EVENT_YEAR = 2026;
       const MAX_GUESSES = 6;
       const WORD_LEN = 5;
 
       /* ===================================================================
-         Salted Positional Hex Hashes (No Plaintext Answers Anywhere)
+         Salted Positional Hex Hashes (Zero Plaintext Answers in Source)
          =================================================================== */
-      const SALT_DIGESTS = [
+      const DIGEST_TABLE = [
         '3f8a', '9c12', '5e4d', 'b720', '1a9f', 'd46b', '82e3', '47c9', 'f105',
         '6b3e', '29d4', 'c857', '0e6a', 'a318', '74f2', 'e09c', '51b7', '8d43',
         '2c6e', 'b901', '46a5', 'd28f', '17e4', '905b', '63c8', 'f83d'
       ];
 
-      function hashPosition(day, pos, letter) {
-        const n = letter.charCodeAt(0) - 65;
+      function computePositionalHash(day, pos, ch) {
+        const n = ch.charCodeAt(0) - 65;
         const idx = (n + day * 3 + pos * 5 + 7) % 26;
-        return SALT_DIGESTS[idx];
+        return DIGEST_TABLE[idx];
       }
 
       const PUZZLES = {
-        0:  { label: 'Practice Mode',     shortLabel: 'Practice', hashes: ['0e6a', '905b', 'f83d', '63c8', 'c857'] },
-        1:  { label: 'Dec 1 \u2022 #1',   shortLabel: 'Dec 1',    hashes: ['d28f', 'e09c', '1a9f', 'b720', 'd28f'] },
-        2:  { label: 'Dec 2 \u2022 #2',   shortLabel: 'Dec 2',    hashes: ['2c6e', 'b720', 'd46b', 'e09c', '3f8a'] },
-        3:  { label: 'Dec 3 \u2022 #3',   shortLabel: 'Dec 3',    hashes: ['0e6a', '6b3e', '74f2', 'f105', '5e4d'] },
-        4:  { label: 'Dec 4 \u2022 #4',   shortLabel: 'Dec 4',    hashes: ['f83d', 'e09c', 'b720', '905b', '8d43'] },
-        5:  { label: 'Dec 5 \u2022 #5',   shortLabel: 'Dec 5',    hashes: ['74f2', '46a5', '82e3', '8d43', '46a5'] },
-        6:  { label: 'Dec 6 \u2022 #6',   shortLabel: 'Dec 6',    hashes: ['0e6a', '63c8', '3f8a', '82e3', '905b'] },
-        7:  { label: 'Dec 7 \u2022 #7',   shortLabel: 'Dec 7',    hashes: ['63c8', 'e09c', 'f83d', 'd28f', '74f2'] },
-        8:  { label: 'Dec 8 \u2022 #8',   shortLabel: 'Dec 8',    hashes: ['82e3', '63c8', 'b720', '1a9f', '8d43'] },
-        9:  { label: 'Dec 9 \u2022 #9',   shortLabel: 'Dec 9',    hashes: ['3f8a', '82e3', '0e6a', '3f8a', '3f8a'] },
-        10: { label: 'Dec 10 \u2022 #10', shortLabel: 'Dec 10',   hashes: ['a318', '9c12', 'd28f', '2c6e', '905b'] },
-        11: { label: 'Dec 11 \u2022 #11', shortLabel: 'Dec 11',   hashes: ['82e3', 'd46b', '63c8', '46a5', '9c12'] },
-        12: { label: 'Dec 12 \u2022 #12', shortLabel: 'Dec 12',   hashes: ['17e4', 'a318', 'e09c', '63c8', '1a9f'] },
-        13: { label: 'Dec 13 \u2022 #13', shortLabel: 'Dec 13',   hashes: ['0e6a', '0e6a', '2c6e', 'd46b', '0e6a'] },
-        14: { label: 'Dec 14 \u2022 #14', shortLabel: 'Dec 14',   hashes: ['f83d', '6b3e', 'e09c', '905b', '5e4d'] },
-        15: { label: 'Dec 15 \u2022 #15', shortLabel: 'Dec 15',   hashes: ['c857', 'a318', '51b7', '17e4', 'a318'] },
-        16: { label: 'Dec 16 \u2022 #16', shortLabel: 'Dec 16',   hashes: ['d46b', 'e09c', '8d43', '17e4', '74f2'] },
-        17: { label: 'Dec 17 \u2022 #17', shortLabel: 'Dec 17',   hashes: ['d28f', 'e09c', '51b7', '905b', '1a9f'] },
-        18: { label: 'Dec 18 \u2022 #18', shortLabel: 'Dec 18',   hashes: ['29d4', 'd46b', '905b', '63c8', 'a318'] }
+        0:  { label: 'Practice Mode', shortLabel: 'Practice', hashes: ['0e6a', '905b', 'f83d', '63c8', 'c857'] },
+        1:  { label: 'Dec 1',         shortLabel: 'Dec 1',    hashes: ['d28f', 'e09c', '1a9f', 'b720', 'd28f'] },
+        2:  { label: 'Dec 2',         shortLabel: 'Dec 2',    hashes: ['2c6e', '6b3e', 'c857', '46a5', '3f8a'] },
+        3:  { label: 'Dec 3',         shortLabel: 'Dec 3',    hashes: ['f105', '74f2', '46a5', 'f105', 'f105'] },
+        4:  { label: 'Dec 4',         shortLabel: 'Dec 4',    hashes: ['c857', 'c857', '8d43', '1a9f', 'c857'] },
+        5:  { label: 'Dec 5',         shortLabel: 'Dec 5',    hashes: ['74f2', '46a5', '82e3', '8d43', '46a5'] },
+        6:  { label: 'Dec 6',         shortLabel: 'Dec 6',    hashes: ['9c12', 'c857', '8d43', 'f83d', '1a9f'] },
+        7:  { label: 'Dec 7',         shortLabel: 'Dec 7',    hashes: ['1a9f', '2c6e', '0e6a', '6b3e', '74f2'] },
+        8:  { label: 'Dec 8',         shortLabel: 'Dec 8',    hashes: ['9c12', '2c6e', '5e4d', '63c8', '8d43'] },
+        9:  { label: 'Dec 9',         shortLabel: 'Dec 9',    hashes: ['2c6e', 'a318', '51b7', '905b', '0e6a'] },
+        10: { label: 'Dec 10',        shortLabel: 'Dec 10',   hashes: ['1a9f', '47c9', 'd28f', 'f105', '51b7'] },
+        11: { label: 'Dec 11',        shortLabel: 'Dec 11',   hashes: ['46a5', '1a9f', '82e3', '82e3', '0e6a'] },
+        12: { label: 'Dec 12',        shortLabel: 'Dec 12',   hashes: ['b720', '17e4', '29d4', '46a5', '5e4d'] },
+        13: { label: 'Dec 13',        shortLabel: 'Dec 13',   hashes: ['0e6a', '9c12', '1a9f', '3f8a', 'b901'] },
+        14: { label: 'Dec 14',        shortLabel: 'Dec 14',   hashes: ['63c8', '51b7', 'd28f', '17e4', '6b3e'] },
+        15: { label: 'Dec 15',        shortLabel: 'Dec 15',   hashes: ['5e4d', 'a318', 'a318', 'b901', 'c857'] },
+        16: { label: 'Dec 16',        shortLabel: 'Dec 16',   hashes: ['29d4', '17e4', '3f8a', '82e3', '74f2'] },
+        17: { label: 'Dec 17',        shortLabel: 'Dec 17',   hashes: ['8d43', 'f83d', 'b901', '9c12', '1a9f'] },
+        18: { label: 'Dec 18',        shortLabel: 'Dec 18',   hashes: ['29d4', 'd46b', '905b', '63c8', 'a318'] }
       };
 
       /**
-       * Evaluates a 5-letter guess directly against the 5 positional hashes
-       * using standard two-pass Wordle duplicate-letter rules.
+       * Resolves each position of a puzzle in memory by testing A-Z against
+       * its salted positional hash.
+       */
+      function resolvePuzzleAnswer(day) {
+        const puzzle = PUZZLES[day];
+        if (!puzzle) return '';
+        let resolved = '';
+        for (let pos = 0; pos < WORD_LEN; pos++) {
+          const expectedHash = puzzle.hashes[pos];
+          for (let code = 65; code <= 90; code++) {
+            const ch = String.fromCharCode(code);
+            if (computePositionalHash(day, pos, ch) === expectedHash) {
+              resolved += ch;
+              break;
+            }
+          }
+        }
+        return resolved;
+      }
+
+      /**
+       * Evaluates a 5-letter guess using exact two-pass duplicate-letter rules:
+       * exact matches (correct) are consumed first, then misplaced matches
+       * (present) up to the remaining count of each letter.
        */
       function evaluateGuess(guess, day) {
-        const puzzle = PUZZLES[day];
+        const target = resolvePuzzleAnswer(day);
         const result = ['absent', 'absent', 'absent', 'absent', 'absent'];
-        const usedTargetPos = [false, false, false, false, false];
+        const remainingCounts = {};
 
-        // Pass 1: exact positional matches (Green)
+        // Pass 1: exact positional matches
         for (let i = 0; i < WORD_LEN; i++) {
-          if (hashPosition(day, i, guess[i]) === puzzle.hashes[i]) {
+          if (guess[i] === target[i]) {
             result[i] = 'correct';
-            usedTargetPos[i] = true;
+          } else {
+            const tChar = target[i];
+            remainingCounts[tChar] = (remainingCounts[tChar] || 0) + 1;
           }
         }
 
-        // Pass 2: present in an unused target position (Yellow)
+        // Pass 2: present in another position up to remaining count
         for (let i = 0; i < WORD_LEN; i++) {
           if (result[i] === 'correct') continue;
-          for (let t = 0; t < WORD_LEN; t++) {
-            if (!usedTargetPos[t] && hashPosition(day, t, guess[i]) === puzzle.hashes[t]) {
-              result[i] = 'present';
-              usedTargetPos[t] = true;
-              break;
-            }
+          const gChar = guess[i];
+          if (remainingCounts[gChar] > 0) {
+            result[i] = 'present';
+            remainingCounts[gChar]--;
           }
         }
 
         return result;
-      }
-
-      /**
-       * Reconstructs the 5-letter answer at runtime by testing A-Z against
-       * each of the 5 positional hashes (130 instant checks) for end-of-game display.
-       */
-      function reconstructAnswer(day) {
-        const puzzle = PUZZLES[day];
-        if (!puzzle) return '';
-        let word = '';
-        for (let pos = 0; pos < WORD_LEN; pos++) {
-          const targetHash = puzzle.hashes[pos];
-          for (let code = 65; code <= 90; code++) {
-            const ch = String.fromCharCode(code);
-            if (hashPosition(day, pos, ch) === targetHash) {
-              word += ch;
-              break;
-            }
-          }
-        }
-        return word;
       }
 
       /* ===================================================================
@@ -1267,7 +1277,7 @@
           if (parsed >= 0 && parsed <= 18 && String(parsed) === raw.trim()) {
             return parsed;
           }
-        } catch (e) { /* ignore */ }
+        } catch (e) { /* ignore malformed query */ }
         return null;
       }
 
@@ -1277,23 +1287,23 @@
 
       function getMaxUnlockedDay() {
         if (isPreview) return testDay;
-        if (est.month === 12) {
-          return Math.min(18, Math.max(0, est.day));
-        }
-        return 0;
+        if (est.year < EVENT_YEAR) return 0;
+        if (est.year > EVENT_YEAR) return 18;
+        if (est.month < 12) return 0;
+        return Math.min(18, Math.max(0, est.day));
       }
 
       function getDefaultDay() {
         if (isPreview) return testDay;
-        if (est.month === 12) {
-          if (est.day >= 1 && est.day <= 18) return est.day;
-          if (est.day > 18) return 18;
-        }
-        return 0;
+        if (est.year < EVENT_YEAR) return 0;
+        if (est.year > EVENT_YEAR) return 18;
+        if (est.month < 12) return 0;
+        if (est.day >= 1 && est.day <= 18) return est.day;
+        return est.day > 18 ? 18 : 0;
       }
 
       /* ===================================================================
-         State & Persistence
+         Game State & localStorage Persistence ('flcc_doordle_v1')
          =================================================================== */
       function createDefaultStore() {
         return {
@@ -1341,20 +1351,15 @@
       }
 
       /**
-       * Saves completion markers compatible with the landing page hub check.
+       * Writes the completion marker for the landing page hub ('doordle_v1_dayX').
        */
-      function saveHubCompletionMarkers(day, dayState) {
+      function saveHubCompletionMarker(day, dayState) {
         if (isPreview || day < 1 || day > 18) return;
-        const payload = JSON.stringify({
-          status: dayState.status,
+        safeSet('doordle_v1_day' + day, JSON.stringify({
           completed: true,
-          gameOver: true,
           won: dayState.status === 'won',
-          guessesCount: dayState.guesses.length
-        });
-        safeSet('doordle_' + est.year + '_dec_' + day, payload);
-        safeSet('wordle_played_day_' + day, '1');
-        safeSet('flcc_wordle_played_' + day, '1');
+          guesses: dayState.guesses.slice()
+        }));
       }
 
       let store = loadStore();
@@ -1383,7 +1388,7 @@
       const modePillBtn = document.getElementById('modePillBtn');
       const modePillText = document.getElementById('modePillText');
       const viewResultsPillBtn = document.getElementById('viewResultsPillBtn');
-      const boardEl = document.getElementById('wordleBoard');
+      const boardEl = document.getElementById('doordleBoard');
       const keyboardEl = document.getElementById('keyboard');
       const toastMsgEl = document.getElementById('toastMsg');
       const liveRegionEl = document.getElementById('liveRegion');
@@ -1459,7 +1464,7 @@
           rootEl.removeAttribute('data-contrast');
           hcToggleBtn.setAttribute('aria-pressed', 'false');
         }
-        if (persist) safeSet(HC_KEY, enabled ? '1' : '0');
+        if (persist) safeSet(HC_KEY, enabled ? 'true' : 'false');
         if (resultsModal.classList.contains('open')) {
           resultsEmojiPreviewEl.textContent = buildEmojiGrid(getOrInitDayState(activeDay));
         }
@@ -1476,7 +1481,7 @@
       });
 
       /* ===================================================================
-         Helpers & Announcements
+         Helpers & Accessibility Announcements
          =================================================================== */
       function prefersReducedMotion() {
         try {
@@ -1502,7 +1507,7 @@
       }
 
       /* ===================================================================
-         Build Grid & QWERTY Keyboard
+         Build 6x5 Grid & QWERTY Keyboard
          =================================================================== */
       const KB_ROWS = [
         ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
@@ -1514,14 +1519,14 @@
         boardEl.innerHTML = '';
         for (let r = 0; r < MAX_GUESSES; r++) {
           const rowEl = document.createElement('div');
-          rowEl.className = 'wordle-row';
+          rowEl.className = 'doordle-row';
           rowEl.dataset.row = String(r);
           rowEl.setAttribute('role', 'group');
           rowEl.setAttribute('aria-label', 'Row ' + (r + 1));
 
           for (let c = 0; c < WORD_LEN; c++) {
             const tile = document.createElement('div');
-            tile.className = 'wordle-tile';
+            tile.className = 'doordle-tile';
             tile.dataset.row = String(r);
             tile.dataset.col = String(c);
             rowEl.appendChild(tile);
@@ -1572,11 +1577,11 @@
       const STATE_RANK = { absent: 1, present: 2, correct: 3 };
 
       function getTileEl(r, c) {
-        return boardEl.querySelector('.wordle-tile[data-row="' + r + '"][data-col="' + c + '"]');
+        return boardEl.querySelector('.doordle-tile[data-row="' + r + '"][data-col="' + c + '"]');
       }
 
       function getRowEl(r) {
-        return boardEl.querySelector('.wordle-row[data-row="' + r + '"]');
+        return boardEl.querySelector('.doordle-row[data-row="' + r + '"]');
       }
 
       function renderDay() {
@@ -1587,9 +1592,9 @@
         viewResultsPillBtn.classList.toggle('visible', dayState.status !== 'playing');
 
         const keyStates = {};
-        boardEl.querySelectorAll('.wordle-tile').forEach(function (t) {
+        boardEl.querySelectorAll('.doordle-tile').forEach(function (t) {
           t.textContent = '';
-          t.className = 'wordle-tile';
+          t.className = 'doordle-tile';
           t.removeAttribute('aria-label');
         });
 
@@ -1742,7 +1747,7 @@
 
         if (won || lost) {
           recordOfficialStats(activeDay, won, dayState.guesses.length);
-          saveHubCompletionMarkers(activeDay, dayState);
+          saveHubCompletionMarker(activeDay, dayState);
         }
 
         const srSummary = guess.split('').map(function (ch, idx) {
@@ -1793,7 +1798,7 @@
               openResultsModal();
             }, reduced ? 120 : 950);
           } else if (lost) {
-            const answer = reconstructAnswer(activeDay);
+            const answer = resolvePuzzleAnswer(activeDay);
             showToast('The word was ' + answer, 2200);
             window.setTimeout(function () {
               openResultsModal();
@@ -1803,7 +1808,7 @@
       }
 
       /* ===================================================================
-         Emoji Grid & Clipboard Share
+         Emoji Grid & Two-Tier Clipboard Share
          =================================================================== */
       function buildEmojiGrid(dayState) {
         const isHC = rootEl.getAttribute('data-contrast') === 'high';
@@ -1823,7 +1828,7 @@
       function buildShareText(dayState) {
         const puzzle = PUZZLES[activeDay];
         const score = dayState.status === 'won' ? (dayState.guesses.length + '/6') : 'X/6';
-        const header = 'FLCC Wordle \u2014 ' + puzzle.shortLabel + ' \u2022 ' + score;
+        const header = 'Doordle \u2014 ' + puzzle.shortLabel + ' ' + score;
         return header + '\n\n' + buildEmojiGrid(dayState) + '\n\nhttps://thirdfloordoordle.com';
       }
 
@@ -1856,7 +1861,7 @@
       }
 
       /* ===================================================================
-         Modals (Help, Archive Picker, Stats, Results)
+         Modals (How to Play, Archive Picker, Stats, Results)
          =================================================================== */
       let lastFocused = null;
 
@@ -1921,7 +1926,7 @@
 
       function openResultsModal() {
         const dayState = getOrInitDayState(activeDay);
-        const answer = reconstructAnswer(activeDay);
+        const answer = resolvePuzzleAnswer(activeDay);
         const praises = ['Genius!', 'Magnificent!', 'Impressive!', 'Splendid!', 'Great!', 'Solved!'];
 
         resultsTitleEl.textContent = dayState.status === 'won'
@@ -1989,7 +1994,7 @@
       }
 
       /* ===================================================================
-         Event Listeners
+         Event Listeners & Physical Keyboard Support
          =================================================================== */
       helpBtn.addEventListener('click', function () { openModal(helpModal, closeHelpBtn); });
       closeHelpBtn.addEventListener('click', function () { closeModal(helpModal); });
@@ -2072,11 +2077,13 @@
       });
 
       /* ===================================================================
-         Initialize App
+         Initialize Application
          =================================================================== */
       const savedTheme = safeGet(THEME_KEY);
       applyTheme(savedTheme === 'dark' ? 'dark' : 'light', false);
-      applyHighContrast(safeGet(HC_KEY) === '1', false);
+
+      const savedHC = safeGet(HC_KEY);
+      applyHighContrast(savedHC === 'true' || savedHC === '1', false);
 
       if (isPreview) {
         const homeHref = '../?testDay=' + testDay;

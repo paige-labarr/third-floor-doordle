@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="Happy Holidays — Play FLCC Wordle, FLCC Connections, and FLCC Lakerdoku." />
+  <meta name="description" content="Happy Holidays — Play Doordle, FLCConnections, and Lakerdoku." />
   <title>Happy Holidays</title>
 
   <!-- Snowflake Emoji Favicon via Inline SVG Data URI -->
@@ -24,7 +24,7 @@
       --font-body: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-      /* Page & Card Surfaces (Pale Ice Blue & Crisp White) */
+      /* Page & Card Surfaces */
       --bg-page: #EEF6FD;
       --bg-glow: radial-gradient(ellipse 95% 50% at 50% -10%, rgba(15, 76, 158, 0.14) 0%, rgba(96, 176, 255, 0.08) 52%, rgba(238, 246, 253, 0) 100%);
       --bg-card: #FFFFFF;
@@ -74,9 +74,9 @@
       --starlight-dot: rgba(14, 74, 153, 0.15);
 
       /* Game Mini-Graphic Tokens */
-      --wordle-green: #538d4e;
-      --wordle-gray: #787c7e;
-      --wordle-yellow: #b59f3b;
+      --tile-green: #538d4e;
+      --tile-gray: #787c7e;
+      --tile-yellow: #b59f3b;
 
       --conn-yellow: #f9df6d;
       --conn-green: #a0c35a;
@@ -166,7 +166,7 @@
     body {
       min-height: 100dvh;
       background-color: var(--bg-page);
-      /* Subtle, completely static winter starlight dots + soft blue sky glow */
+      /* Subtle, static winter starlight dots + soft blue sky glow */
       background-image:
         radial-gradient(circle at 12% 8%, var(--starlight-dot) 1.6px, transparent 2.2px),
         radial-gradient(circle at 86% 11%, var(--starlight-dot) 2px, transparent 2.6px),
@@ -408,21 +408,21 @@
     }
 
     /* ---------------------------------------------------------------------
-       Mini-Graphic 1: FLCC Wordle (5 Blank Classic Tiles + FLCC Star)
+       Mini-Graphic 1: Doordle (5 Blank Classic Tiles + FLCC Star)
        --------------------------------------------------------------------- */
-    .mini-wordle-wrap {
+    .mini-doordle-wrap {
       display: inline-flex;
       align-items: center;
       gap: 8px;
     }
 
-    .mini-wordle {
+    .mini-doordle {
       display: inline-flex;
       gap: 5px;
       align-items: center;
     }
 
-    .w-tile {
+    .sq-tile {
       width: 26px;
       height: 26px;
       border-radius: 6px;
@@ -430,9 +430,9 @@
       box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.14);
     }
 
-    .w-tile.w-green  { background-color: var(--wordle-green); }
-    .w-tile.w-gray   { background-color: var(--wordle-gray); }
-    .w-tile.w-yellow { background-color: var(--wordle-yellow); }
+    .sq-tile.t-green  { background-color: var(--tile-green); }
+    .sq-tile.t-gray   { background-color: var(--tile-gray); }
+    .sq-tile.t-yellow { background-color: var(--tile-yellow); }
 
     .flcc-star {
       width: 25px;
@@ -442,7 +442,7 @@
     }
 
     /* ---------------------------------------------------------------------
-       Mini-Graphic 2: FLCC Connections (4 Colored Bars + Accessible Shapes)
+       Mini-Graphic 2: FLCConnections (4 Colored Bars + Accessible Shapes)
        --------------------------------------------------------------------- */
     .mini-connections {
       display: flex;
@@ -470,7 +470,7 @@
     .c-bar.c-purple { background-color: var(--conn-purple); }
 
     /* ---------------------------------------------------------------------
-       Mini-Graphic 3: FLCC Lakerdoku (2x3 Mini Sudoku Grid: L A K / E R S)
+       Mini-Graphic 3: Lakerdoku (2x3 Mini Sudoku Grid: L A K / E R S)
        --------------------------------------------------------------------- */
     .mini-lakerdoku {
       display: grid;
@@ -612,7 +612,7 @@
       .game-card {
         padding: 16px;
       }
-      .w-tile {
+      .sq-tile {
         width: 23px;
         height: 23px;
       }
@@ -623,7 +623,7 @@
   <!-- Visually Hidden Skip-to-Main-Content Link -->
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- Dismissible Preview Banner (Visible only when ?testDay=1..18 is active) -->
+  <!-- Dismissible Preview Banner (Visible only when ?testDay=0..18 is active) -->
   <div id="previewBanner" class="preview-banner" role="status" aria-live="polite">
     <div class="preview-banner-inner">
       <span id="previewBannerText">Previewing December 1</span>
@@ -649,17 +649,17 @@
     <!-- Main Games Stack -->
     <main id="main-content" class="games-stack" aria-label="Holiday Puzzle Games">
 
-      <!-- Card 1: FLCC Wordle -->
-      <article class="game-card" aria-labelledby="wordleTitle">
+      <!-- Card 1: Doordle -->
+      <article class="game-card" aria-labelledby="doordleTitle">
         <div class="card-top-row">
-          <!-- 5 Blank Classic Wordle Tiles + Two-Tone FLCC Navy & Green Star -->
-          <div class="mini-wordle-wrap" aria-hidden="true">
-            <div class="mini-wordle">
-              <span class="w-tile w-green"></span>
-              <span class="w-tile w-gray"></span>
-              <span class="w-tile w-yellow"></span>
-              <span class="w-tile w-green"></span>
-              <span class="w-tile w-gray"></span>
+          <!-- 5 Blank Classic Tiles + Two-Tone FLCC Navy & Green Star -->
+          <div class="mini-doordle-wrap" aria-hidden="true">
+            <div class="mini-doordle">
+              <span class="sq-tile t-green"></span>
+              <span class="sq-tile t-gray"></span>
+              <span class="sq-tile t-yellow"></span>
+              <span class="sq-tile t-green"></span>
+              <span class="sq-tile t-gray"></span>
             </div>
             <svg class="flcc-star" viewBox="0 0 24 24" focusable="false">
               <path fill="#003865" d="M12 1.75l2.75 6.45 6.95.62-5.26 4.58 1.58 6.85L12 16.65l-6.02 3.6 1.58-6.85-5.26-4.58 6.95-.62L12 1.75z" />
@@ -667,11 +667,11 @@
             </svg>
           </div>
 
-          <span id="wordleStatus" class="status-pill">Practice Mode Open</span>
+          <span id="doordleStatus" class="status-pill">Practice Mode Open</span>
         </div>
 
         <div class="card-body">
-          <h2 id="wordleTitle" class="card-title">FLCC Wordle</h2>
+          <h2 id="doordleTitle" class="card-title">Doordle</h2>
           <div class="dates-strip">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -679,17 +679,17 @@
               <line x1="8" y1="2" x2="8" y2="6"></line>
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
-            <span>New game every day &bull; Dec 1&ndash;18</span>
+            <span>New game every day, Dec 1&ndash;18</span>
           </div>
         </div>
 
-        <a id="wordleBtn" href="./wordle/" class="play-btn">
-          <span>Play Wordle</span>
+        <a id="doordleBtn" href="./doordle/" class="play-btn">
+          <span>Play Doordle</span>
           <span class="btn-arrow" aria-hidden="true">&rarr;</span>
         </a>
       </article>
 
-      <!-- Card 2: FLCC Connections -->
+      <!-- Card 2: FLCConnections -->
       <article class="game-card" aria-labelledby="connectionsTitle">
         <div class="card-top-row">
           <!-- 4 Authentic Connections Colored Bars + Dark Accessible Shapes -->
@@ -704,7 +704,7 @@
         </div>
 
         <div class="card-body">
-          <h2 id="connectionsTitle" class="card-title">FLCC Connections</h2>
+          <h2 id="connectionsTitle" class="card-title">FLCConnections</h2>
           <div class="dates-strip">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -712,20 +712,20 @@
               <line x1="8" y1="2" x2="8" y2="6"></line>
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
-            <span>New boards drop &bull; Dec 1, Dec 8 &amp; Dec 15</span>
+            <span>New boards drop Dec 1, Dec 8 &amp; Dec 15</span>
           </div>
         </div>
 
         <a id="connectionsBtn" href="./connections/" class="play-btn">
-          <span>Play Connections</span>
+          <span>Play FLCConnections</span>
           <span class="btn-arrow" aria-hidden="true">&rarr;</span>
         </a>
       </article>
 
-      <!-- Card 3: FLCC Lakerdoku -->
+      <!-- Card 3: Lakerdoku -->
       <article class="game-card" aria-labelledby="lakerdokuTitle">
         <div class="card-top-row">
-          <!-- Compact 2x3 Sudoku Mini-Grid (L A K / E R S) in Crisp Shades of Blue -->
+          <!-- Compact 2x3 Mini Grid (L A K / E R S) in Crisp Shades of Blue -->
           <div class="mini-lakerdoku" aria-hidden="true">
             <span class="d-cell">L</span>
             <span class="d-cell is-alt">A</span>
@@ -739,7 +739,7 @@
         </div>
 
         <div class="card-body">
-          <h2 id="lakerdokuTitle" class="card-title">FLCC Lakerdoku</h2>
+          <h2 id="lakerdokuTitle" class="card-title">Lakerdoku</h2>
           <div class="dates-strip">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -747,7 +747,7 @@
               <line x1="8" y1="2" x2="8" y2="6"></line>
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
-            <span>New boards drop &bull; Dec 1, Dec 8 &amp; Dec 15</span>
+            <span>New puzzles drop Dec 1, Dec 8 &amp; Dec 15</span>
           </div>
         </div>
 
@@ -843,7 +843,7 @@
       });
 
       /* ===================================================================
-         Eastern Time (America/New_York) & ?testDay=1..18 Preview Logic
+         Eastern Time (America/New_York) & ?testDay=0..18 Preview Logic
          =================================================================== */
       function getEasternDateParts() {
         try {
@@ -875,9 +875,9 @@
         try {
           const params = new URLSearchParams(window.location.search);
           const raw = params.get('testDay');
-          if (!raw) return null;
+          if (raw === null) return null;
           const parsed = parseInt(raw, 10);
-          if (parsed >= 1 && parsed <= 18 && String(parsed) === raw.trim()) {
+          if (parsed >= 0 && parsed <= 18 && String(parsed) === raw.trim()) {
             return parsed;
           }
         } catch (err) {
@@ -889,15 +889,25 @@
       /* ===================================================================
          Local Completion Checkers
          =================================================================== */
-      function isWordlePlayedToday(year, day) {
+      function isDoordlePlayedToday(year, day) {
+        const mainStore = safeParseJSON(safeGetItem('flcc_doordle_v1'));
+        if (mainStore && mainStore.days && mainStore.days[day]) {
+          const dState = mainStore.days[day];
+          if (dState.status === 'won' || dState.status === 'lost' || dState.completed === true) {
+            return true;
+          }
+        }
+
         const keys = [
+          'doordle_v1_day' + day,
           'doordle_' + year + '_dec_' + day,
-          'flcc_wordle_dec_' + day,
-          'flcc_wordle_' + year + '_dec_' + day
+          'flcc_doordle_dec_' + day
         ];
 
         for (let i = 0; i < keys.length; i++) {
-          const data = safeParseJSON(safeGetItem(keys[i]));
+          const raw = safeGetItem(keys[i]);
+          if (raw === '1' || raw === 'true') return true;
+          const data = safeParseJSON(raw);
           if (!data) continue;
           if (data.status === 'won' || data.status === 'lost' || data.completed === true || data.gameOver === true) {
             return true;
@@ -929,8 +939,18 @@
       }
 
       function isLakerdokuWeekSolved(weekNum) {
-        const data = safeParseJSON(safeGetItem('lakerdoku_v1_week' + weekNum));
-        return Boolean(data && data.completed === true);
+        const key = 'week' + weekNum;
+        const mainStore = safeParseJSON(safeGetItem('flcc_lakerdoku_v1'));
+        if (mainStore && typeof mainStore === 'object') {
+          if (mainStore.boards && mainStore.boards[key] && mainStore.boards[key].completed === true) {
+            return true;
+          }
+          if (mainStore.stats && Array.isArray(mainStore.stats.solvedWeeks) && mainStore.stats.solvedWeeks.indexOf(key) !== -1) {
+            return true;
+          }
+        }
+        const marker = safeParseJSON(safeGetItem('lakerdoku_v1_week' + weekNum));
+        return Boolean(marker && marker.completed === true);
       }
 
       /* ===================================================================
@@ -945,8 +965,8 @@
         const est = getEasternDateParts();
         const testDay = getTestDayParam();
 
-        const effectiveMonth = testDay !== null ? 12 : est.month;
-        const effectiveDay = testDay !== null ? testDay : est.day;
+        const effectiveMonth = testDay !== null ? (testDay === 0 ? 11 : 12) : est.month;
+        const effectiveDay = testDay !== null ? (testDay === 0 ? 30 : testDay) : est.day;
 
         // Show dismissible preview banner & forward ?testDay=X to all three game links
         if (testDay !== null) {
@@ -954,30 +974,32 @@
           const previewBannerText = document.getElementById('previewBannerText');
           const dismissPreviewBtn = document.getElementById('dismissPreviewBtn');
 
-          previewBannerText.textContent = 'Previewing December ' + testDay;
+          previewBannerText.textContent = testDay === 0
+            ? 'Previewing Practice Mode'
+            : ('Previewing December ' + testDay);
           previewBanner.classList.add('visible');
 
           dismissPreviewBtn.addEventListener('click', function () {
             previewBanner.classList.remove('visible');
           });
 
-          document.getElementById('wordleBtn').setAttribute('href', './wordle/?testDay=' + testDay);
+          document.getElementById('doordleBtn').setAttribute('href', './doordle/?testDay=' + testDay);
           document.getElementById('connectionsBtn').setAttribute('href', './connections/?testDay=' + testDay);
           document.getElementById('lakerdokuBtn').setAttribute('href', './lakerdoku/?testDay=' + testDay);
         }
 
-        // 1. FLCC Wordle Status Pill
-        const wordleStatusEl = document.getElementById('wordleStatus');
+        // 1. Doordle Status Pill
+        const doordleStatusEl = document.getElementById('doordleStatus');
         if (effectiveMonth === 12 && effectiveDay >= 1 && effectiveDay <= 18) {
-          if (testDay === null && isWordlePlayedToday(est.year, effectiveDay)) {
-            setStatusPill(wordleStatusEl, '\u2713 Played Today', true);
+          if (testDay === null && isDoordlePlayedToday(est.year, effectiveDay)) {
+            setStatusPill(doordleStatusEl, '\u2713 Played Today', true);
           } else {
-            setStatusPill(wordleStatusEl, 'Dec ' + effectiveDay + ' Live', false);
+            setStatusPill(doordleStatusEl, 'Dec ' + effectiveDay + ' Live', false);
           }
         } else if (effectiveMonth === 12 && effectiveDay > 18) {
-          setStatusPill(wordleStatusEl, 'All Games Open', false);
+          setStatusPill(doordleStatusEl, 'All Games Open', false);
         } else {
-          setStatusPill(wordleStatusEl, 'Practice Mode Open', false);
+          setStatusPill(doordleStatusEl, 'Practice Mode Open', false);
         }
 
         // Determine active week (Dec 1-7 = Week 1, Dec 8-14 = Week 2, Dec 15-18 = Week 3)
@@ -991,7 +1013,7 @@
           activeWeek = 3;
         }
 
-        // 2. FLCC Connections Status Pill
+        // 2. FLCConnections Status Pill
         const connectionsStatusEl = document.getElementById('connectionsStatus');
         if (isPostEvent) {
           setStatusPill(connectionsStatusEl, 'All Games Open', false);
@@ -1005,7 +1027,7 @@
           setStatusPill(connectionsStatusEl, 'Practice Mode Open', false);
         }
 
-        // 3. FLCC Lakerdoku Status Pill
+        // 3. Lakerdoku Status Pill
         const lakerdokuStatusEl = document.getElementById('lakerdokuStatus');
         if (isPostEvent) {
           setStatusPill(lakerdokuStatusEl, 'All Games Open', false);
