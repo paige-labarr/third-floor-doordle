@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="Play FLCC Connections — sort 16 campus-themed words into 4 secret groups at thirdfloordoordle.com." />
-  <title>FLCC Connections — Third Floor Doordle</title>
+  <meta name="description" content="Play FLCConnections — sort 16 campus-themed words into 4 secret groups at thirdfloordoordle.com." />
+  <title>FLCConnections — Third Floor Doordle</title>
 
   <!-- Snowflake Emoji Favicon via Inline SVG Data URI -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%E2%9D%84%EF%B8%8F%3C/text%3E%3C/svg%3E" />
@@ -967,10 +967,10 @@
           </a>
         </div>
 
-        <h1 class="game-title">FLCC Connections</h1>
+        <h1 class="game-title">FLCConnections</h1>
 
         <div class="header-actions">
-          <button id="helpBtn" class="icon-btn" type="button" aria-label="How to play FLCC Connections">?</button>
+          <button id="helpBtn" class="icon-btn" type="button" aria-label="How to play FLCConnections">?</button>
           <button id="themeToggleBtn" class="icon-btn" type="button" aria-pressed="false" aria-label="Switch to dark mode">
             <span id="themeIcon" aria-hidden="true"></span>
           </button>
@@ -996,7 +996,7 @@
     <p id="instructionText" class="instruction-text">Create four groups of four!</p>
 
     <!-- Main Puzzle Landmark -->
-    <main id="mainBoard" class="board-main" aria-label="FLCC Connections puzzle board">
+    <main id="mainBoard" class="board-main" aria-label="FLCConnections puzzle board">
       <div id="solvedStack" class="solved-stack" aria-label="Solved categories"></div>
       <div id="tileGrid" class="tile-grid" role="group" aria-label="Unsolved word tiles"></div>
     </main>
@@ -1857,7 +1857,7 @@
       function buildShareText(st) {
         const lines = buildEmojiLines(st);
         return [
-          'FLCC Connections \u2014 ' + currentBoard.label,
+          'FLCConnections \u2014 ' + currentBoard.label,
           lines.join('\n'),
           'https://thirdfloordoordle.com'
         ].join('\n\n');
