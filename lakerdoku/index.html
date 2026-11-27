@@ -1,0 +1,2599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Play FLCC Lakerdoku — a 6x6 Mini Sudoku holiday puzzle in L-A-K-E-R-S or 1-6 mode at thirdfloordoordle.com." />
+  <title>FLCC Lakerdoku — Third Floor Doordle</title>
+
+  <!-- Snowflake Emoji Favicon via Inline SVG Data URI -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%E2%9D%84%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+
+  <!-- Google Fonts: Outfit (Headings), Lato (Body), JetBrains Mono (Grid, Badges, Timers, Buttons) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Lato:wght@400;700;900&family=Outfit:wght@700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =====================================================================
+       Design Tokens — Light Mode (Default)
+       Winter Shades of Blue | WCAG 2.2 AA+ & AAA Contrast Verified
+       ===================================================================== */
+    :root {
+      --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-body: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      /* Page & Surfaces */
+      --bg-page: #f0f7ff;
+      --bg-surface: #ffffff;
+      --bg-surface-alt: #e3f0fd;
+      --bg-control: #ffffff;
+      --bg-control-hover: #dbeafe;
+
+      /* Typography (WCAG AAA) */
+      --text-primary: #0f2442;       /* ~14.7:1 on #f0f7ff */
+      --text-secondary: #26456b;     /* ~9.2:1 on #f0f7ff */
+      --text-muted: #405e82;         /* ~6.6:1 on #ffffff */
+
+      /* Brand & Accents */
+      --brand-blue: #1d4ed8;         /* ~6.4:1 on #ffffff */
+      --brand-blue-dark: #004b87;    /* ~8.6:1 on #ffffff */
+      --brand-cerulean: #0284c7;
+      --brand-pill-bg: #dbeafe;
+      --brand-pill-border: #60a5fa;
+      --brand-pill-text: #0f2442;
+
+      /* Borders */
+      --border-subtle: #c5dcf5;
+      --border-control: #6b8db5;
+      --border-grid-thin: #9cb9d9;
+      --border-grid-bold: #0f2442;
+
+      /* Board Cell States */
+      --cell-bg: #ffffff;
+      --cell-given-bg: #edf4fc;
+      --cell-given-text: #0f2442;
+      --cell-user-text: #1d4ed8;
+      --cell-hint-text: #0369a1;
+      --cell-peer-bg: #e2effc;
+      --cell-same-bg: #c6e0fb;
+      --cell-selected-bg: #1d4ed8;
+      --cell-selected-text: #ffffff;
+      --cell-note-text: #395575;
+      --cell-selected-note: #e0f2fe;
+
+      /* Conflict State (Color + Corner ! Badge + Wavy Underline) */
+      --conflict-bg: #fde8e8;
+      --conflict-text: #9b1c1c;      /* ~7.8:1 on #fde8e8 */
+      --conflict-border: #c53030;
+      --conflict-selected-bg: #9b1c1c;
+
+      /* Notes Active Toggle */
+      --notes-active-bg: #0284c7;
+      --notes-active-border: #0369a1;
+      --notes-active-text: #ffffff;
+
+      /* Toast & Preview Banner */
+      --toast-bg: #0f2442;
+      --toast-text: #ffffff;
+      --preview-bg: #dbeafe;
+      --preview-border: #1d4ed8;
+      --preview-text: #0f2442;
+
+      /* Focus & Shadows */
+      --focus-ring: #1d4ed8;
+      --shadow-sm: 0 2px 8px rgba(15, 36, 66, 0.08);
+      --shadow-md: 0 12px 30px rgba(15, 36, 66, 0.2);
+
+      /* Radii */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+    }
+
+    /* =====================================================================
+       Design Tokens — Dark Mode (Synced via 'thirdfloordoordle_theme')
+       ===================================================================== */
+    :root[data-theme="dark"] {
+      --bg-page: #081426;
+      --bg-surface: #0f223d;
+      --bg-surface-alt: #163054;
+      --bg-control: #12294a;
+      --bg-control-hover: #1a3a66;
+
+      --text-primary: #f0f7ff;
+      --text-secondary: #cbd9ec;
+      --text-muted: #94aecb;
+
+      --brand-blue: #60a5fa;
+      --brand-blue-dark: #38bdf8;
+      --brand-cerulean: #38bdf8;
+      --brand-pill-bg: #153159;
+      --brand-pill-border: #60a5fa;
+      --brand-pill-text: #e0f2fe;
+
+      --border-subtle: #23426e;
+      --border-control: #4f75a8;
+      --border-grid-thin: #345685;
+      --border-grid-bold: #7cb6f7;
+
+      --cell-bg: #0d1f38;
+      --cell-given-bg: #153054;
+      --cell-given-text: #f0f7ff;
+      --cell-user-text: #60a5fa;
+      --cell-hint-text: #38bdf8;
+      --cell-peer-bg: #173660;
+      --cell-same-bg: #224c85;
+      --cell-selected-bg: #1d4ed8;
+      --cell-selected-text: #ffffff;
+      --cell-note-text: #b7cde6;
+      --cell-selected-note: #e0f2fe;
+
+      --conflict-bg: #4c151b;
+      --conflict-text: #fecaca;
+      --conflict-border: #f87171;
+      --conflict-selected-bg: #991b1b;
+
+      --notes-active-bg: #38bdf8;
+      --notes-active-border: #7dd3fc;
+      --notes-active-text: #081426;
+
+      --toast-bg: #f0f7ff;
+      --toast-text: #081426;
+      --preview-bg: #132d54;
+      --preview-border: #60a5fa;
+      --preview-text: #f0f7ff;
+
+      --focus-ring: #38bdf8;
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.36);
+      --shadow-md: 0 14px 36px rgba(0, 0, 0, 0.6);
+    }
+
+    /* =====================================================================
+       Reset & Accessibility Primitives
+       ===================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      min-height: 100dvh;
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.42;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .skip-link {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link:focus {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 600;
+      width: auto;
+      height: auto;
+      padding: 10px 16px;
+      clip: auto;
+      background-color: var(--text-primary);
+      color: var(--bg-page);
+      font-family: var(--font-display);
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* =====================================================================
+       Preview Mode Banner (?testDay / ?testWeek)
+       ===================================================================== */
+    .preview-banner {
+      display: none;
+      width: 100%;
+      background-color: var(--preview-bg);
+      color: var(--preview-text);
+      border-bottom: 2px solid var(--preview-border);
+      padding: 6px 12px;
+    }
+    .preview-banner.visible { display: block; }
+
+    .preview-banner-inner {
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    .preview-dismiss {
+      min-width: 36px;
+      min-height: 36px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--preview-border);
+      background: transparent;
+      color: var(--preview-text);
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    /* =====================================================================
+       Floating Toast Notification
+       ===================================================================== */
+    .toast-slot {
+      position: fixed;
+      top: 76px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 350;
+      pointer-events: none;
+    }
+
+    .toast-msg {
+      background-color: var(--toast-bg);
+      color: var(--toast-text);
+      padding: 9px 18px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      white-space: nowrap;
+    }
+    .toast-msg.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =====================================================================
+       App Shell — Mobile-First Single-Screen Layout (max-width: 480px)
+       ===================================================================== */
+    .app-shell {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100dvh;
+      padding: 8px 12px calc(16px + env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* =====================================================================
+       Top Header Landmark
+       ===================================================================== */
+    .top-header {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-bottom: 8px;
+      border-bottom: 1.5px solid var(--border-subtle);
+    }
+
+    .header-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .back-link {
+      min-height: 44px;
+      padding: 0 8px;
+      border-radius: var(--radius-sm);
+      color: var(--brand-blue);
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.86rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+    .back-link:hover { background-color: var(--bg-surface-alt); }
+
+    .game-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.18rem, 4.8vw, 1.44rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      text-align: center;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border-control);
+      background-color: var(--bg-control);
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      font-size: 0.96rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+    .icon-btn:hover { background-color: var(--bg-control-hover); }
+    .icon-btn:active { transform: scale(0.95); }
+
+    /* Center Tappable Week / Status Pill */
+    .week-pill-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .week-pill-btn {
+      min-height: 36px;
+      padding: 5px 14px;
+      border-radius: var(--radius-pill);
+      background-color: var(--brand-pill-bg);
+      border: 1.5px solid var(--brand-pill-border);
+      color: var(--brand-pill-text);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .week-pill-btn:hover {
+      border-color: var(--brand-blue);
+      background-color: var(--bg-surface-alt);
+    }
+
+    .results-pill-btn {
+      display: none;
+      min-height: 36px;
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      background-color: var(--brand-blue);
+      border: 1.5px solid var(--brand-blue);
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    :root[data-theme="dark"] .results-pill-btn {
+      color: #081426;
+    }
+    .results-pill-btn.visible { display: inline-flex; align-items: center; }
+
+    /* =====================================================================
+       Status Bar: Symbol Mode Toggle (L-A-K-E-R-S vs 1-6) + Timer & Hints
+       ===================================================================== */
+    .status-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mode-switch {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: var(--radius-pill);
+      background-color: var(--bg-surface-alt);
+      border: 1.5px solid var(--border-control);
+    }
+
+    .mode-btn {
+      min-height: 34px;
+      padding: 0 11px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .mode-btn[aria-pressed="true"] {
+      background-color: var(--brand-blue);
+      color: #ffffff;
+    }
+    :root[data-theme="dark"] .mode-btn[aria-pressed="true"] {
+      background-color: var(--brand-blue);
+      color: #081426;
+    }
+
+    .stats-inline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .stat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Practice New Board Bar */
+    .practice-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 7px 11px;
+      border-radius: var(--radius-md);
+      background-color: var(--bg-surface-alt);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+    .practice-bar.visible { display: flex; }
+
+    .new-practice-btn {
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--brand-blue);
+      background-color: var(--bg-surface);
+      color: var(--brand-blue);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      touch-action: manipulation;
+    }
+    .new-practice-btn:hover { background-color: var(--bg-control-hover); }
+
+    /* =====================================================================
+       6x6 Sudoku Board (Six 2x3 Bold-Bordered Boxes)
+       ===================================================================== */
+    .board-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    .sudoku-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      width: min(100%, 360px, 47dvh);
+      aspect-ratio: 1 / 1;
+      border: 3px solid var(--border-grid-bold);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background-color: var(--border-grid-bold);
+      box-shadow: var(--shadow-sm);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .sudoku-cell {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-right: 1px solid var(--border-grid-thin);
+      border-bottom: 1px solid var(--border-grid-thin);
+      background-color: var(--cell-bg);
+      color: var(--cell-user-text);
+      font-family: var(--font-mono);
+      font-size: clamp(1.2rem, 5.2vw, 1.7rem);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      touch-action: manipulation;
+      transition: background-color 0.1s ease, color 0.1s ease;
+    }
+
+    /* Bold 2x3 Box Borders:
+       - Vertical bold divider after col 2 (index 2)
+       - Horizontal bold dividers after row 1 (index 1) and row 3 (index 3) */
+    .sudoku-cell[data-col="2"] { border-right: 3px solid var(--border-grid-bold); }
+    .sudoku-cell[data-col="5"] { border-right: none; }
+    .sudoku-cell[data-row="1"],
+    .sudoku-cell[data-row="3"] { border-bottom: 3px solid var(--border-grid-bold); }
+    .sudoku-cell[data-row="5"] { border-bottom: none; }
+
+    /* Given Clues */
+    .sudoku-cell.is-given {
+      background-color: var(--cell-given-bg);
+      color: var(--cell-given-text);
+    }
+
+    /* Hinted Cells */
+    .sudoku-cell.is-hinted {
+      color: var(--cell-hint-text);
+    }
+
+    /* Peer Highlight (Same row, column, or 2x3 box) */
+    .sudoku-cell.is-peer {
+      background-color: var(--cell-peer-bg);
+    }
+
+    /* Matching Value Highlight */
+    .sudoku-cell.is-same-value {
+      background-color: var(--cell-same-bg);
+    }
+
+    /* Non-Color Conflict State (Tint + Corner ! Badge + Wavy Underline) */
+    .sudoku-cell.is-conflict {
+      background-color: var(--conflict-bg);
+      color: var(--conflict-text);
+    }
+    .sudoku-cell.is-conflict .cell-val {
+      text-decoration: underline wavy var(--conflict-border);
+      text-underline-offset: 2px;
+    }
+    .sudoku-cell.is-conflict::after {
+      content: "!";
+      position: absolute;
+      top: 2px;
+      right: 3px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: var(--conflict-border);
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      line-height: 14px;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    /* Selected Cell */
+    .sudoku-cell.is-selected {
+      background-color: var(--cell-selected-bg);
+      color: var(--cell-selected-text);
+      z-index: 2;
+      box-shadow: inset 0 0 0 2px #ffffff;
+    }
+    .sudoku-cell.is-selected.is-conflict {
+      background-color: var(--conflict-selected-bg);
+      color: #ffffff;
+    }
+    .sudoku-cell.is-selected .note-item {
+      color: var(--cell-selected-note);
+    }
+
+    /* Crisp 3x2 Pencil Notes Mini-Grid inside empty cells */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      width: 100%;
+      height: 100%;
+      padding: 2px;
+      align-items: center;
+      justify-items: center;
+      pointer-events: none;
+    }
+
+    .note-item {
+      font-family: var(--font-mono);
+      font-size: clamp(0.56rem, 2.2vw, 0.7rem);
+      font-weight: 700;
+      line-height: 1;
+      color: var(--cell-note-text);
+    }
+
+    /* Entry Pop, Hint Pulse & Celebratory Wave Animations */
+    @keyframes popIn {
+      0% { transform: scale(0.82); }
+      60% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .cell-val.animate-pop {
+      animation: popIn 0.16s ease-out;
+    }
+
+    @keyframes hintGlow {
+      0% { box-shadow: inset 0 0 0 0 var(--brand-cerulean); }
+      45% { box-shadow: inset 0 0 0 4px var(--brand-cerulean); }
+      100% { box-shadow: inset 0 0 0 0 var(--brand-cerulean); }
+    }
+    .sudoku-cell.animate-hint {
+      animation: hintGlow 0.6s ease-out;
+    }
+
+    @keyframes winWave {
+      0%, 100% { transform: scale(1); }
+      45% { transform: scale(1.14); background-color: var(--brand-pill-bg); }
+    }
+    .sudoku-cell.animate-wave {
+      animation: winWave 0.42s ease-out;
+    }
+
+    /* =====================================================================
+       Action Toolbar (Undo, Erase, Notes, Hint)
+       ===================================================================== */
+    .action-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+      width: 100%;
+      max-width: 390px;
+      margin: 0 auto;
+    }
+
+    .action-btn {
+      min-height: 46px;
+      padding: 5px 4px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border-control);
+      background-color: var(--bg-control);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+    .action-btn:hover:not(:disabled) { background-color: var(--bg-control-hover); }
+    .action-btn:active:not(:disabled) { transform: scale(0.96); }
+    .action-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .action-btn.is-active {
+      background-color: var(--notes-active-bg);
+      border-color: var(--notes-active-border);
+      color: var(--notes-active-text);
+    }
+
+    .action-btn svg {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+    }
+
+    /* =====================================================================
+       Bottom 6-Key Input Keypad (Thumb-Friendly >= 48px)
+       ===================================================================== */
+    .input-pad {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      width: 100%;
+      max-width: 390px;
+      margin: 0 auto;
+    }
+
+    .pad-key {
+      min-height: 56px;
+      padding: 4px 2px;
+      border-radius: var(--radius-md);
+      border: 2px solid var(--brand-blue);
+      background-color: var(--bg-surface);
+      color: var(--brand-blue);
+      font-family: var(--font-mono);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      touch-action: manipulation;
+      box-shadow: var(--shadow-sm);
+      transition: background-color 0.12s ease, transform 0.1s ease, opacity 0.15s ease;
+    }
+
+    .pad-key:hover { background-color: var(--bg-control-hover); }
+    .pad-key:active { transform: scale(0.94); }
+
+    .pad-symbol {
+      font-size: 1.32rem;
+      font-weight: 700;
+      line-height: 1.05;
+    }
+
+    .pad-count {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+
+    .pad-key.is-complete {
+      border-color: var(--border-subtle);
+      background-color: var(--bg-surface-alt);
+      color: var(--text-muted);
+      opacity: 0.72;
+    }
+
+    /* =====================================================================
+       Modals (How to Play, Week Picker / Archive, Completion)
+       ===================================================================== */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      background-color: rgba(8, 20, 38, 0.76);
+      padding: 14px;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+
+    .modal-card {
+      width: 100%;
+      max-width: 430px;
+      max-height: 90dvh;
+      overflow-y: auto;
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      border: 2px solid var(--border-control);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .help-list {
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* Week Picker List */
+    .picker-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .picker-btn {
+      width: 100%;
+      min-height: 54px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border-subtle);
+      background-color: var(--bg-surface-alt);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      touch-action: manipulation;
+      text-align: left;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .picker-btn:hover:not(:disabled) { border-color: var(--brand-blue); }
+    .picker-btn.is-current {
+      background-color: var(--brand-blue);
+      border-color: var(--brand-blue);
+      color: #ffffff;
+    }
+    :root[data-theme="dark"] .picker-btn.is-current { color: #081426; }
+    .picker-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .picker-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      display: block;
+    }
+
+    .picker-sub {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      opacity: 0.9;
+      display: block;
+    }
+
+    .picker-badge {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* Stats Summary Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      text-align: center;
+    }
+
+    .stat-box {
+      padding: 10px 6px;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-surface-alt);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .stat-val {
+      font-family: var(--font-mono);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stat-lbl {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* 6x6 Emoji Summary Preview */
+    .emoji-grid-box {
+      background-color: var(--bg-surface-alt);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      text-align: center;
+      font-size: 1.15rem;
+      line-height: 1.32;
+      letter-spacing: 0.1em;
+      white-space: pre-line;
+      user-select: all;
+    }
+
+    .emoji-legend {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .primary-modal-btn {
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background-color: var(--brand-blue);
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+    .primary-modal-btn:hover { background-color: var(--brand-blue-dark); }
+    :root[data-theme="dark"] .primary-modal-btn { color: #081426; }
+
+    .secondary-modal-btn {
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border-control);
+      background-color: var(--bg-control);
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+    .secondary-modal-btn:hover { background-color: var(--bg-control-hover); }
+
+    .share-feedback {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--brand-blue);
+      min-height: 1.2em;
+    }
+
+    /* =====================================================================
+       Reduced Motion Compliance (WCAG 2.3.3)
+       ===================================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .icon-btn:active, .action-btn:active, .pad-key:active {
+        transform: none !important;
+      }
+    }
+
+    @media (max-height: 670px) {
+      .app-shell { gap: 6px; padding-top: 6px; }
+      .sudoku-grid { width: min(100%, 318px, 44dvh); }
+      .pad-key { min-height: 48px; }
+      .action-btn { min-height: 42px; }
+    }
+
+    @media (max-width: 360px) {
+      .app-shell { padding: 6px 8px calc(12px + env(safe-area-inset-bottom)); }
+      .back-link { font-size: 0.8rem; padding: 0 5px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#sudokuGrid" class="skip-link">Skip to Lakerdoku board</a>
+
+  <!-- Dismissible Preview Banner (?testDay / ?testWeek) -->
+  <div id="previewBanner" class="preview-banner" role="status" aria-live="polite">
+    <div class="preview-banner-inner">
+      <span id="previewBannerText">Preview Mode</span>
+      <button id="dismissPreviewBtn" class="preview-dismiss" type="button" aria-label="Dismiss preview banner">&times;</button>
+    </div>
+  </div>
+
+  <!-- Floating Toast Feedback -->
+  <div class="toast-slot" aria-hidden="true">
+    <div id="toastMsg" class="toast-msg"></div>
+  </div>
+
+  <div class="app-shell">
+    <!-- Top Header Landmark -->
+    <header class="top-header">
+      <div class="header-row">
+        <div class="header-left">
+          <a id="allGamesLink" href="../" class="back-link" aria-label="Back to All Games">
+            <span aria-hidden="true">&larr;</span> All Games
+          </a>
+        </div>
+
+        <h1 class="game-title">FLCC Lakerdoku</h1>
+
+        <div class="header-actions">
+          <button id="helpBtn" class="icon-btn" type="button" aria-label="How to play FLCC Lakerdoku">?</button>
+          <button id="themeToggleBtn" class="icon-btn" type="button" aria-pressed="false" aria-label="Switch to dark mode">
+            <span id="themeIcon" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Center Tappable Week / Status Pill + Solved Results Shortcut -->
+      <div class="week-pill-bar">
+        <button id="weekPillBtn" class="week-pill-btn" type="button" aria-label="Choose Practice Mode or an unlocked weekly board">
+          <span id="weekPillText">Practice Mode</span>
+          <span aria-hidden="true">&#9662;</span>
+        </button>
+        <button id="viewResultsPillBtn" class="results-pill-btn" type="button">View Results</button>
+      </div>
+    </header>
+
+    <!-- Status Bar: Symbol Mode Toggle + Timer & Hints -->
+    <div class="status-strip">
+      <div class="mode-switch" role="group" aria-label="Symbol display mode">
+        <button id="modeLakersBtn" class="mode-btn" type="button" aria-pressed="true">L-A-K-E-R-S</button>
+        <button id="modeNumbersBtn" class="mode-btn" type="button" aria-pressed="false">1&ndash;6</button>
+      </div>
+
+      <div class="stats-inline" aria-label="Board timer and hints">
+        <span class="stat-chip" id="timerDisplay" aria-label="Elapsed time">00:00</span>
+        <span aria-hidden="true">&bull;</span>
+        <span class="stat-chip" id="hintsDisplay">Hints: 0</span>
+      </div>
+    </div>
+
+    <!-- Practice New Board Bar -->
+    <div id="practiceBar" class="practice-bar">
+      <span>Unlimited 6&times;6 warmup boards!</span>
+      <button id="newPracticeBtn" class="new-practice-btn" type="button">New Practice Board</button>
+    </div>
+
+    <!-- Main 6x6 Sudoku Grid -->
+    <main class="board-container">
+      <div id="sudokuGrid" class="sudoku-grid" role="grid" aria-label="6 by 6 FLCC Lakerdoku puzzle board"></div>
+    </main>
+
+    <!-- Action Toolbar -->
+    <div class="action-bar" role="group" aria-label="Board actions">
+      <button id="undoBtn" class="action-btn" type="button" disabled aria-label="Undo last move">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 14 4 9 9 4"></polyline>
+          <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+        </svg>
+        <span>Undo</span>
+      </button>
+
+      <button id="eraseBtn" class="action-btn" type="button" aria-label="Erase selected cell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 20H7L3 16c-.6-.6-.6-1.5 0-2.1l9.9-9.9c.6-.6 1.5-.6 2.1 0l6 6c.6.6.6 1.5 0 2.1L15 18"></path>
+          <path d="M6 11l7 7"></path>
+        </svg>
+        <span>Erase</span>
+      </button>
+
+      <button id="notesBtn" class="action-btn" type="button" aria-pressed="false" aria-label="Toggle pencil notes mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 20h9"></path>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+        </svg>
+        <span id="notesBtnLabel">Notes</span>
+      </button>
+
+      <button id="hintBtn" class="action-btn" type="button" aria-label="Reveal one cell as a hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 18h6"></path>
+          <path d="M10 22h4"></path>
+          <path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"></path>
+        </svg>
+        <span>Hint</span>
+      </button>
+    </div>
+
+    <!-- Bottom 6-Key Input Keypad -->
+    <div id="inputPad" class="input-pad" role="group" aria-label="Symbol input keypad"></div>
+
+    <!-- Polite Screen-Reader Live Region -->
+    <div id="liveRegion" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+  <!-- How to Play Modal -->
+  <div id="helpModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="helpTitle" class="modal-title">How to Play Lakerdoku</h2>
+        <button id="closeHelpBtn" class="icon-btn" type="button" aria-label="Close help dialog">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Fill every <strong>row</strong>, <strong>column</strong>, and bold-bordered <strong>2&times;3 box</strong> with each symbol exactly once.</p>
+        <ul class="help-list">
+          <li><strong>L-A-K-E-R-S or 1&ndash;6:</strong> Switch display modes anytime above the grid without losing progress (1=L, 2=A, 3=K, 4=E, 5=R, 6=S).</li>
+          <li><strong>Notes Mode:</strong> Tap <em>Notes</em> (or press <kbd>N</kbd>) to jot down pencil candidates in empty cells. Placing a value automatically clears conflicting notes.</li>
+          <li><strong>Conflict Detection:</strong> Duplicates in the same row, column, or 2&times;3 box show a red tint, a corner <strong>!</strong> badge, and a wavy underline.</li>
+          <li><strong>Weekly Unlocks:</strong> Official boards unlock at midnight EST on <strong>Dec 1 (Easy)</strong>, <strong>Dec 8 (Medium)</strong>, and <strong>Dec 15 (Challenging)</strong>.</li>
+          <li><strong>Keyboard:</strong> Arrow keys move, <kbd>1</kbd>&ndash;<kbd>6</kbd> or <kbd>L A K E R S</kbd> enter symbols, <kbd>Backspace</kbd>/<kbd>0</kbd> erases, <kbd>Z</kbd> undoes.</li>
+        </ul>
+      </div>
+      <div class="modal-actions">
+        <button id="helpGotItBtn" class="primary-modal-btn" type="button">Got It &mdash; Let&rsquo;s Play</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Week Picker / Archive Modal -->
+  <div id="pickerModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="pickerTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="pickerTitle" class="modal-title">Choose a Board</h2>
+        <button id="closePickerBtn" class="icon-btn" type="button" aria-label="Close board picker">&times;</button>
+      </div>
+      <div id="pickerList" class="picker-list"></div>
+      <div class="stats-grid" aria-label="Official Lakerdoku statistics">
+        <div class="stat-box">
+          <div id="pickStatSolved" class="stat-val">0/3</div>
+          <div class="stat-lbl">Weeks Solved</div>
+        </div>
+        <div class="stat-box">
+          <div id="pickStatBest" class="stat-val">--:--</div>
+          <div class="stat-lbl">Best Time</div>
+        </div>
+        <div class="stat-box">
+          <div id="pickStatHints" class="stat-val">0</div>
+          <div class="stat-lbl">Total Hints</div>
+        </div>
+      </div>
+      <p style="font-size:0.76rem; color:var(--text-muted); text-align:center;">Stats track official Weeks 1&ndash;3 (Practice &amp; preview runs are excluded).</p>
+    </div>
+  </div>
+
+  <!-- Completion & Share Modal -->
+  <div id="winModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="winTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="winTitle" class="modal-title">Puzzle Solved!</h2>
+        <button id="closeWinBtn" class="icon-btn" type="button" aria-label="Close completion dialog">&times;</button>
+      </div>
+
+      <div class="modal-body" style="text-align:center;">
+        <p id="winSubtitle" style="font-weight:700; color:var(--text-primary); font-size:0.98rem;"></p>
+        <div id="winEmojiGrid" class="emoji-grid-box" aria-label="6 by 6 puzzle completion emoji summary"></div>
+        <div class="emoji-legend">&#x1F7E6; Given &bull; &#x2744;&#xFE0F; Solved &bull; &#x1F4A1; Hint</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div id="winStatTime" class="stat-val">00:00</div>
+          <div class="stat-lbl">Solve Time</div>
+        </div>
+        <div class="stat-box">
+          <div id="winStatHints" class="stat-val">0</div>
+          <div class="stat-lbl">Hints Used</div>
+        </div>
+        <div class="stat-box">
+          <div id="winStatWeeks" class="stat-val">0/3</div>
+          <div class="stat-lbl">Weeks Solved</div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="copyResultsBtn" class="primary-modal-btn" type="button">Copy Results to Clipboard</button>
+        <div id="shareFeedback" class="share-feedback" role="status" aria-live="polite"></div>
+        <button id="winPracticeBtn" class="secondary-modal-btn" type="button" style="display:none;">New Practice Board</button>
+        <a id="winBackHomeBtn" href="../" class="secondary-modal-btn">
+          <span aria-hidden="true">&larr;</span> Back to All Games
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ===================================================================
+         Constants & Board Configuration
+         =================================================================== */
+      const THEME_KEY = 'thirdfloordoordle_theme';
+      const MODE_KEY = 'flcc_lakerdoku_mode_v1';
+      const STORE_KEY = 'flcc_lakerdoku_v1';
+      const LETTERS = ['', 'L', 'A', 'K', 'E', 'R', 'S']; // 1..6
+
+      // Canonical valid 6x6 base grid (six 2x3 boxes: rows 0-1, 2-3, 4-5; cols 0-2, 3-5)
+      const BASE_SOLUTION = [
+        [1, 2, 3, 4, 5, 6],
+        [4, 5, 6, 1, 2, 3],
+        [2, 3, 1, 5, 6, 4],
+        [5, 6, 4, 2, 3, 1],
+        [3, 1, 2, 6, 4, 5],
+        [6, 4, 5, 3, 1, 2]
+      ];
+
+      const BOARD_CONFIG = {
+        practice: {
+          id: 'practice',
+          label: 'Practice Mode',
+          pillLabel: 'Practice Mode',
+          shortDate: 'Always Open',
+          difficulty: 'Practice',
+          targetClues: 16,
+          unlockDay: 0,
+          fixedSeed: null
+        },
+        week1: {
+          id: 'week1',
+          label: 'Week 1',
+          pillLabel: 'Week 1 \u2022 Easy',
+          shortDate: 'Dec 1',
+          difficulty: 'Easy',
+          targetClues: 17,
+          unlockDay: 1,
+          fixedSeed: 20261201
+        },
+        week2: {
+          id: 'week2',
+          label: 'Week 2',
+          pillLabel: 'Week 2 \u2022 Medium',
+          shortDate: 'Dec 8',
+          difficulty: 'Medium',
+          targetClues: 14,
+          unlockDay: 8,
+          fixedSeed: 20261208
+        },
+        week3: {
+          id: 'week3',
+          label: 'Week 3',
+          pillLabel: 'Week 3 \u2022 Challenging',
+          shortDate: 'Dec 15',
+          difficulty: 'Challenging',
+          targetClues: 11,
+          unlockDay: 15,
+          fixedSeed: 20261215
+        }
+      };
+
+      const BOARD_ORDER = ['practice', 'week1', 'week2', 'week3'];
+
+      /* ===================================================================
+         Crash-Proof localStorage Helpers
+         =================================================================== */
+      function safeGet(key) {
+        try { return window.localStorage.getItem(key); } catch (e) { return null; }
+      }
+      function safeSet(key, val) {
+        try { window.localStorage.setItem(key, val); } catch (e) { /* ignore private browsing */ }
+      }
+
+      /* ===================================================================
+         Deterministic Seeded PRNG (Mulberry32) & 6x6 Unique Puzzle Generator
+         =================================================================== */
+      function mulberry32(seed) {
+        let a = seed >>> 0;
+        return function () {
+          a |= 0;
+          a = (a + 0x6D2B79F5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function shuffleArray(arr, rng) {
+        const copy = arr.slice();
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(rng() * (i + 1));
+          const tmp = copy[i];
+          copy[i] = copy[j];
+          copy[j] = tmp;
+        }
+        return copy;
+      }
+
+      /**
+       * Validity-preserving transformations on BASE_SOLUTION:
+       * symbol permutation, band permutation, intra-band row swaps,
+       * stack permutation, and intra-stack column shuffles.
+       */
+      function generateSolution(rng) {
+        const symMap = shuffleArray([1, 2, 3, 4, 5, 6], rng);
+        const bands = shuffleArray([0, 1, 2], rng);
+        const rowOrder = [];
+        for (let b = 0; b < 3; b++) {
+          const r0 = bands[b] * 2;
+          const pair = rng() < 0.5 ? [r0, r0 + 1] : [r0 + 1, r0];
+          rowOrder.push(pair[0], pair[1]);
+        }
+
+        const stacks = rng() < 0.5 ? [0, 1] : [1, 0];
+        const colOrder = [];
+        for (let s = 0; s < 2; s++) {
+          const c0 = stacks[s] * 3;
+          const triple = shuffleArray([c0, c0 + 1, c0 + 2], rng);
+          colOrder.push(triple[0], triple[1], triple[2]);
+        }
+
+        const grid = [];
+        for (let r = 0; r < 6; r++) {
+          const row = [];
+          for (let c = 0; c < 6; c++) {
+            row.push(symMap[BASE_SOLUTION[rowOrder[r]][colOrder[c]] - 1]);
+          }
+          grid.push(row);
+        }
+        return grid;
+      }
+
+      /**
+       * Fast MRV backtracking solver that counts up to `limit` (default 2) solutions
+       * to mathematically guarantee uniqueness while carving clues.
+       */
+      function countSolutions(board, limit) {
+        const maxCount = limit || 2;
+        let solutions = 0;
+
+        function getCandidatesMask(r, c) {
+          let used = 0;
+          for (let i = 0; i < 6; i++) {
+            if (board[r][i]) used |= (1 << board[r][i]);
+            if (board[i][c]) used |= (1 << board[i][c]);
+          }
+          const br = Math.floor(r / 2) * 2;
+          const bc = Math.floor(c / 3) * 3;
+          for (let dr = 0; dr < 2; dr++) {
+            for (let dc = 0; dc < 3; dc++) {
+              const v = board[br + dr][bc + dc];
+              if (v) used |= (1 << v);
+            }
+          }
+          return (~used) & 0b1111110;
+        }
+
+        function bitCount(mask) {
+          let n = 0;
+          while (mask) { mask &= (mask - 1); n++; }
+          return n;
+        }
+
+        function backtrack() {
+          if (solutions >= maxCount) return;
+          let bestR = -1, bestC = -1, bestMask = 0, bestCount = 7;
+
+          for (let r = 0; r < 6; r++) {
+            for (let c = 0; c < 6; c++) {
+              if (board[r][c] === 0) {
+                const mask = getCandidatesMask(r, c);
+                if (mask === 0) return;
+                const cnt = bitCount(mask);
+                if (cnt < bestCount) {
+                  bestCount = cnt;
+                  bestR = r;
+                  bestC = c;
+                  bestMask = mask;
+                  if (cnt === 1) break;
+                }
+              }
+            }
+            if (bestCount === 1) break;
+          }
+
+          if (bestR === -1) {
+            solutions++;
+            return;
+          }
+
+          for (let val = 1; val <= 6; val++) {
+            if (bestMask & (1 << val)) {
+              board[bestR][bestC] = val;
+              backtrack();
+              board[bestR][bestC] = 0;
+              if (solutions >= maxCount) return;
+            }
+          }
+        }
+
+        backtrack();
+        return solutions;
+      }
+
+      function generatePuzzle(seed, targetClues) {
+        const rng = mulberry32(seed);
+        const solution = generateSolution(rng);
+        const givens = solution.map(function (row) { return row.slice(); });
+
+        const positions = [];
+        for (let r = 0; r < 6; r++) {
+          for (let c = 0; c < 6; c++) positions.push([r, c]);
+        }
+        const order = shuffleArray(positions, rng);
+
+        let clues = 36;
+        for (let i = 0; i < order.length && clues > targetClues; i++) {
+          const r = order[i][0];
+          const c = order[i][1];
+          const backup = givens[r][c];
+          givens[r][c] = 0;
+
+          if (countSolutions(givens, 2) === 1) {
+            clues--;
+          } else {
+            givens[r][c] = backup;
+          }
+        }
+
+        return { seed: seed, solution: solution, givens: givens };
+      }
+
+      /* ===================================================================
+         Eastern Time (America/New_York) & ?testDay / ?testWeek Preview Logic
+         =================================================================== */
+      function getEasternDateParts() {
+        try {
+          const fmt = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/New_York',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+          });
+          const parts = fmt.formatToParts(new Date());
+          const year = parseInt(parts.find(function (p) { return p.type === 'year'; }).value, 10);
+          const month = parseInt(parts.find(function (p) { return p.type === 'month'; }).value, 10);
+          const day = parseInt(parts.find(function (p) { return p.type === 'day'; }).value, 10);
+          if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+            return { year: year, month: month, day: day };
+          }
+        } catch (e) { /* fallback below */ }
+        const now = new Date();
+        return { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
+      }
+
+      function getPreviewConfig() {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const testWeekRaw = params.get('testWeek');
+          const testDayRaw = params.get('testDay');
+
+          if (testWeekRaw !== null) {
+            const w = parseInt(testWeekRaw, 10);
+            if (w >= 1 && w <= 3 && String(w) === testWeekRaw.trim()) {
+              const dayMap = { 1: 1, 2: 8, 3: 15 };
+              return {
+                active: true,
+                month: 12,
+                day: dayMap[w],
+                forcedBoard: 'week' + w,
+                testDayParam: null,
+                label: 'Previewing December ' + dayMap[w] + ' (Week ' + w + ') \u2014 Official stats paused'
+              };
+            }
+          }
+
+          if (testDayRaw !== null) {
+            const d = parseInt(testDayRaw, 10);
+            if (d >= 0 && d <= 18 && String(d) === testDayRaw.trim()) {
+              const weekNum = d >= 15 ? 3 : (d >= 8 ? 2 : (d >= 1 ? 1 : 0));
+              return {
+                active: true,
+                month: d === 0 ? 11 : 12,
+                day: d === 0 ? 30 : d,
+                forcedBoard: d === 0 ? 'practice' : null,
+                testDayParam: d,
+                label: d === 0
+                  ? 'Previewing Practice Mode \u2014 Official stats paused'
+                  : 'Previewing December ' + d + ' (Week ' + weekNum + ') \u2014 Official stats paused'
+              };
+            }
+          }
+        } catch (e) { /* ignore */ }
+        return { active: false, month: null, day: null, forcedBoard: null, testDayParam: null, label: '' };
+      }
+
+      const preview = getPreviewConfig();
+      const est = getEasternDateParts();
+      const effectiveMonth = preview.active ? preview.month : est.month;
+      const effectiveDay = preview.active ? preview.day : est.day;
+
+      function isBoardUnlocked(boardId) {
+        const cfg = BOARD_CONFIG[boardId];
+        if (!cfg) return false;
+        if (cfg.unlockDay === 0) return true;
+        return effectiveMonth === 12 && effectiveDay >= cfg.unlockDay;
+      }
+
+      function getDefaultBoardId() {
+        if (preview.forcedBoard && isBoardUnlocked(preview.forcedBoard)) {
+          return preview.forcedBoard;
+        }
+        if (isBoardUnlocked('week3')) return 'week3';
+        if (isBoardUnlocked('week2')) return 'week2';
+        if (isBoardUnlocked('week1')) return 'week1';
+        return 'practice';
+      }
+
+      /* ===================================================================
+         Unified Store (flcc_lakerdoku_v1) + Hub Compatibility Markers
+         =================================================================== */
+      function createDefaultStore() {
+        return {
+          boards: {},
+          stats: {
+            solvedWeeks: [],
+            bestTimes: {},
+            totalHints: 0
+          }
+        };
+      }
+
+      function loadStore() {
+        if (preview.active) return createDefaultStore();
+        const raw = safeGet(STORE_KEY);
+        if (!raw) return createDefaultStore();
+        try {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            const st = parsed.stats || {};
+            return {
+              boards: parsed.boards && typeof parsed.boards === 'object' ? parsed.boards : {},
+              stats: {
+                solvedWeeks: Array.isArray(st.solvedWeeks) ? st.solvedWeeks : [],
+                bestTimes: st.bestTimes && typeof st.bestTimes === 'object' ? st.bestTimes : {},
+                totalHints: Number(st.totalHints) || 0
+              }
+            };
+          }
+        } catch (e) { /* ignore corrupt JSON */ }
+        return createDefaultStore();
+      }
+
+      function saveStore() {
+        if (preview.active) return;
+        safeSet(STORE_KEY, JSON.stringify(store));
+      }
+
+      /**
+       * Writes a lightweight completion marker under lakerdoku_v1_<boardId>
+       * so index.html hub can display "✓ Week X Solved".
+       */
+      function syncHubMarker(boardId, completed) {
+        if (preview.active || boardId === 'practice') return;
+        safeSet('lakerdoku_v1_' + boardId, JSON.stringify({ completed: Boolean(completed) }));
+      }
+
+      /* ===================================================================
+         Application State
+         =================================================================== */
+      let store = loadStore();
+      let state = {
+        mode: safeGet(MODE_KEY) === 'numbers' ? 'numbers' : 'lakers',
+        boardId: 'practice',
+        puzzle: null,
+        grid: [],
+        notes: [],
+        hinted: [],
+        undoStack: [],
+        selected: { r: 0, c: 0 },
+        notesMode: false,
+        elapsedSec: 0,
+        hintsUsed: 0,
+        completed: false,
+        completedMode: null,
+        lastAnimatedCell: null,
+        lastHintedCell: null
+      };
+
+      let timerInterval = null;
+      let toastTimer = null;
+
+      /* ===================================================================
+         DOM References
+         =================================================================== */
+      const rootEl = document.documentElement;
+      const allGamesLink = document.getElementById('allGamesLink');
+      const winBackHomeBtn = document.getElementById('winBackHomeBtn');
+      const weekPillBtn = document.getElementById('weekPillBtn');
+      const weekPillText = document.getElementById('weekPillText');
+      const viewResultsPillBtn = document.getElementById('viewResultsPillBtn');
+      const modeLakersBtn = document.getElementById('modeLakersBtn');
+      const modeNumbersBtn = document.getElementById('modeNumbersBtn');
+      const timerDisplayEl = document.getElementById('timerDisplay');
+      const hintsDisplayEl = document.getElementById('hintsDisplay');
+      const practiceBarEl = document.getElementById('practiceBar');
+      const newPracticeBtn = document.getElementById('newPracticeBtn');
+      const gridEl = document.getElementById('sudokuGrid');
+      const inputPadEl = document.getElementById('inputPad');
+      const undoBtn = document.getElementById('undoBtn');
+      const eraseBtn = document.getElementById('eraseBtn');
+      const notesBtn = document.getElementById('notesBtn');
+      const notesBtnLabel = document.getElementById('notesBtnLabel');
+      const hintBtn = document.getElementById('hintBtn');
+      const toastMsgEl = document.getElementById('toastMsg');
+      const liveRegionEl = document.getElementById('liveRegion');
+
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const themeIconEl = document.getElementById('themeIcon');
+      const helpBtn = document.getElementById('helpBtn');
+
+      const helpModal = document.getElementById('helpModal');
+      const closeHelpBtn = document.getElementById('closeHelpBtn');
+      const helpGotItBtn = document.getElementById('helpGotItBtn');
+
+      const pickerModal = document.getElementById('pickerModal');
+      const closePickerBtn = document.getElementById('closePickerBtn');
+      const pickerListEl = document.getElementById('pickerList');
+      const pickStatSolvedEl = document.getElementById('pickStatSolved');
+      const pickStatBestEl = document.getElementById('pickStatBest');
+      const pickStatHintsEl = document.getElementById('pickStatHints');
+
+      const winModal = document.getElementById('winModal');
+      const closeWinBtn = document.getElementById('closeWinBtn');
+      const winSubtitleEl = document.getElementById('winSubtitle');
+      const winEmojiGridEl = document.getElementById('winEmojiGrid');
+      const winStatTimeEl = document.getElementById('winStatTime');
+      const winStatHintsEl = document.getElementById('winStatHints');
+      const winStatWeeksEl = document.getElementById('winStatWeeks');
+      const copyResultsBtn = document.getElementById('copyResultsBtn');
+      const shareFeedbackEl = document.getElementById('shareFeedback');
+      const winPracticeBtn = document.getElementById('winPracticeBtn');
+
+      /* ===================================================================
+         Synced Light / Dark Theme ('thirdfloordoordle_theme')
+         =================================================================== */
+      const MOON_SVG = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+      const SUN_SVG = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+
+      function applyTheme(theme, persist) {
+        const isDark = theme === 'dark';
+        if (isDark) {
+          rootEl.setAttribute('data-theme', 'dark');
+          themeToggleBtn.setAttribute('aria-pressed', 'true');
+          themeToggleBtn.setAttribute('aria-label', 'Switch to light mode');
+          themeIconEl.innerHTML = SUN_SVG;
+        } else {
+          rootEl.removeAttribute('data-theme');
+          themeToggleBtn.setAttribute('aria-pressed', 'false');
+          themeToggleBtn.setAttribute('aria-label', 'Switch to dark mode');
+          themeIconEl.innerHTML = MOON_SVG;
+        }
+        if (persist) safeSet(THEME_KEY, theme);
+      }
+
+      themeToggleBtn.addEventListener('click', function () {
+        applyTheme(rootEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
+      });
+
+      /* ===================================================================
+         Helpers
+         =================================================================== */
+      function prefersReducedMotion() {
+        try {
+          return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        } catch (e) { return false; }
+      }
+
+      function formatSymbol(val) {
+        if (!val) return '';
+        return state.mode === 'lakers' ? LETTERS[val] : String(val);
+      }
+
+      function formatTime(sec) {
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+      }
+
+      function announce(msg) {
+        liveRegionEl.textContent = '';
+        window.setTimeout(function () {
+          liveRegionEl.textContent = msg;
+        }, 25);
+      }
+
+      function showToast(msg, durationMs) {
+        toastMsgEl.textContent = msg;
+        toastMsgEl.classList.add('visible');
+        announce(msg);
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(function () {
+          toastMsgEl.classList.remove('visible');
+        }, durationMs || 1600);
+      }
+
+      function createEmpty2D(fillFn) {
+        const arr = [];
+        for (let r = 0; r < 6; r++) {
+          const row = [];
+          for (let c = 0; c < 6; c++) row.push(fillFn());
+          arr.push(row);
+        }
+        return arr;
+      }
+
+      function cloneBoardSnapshot() {
+        return {
+          grid: state.grid.map(function (r) { return r.slice(); }),
+          notes: state.notes.map(function (r) { return r.map(function (c) { return c.slice(); }); })
+        };
+      }
+
+      function persistCurrentBoard() {
+        store.boards[state.boardId] = {
+          seed: state.puzzle.seed,
+          grid: state.grid,
+          notes: state.notes,
+          hinted: state.hinted,
+          elapsedSec: state.elapsedSec,
+          hintsUsed: state.hintsUsed,
+          completed: state.completed,
+          completedMode: state.completedMode
+        };
+        saveStore();
+      }
+
+      /* ===================================================================
+         Conflict Detection & Win Verification
+         =================================================================== */
+      function computeConflicts() {
+        const conflicts = createEmpty2D(function () { return false; });
+
+        for (let r = 0; r < 6; r++) {
+          for (let c = 0; c < 6; c++) {
+            const val = state.grid[r][c];
+            if (!val) continue;
+
+            for (let i = 0; i < 6; i++) {
+              if (i !== c && state.grid[r][i] === val) {
+                conflicts[r][c] = true;
+                conflicts[r][i] = true;
+              }
+              if (i !== r && state.grid[i][c] === val) {
+                conflicts[r][c] = true;
+                conflicts[i][c] = true;
+              }
+            }
+
+            const br = Math.floor(r / 2) * 2;
+            const bc = Math.floor(c / 3) * 3;
+            for (let dr = 0; dr < 2; dr++) {
+              for (let dc = 0; dc < 3; dc++) {
+                const rr = br + dr;
+                const cc = bc + dc;
+                if ((rr !== r || cc !== c) && state.grid[rr][cc] === val) {
+                  conflicts[r][c] = true;
+                  conflicts[rr][cc] = true;
+                }
+              }
+            }
+          }
+        }
+        return conflicts;
+      }
+
+      function checkWin(conflicts) {
+        for (let r = 0; r < 6; r++) {
+          for (let c = 0; c < 6; c++) {
+            if (state.grid[r][c] === 0 || conflicts[r][c]) return false;
+          }
+        }
+        return true;
+      }
+
+      /* ===================================================================
+         Board Loading & Timer
+         =================================================================== */
+      function loadBoard(boardId, forceNewPracticeSeed) {
+        const cfg = BOARD_CONFIG[boardId];
+        if (!cfg || !isBoardUnlocked(boardId)) return;
+
+        state.boardId = boardId;
+        state.undoStack = [];
+        state.lastAnimatedCell = null;
+        state.lastHintedCell = null;
+
+        const saved = !forceNewPracticeSeed ? store.boards[boardId] : null;
+        let seed;
+
+        if (cfg.fixedSeed !== null) {
+          seed = cfg.fixedSeed;
+        } else if (saved && typeof saved.seed === 'number') {
+          seed = saved.seed;
+        } else {
+          seed = Math.floor(Math.random() * 900000000) + 100000;
+        }
+
+        state.puzzle = generatePuzzle(seed, cfg.targetClues);
+
+        if (saved && saved.seed === seed && Array.isArray(saved.grid) && saved.grid.length === 6) {
+          state.grid = saved.grid;
+          state.notes = saved.notes || createEmpty2D(function () { return []; });
+          state.hinted = saved.hinted || createEmpty2D(function () { return false; });
+          state.elapsedSec = typeof saved.elapsedSec === 'number' ? saved.elapsedSec : 0;
+          state.hintsUsed = typeof saved.hintsUsed === 'number' ? saved.hintsUsed : 0;
+          state.completed = Boolean(saved.completed);
+          state.completedMode = saved.completedMode || null;
+        } else {
+          state.grid = state.puzzle.givens.map(function (row) { return row.slice(); });
+          state.notes = createEmpty2D(function () { return []; });
+          state.hinted = createEmpty2D(function () { return false; });
+          state.elapsedSec = 0;
+          state.hintsUsed = 0;
+          state.completed = false;
+          state.completedMode = null;
+          persistCurrentBoard();
+        }
+
+        // Select first empty cell (or 0,0 if solved)
+        let selR = 0, selC = 0;
+        outer: for (let r = 0; r < 6; r++) {
+          for (let c = 0; c < 6; c++) {
+            if (state.grid[r][c] === 0) {
+              selR = r;
+              selC = c;
+              break outer;
+            }
+          }
+        }
+        state.selected = { r: selR, c: selC };
+
+        weekPillText.textContent = cfg.pillLabel;
+        practiceBarEl.classList.toggle('visible', boardId === 'practice');
+
+        renderAll();
+        startTimer();
+      }
+
+      function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = window.setInterval(function () {
+          if (state.completed) return;
+          if (document.visibilityState !== 'visible') return;
+          if (
+            helpModal.classList.contains('open') ||
+            pickerModal.classList.contains('open') ||
+            winModal.classList.contains('open')
+          ) {
+            return;
+          }
+          state.elapsedSec++;
+          timerDisplayEl.textContent = formatTime(state.elapsedSec);
+          if (state.elapsedSec % 5 === 0) persistCurrentBoard();
+        }, 1000);
+      }
+
+      /* ===================================================================
+         Rendering UI
+         =================================================================== */
+      function renderModeToggle() {
+        const isLakers = state.mode === 'lakers';
+        modeLakersBtn.setAttribute('aria-pressed', isLakers ? 'true' : 'false');
+        modeNumbersBtn.setAttribute('aria-pressed', !isLakers ? 'true' : 'false');
+      }
+
+      function renderStatsAndToolbar() {
+        timerDisplayEl.textContent = formatTime(state.elapsedSec);
+        hintsDisplayEl.textContent = 'Hints: ' + state.hintsUsed;
+        viewResultsPillBtn.classList.toggle('visible', state.completed);
+
+        undoBtn.disabled = state.undoStack.length === 0 || state.completed;
+        eraseBtn.disabled = state.completed;
+        hintBtn.disabled = state.completed;
+        notesBtn.disabled = state.completed;
+        notesBtn.classList.toggle('is-active', state.notesMode && !state.completed);
+        notesBtn.setAttribute('aria-pressed', state.notesMode ? 'true' : 'false');
+        notesBtnLabel.textContent = state.notesMode ? 'Notes ON' : 'Notes';
+      }
+
+      function renderBoard(conflicts) {
+        const selR = state.selected.r;
+        const selC = state.selected.c;
+        const selBoxR = Math.floor(selR / 2);
+        const selBoxC = Math.floor(selC / 3);
+        const selVal = state.grid[selR][selC];
+
+        gridEl.innerHTML = '';
+
+        for (let r = 0; r < 6; r++) {
+          for (let c = 0; c < 6; c++) {
+            const val = state.grid[r][c];
+            const isGiven = state.puzzle.givens[r][c] !== 0;
+            const isHinted = state.hinted[r][c];
+            const isSelected = (r === selR && c === selC);
+            const inSameBox = (Math.floor(r / 2) === selBoxR && Math.floor(c / 3) === selBoxC);
+            const isPeer = !isSelected && (r === selR || c === selC || inSameBox);
+            const isSameVal = !isSelected && selVal !== 0 && val === selVal;
+            const isConflict = conflicts[r][c];
+            const boxNum = Math.floor(r / 2) * 2 + Math.floor(c / 3) + 1;
+
+            const cell = document.createElement('button');
+            cell.type = 'button';
+            cell.className = 'sudoku-cell';
+            cell.setAttribute('role', 'gridcell');
+            cell.dataset.row = String(r);
+            cell.dataset.col = String(c);
+            cell.tabIndex = isSelected ? 0 : -1;
+
+            if (isGiven) cell.classList.add('is-given');
+            if (isHinted) cell.classList.add('is-hinted');
+            if (isPeer) cell.classList.add('is-peer');
+            if (isSameVal) cell.classList.add('is-same-value');
+            if (isConflict) cell.classList.add('is-conflict');
+            if (isSelected) cell.classList.add('is-selected');
+
+            if (state.lastHintedCell && state.lastHintedCell.r === r && state.lastHintedCell.c === c) {
+              cell.classList.add('animate-hint');
+            }
+
+            // Rich WCAG ARIA Label
+            const labelParts = ['Row ' + (r + 1) + ', Column ' + (c + 1) + ', Box ' + boxNum];
+            if (val) {
+              labelParts.push(formatSymbol(val));
+              labelParts.push(isGiven ? 'given' : (isHinted ? 'hinted' : 'entered'));
+            } else {
+              const cellNotes = state.notes[r][c];
+              if (cellNotes && cellNotes.length > 0) {
+                labelParts.push('empty, notes: ' + cellNotes.map(formatSymbol).join(' '));
+              } else {
+                labelParts.push('empty');
+              }
+            }
+            if (isConflict) labelParts.push('conflict duplicate');
+            cell.setAttribute('aria-label', labelParts.join(', '));
+            cell.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+
+            if (val) {
+              const span = document.createElement('span');
+              span.className = 'cell-val';
+              if (state.lastAnimatedCell && state.lastAnimatedCell.r === r && state.lastAnimatedCell.c === c) {
+                span.classList.add('animate-pop');
+              }
+              span.textContent = formatSymbol(val);
+              cell.appendChild(span);
+            } else if (state.notes[r][c] && state.notes[r][c].length > 0) {
+              const notesGrid = document.createElement('div');
+              notesGrid.className = 'notes-grid';
+              notesGrid.setAttribute('aria-hidden', 'true');
+              for (let n = 1; n <= 6; n++) {
+                const noteSpan = document.createElement('span');
+                noteSpan.className = 'note-item';
+                if (state.notes[r][c].indexOf(n) !== -1) {
+                  noteSpan.textContent = formatSymbol(n);
+                }
+                notesGrid.appendChild(noteSpan);
+              }
+              cell.appendChild(notesGrid);
+            }
+
+            (function (rowIdx, colIdx) {
+              cell.addEventListener('click', function () {
+                selectCell(rowIdx, colIdx, false);
+              });
+            })(r, c);
+
+            gridEl.appendChild(cell);
+          }
+        }
+        state.lastAnimatedCell = null;
+        state.lastHintedCell = null;
+      }
+
+      function renderInputPad() {
+        const counts = [0, 0, 0, 0, 0, 0, 0];
+        for (let r = 0; r < 6; r++) {
+          for (let c = 0; c < 6; c++) {
+            const v = state.grid[r][c];
+            if (v >= 1 && v <= 6) counts[v]++;
+          }
+        }
+
+        inputPadEl.innerHTML = '';
+        for (let val = 1; val <= 6; val++) {
+          const remaining = Math.max(0, 6 - counts[val]);
+          const sym = formatSymbol(val);
+
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'pad-key';
+          if (remaining === 0) btn.classList.add('is-complete');
+          btn.disabled = state.completed;
+          btn.setAttribute('aria-label', (state.notesMode ? 'Toggle note ' : 'Enter ') + sym + ', ' + remaining + ' remaining');
+
+          const symEl = document.createElement('span');
+          symEl.className = 'pad-symbol';
+          symEl.textContent = sym;
+
+          const countEl = document.createElement('span');
+          countEl.className = 'pad-count';
+          countEl.textContent = remaining === 0 ? '\u2713' : String(remaining);
+
+          btn.appendChild(symEl);
+          btn.appendChild(countEl);
+
+          (function (v) {
+            btn.addEventListener('click', function () {
+              enterValue(v);
+            });
+          })(val);
+
+          inputPadEl.appendChild(btn);
+        }
+      }
+
+      function renderAll() {
+        const conflicts = computeConflicts();
+        renderModeToggle();
+        renderStatsAndToolbar();
+        renderBoard(conflicts);
+        renderInputPad();
+        return conflicts;
+      }
+
+      /* ===================================================================
+         Gameplay Actions
+         =================================================================== */
+      function selectCell(r, c, focusDom) {
+        state.selected = { r: r, c: c };
+        renderAll();
+        if (focusDom) {
+          const btn = gridEl.querySelector('[data-row="' + r + '"][data-col="' + c + '"]');
+          if (btn) btn.focus();
+        }
+      }
+
+      function clearPeerNotes(r, c, val) {
+        for (let i = 0; i < 6; i++) {
+          state.notes[r][i] = state.notes[r][i].filter(function (n) { return n !== val; });
+          state.notes[i][c] = state.notes[i][c].filter(function (n) { return n !== val; });
+        }
+        const br = Math.floor(r / 2) * 2;
+        const bc = Math.floor(c / 3) * 3;
+        for (let dr = 0; dr < 2; dr++) {
+          for (let dc = 0; dc < 3; dc++) {
+            state.notes[br + dr][bc + dc] = state.notes[br + dr][bc + dc].filter(function (n) { return n !== val; });
+          }
+        }
+      }
+
+      function enterValue(val) {
+        if (state.completed) return;
+        const r = state.selected.r;
+        const c = state.selected.c;
+
+        if (state.puzzle.givens[r][c] !== 0) {
+          announce('That cell is a given clue and cannot be changed.');
+          return;
+        }
+
+        if (state.notesMode) {
+          if (state.grid[r][c] !== 0) {
+            announce('Erase this cell before adding pencil notes.');
+            return;
+          }
+          state.undoStack.push(cloneBoardSnapshot());
+          const cellNotes = state.notes[r][c];
+          const idx = cellNotes.indexOf(val);
+          if (idx !== -1) {
+            cellNotes.splice(idx, 1);
+            announce('Removed note ' + formatSymbol(val));
+          } else {
+            cellNotes.push(val);
+            cellNotes.sort();
+            announce('Added note ' + formatSymbol(val));
+          }
+          persistCurrentBoard();
+          renderAll();
+          return;
+        }
+
+        if (state.grid[r][c] === val) return;
+
+        state.undoStack.push(cloneBoardSnapshot());
+        state.grid[r][c] = val;
+        state.notes[r][c] = [];
+        state.hinted[r][c] = false;
+        state.lastAnimatedCell = { r: r, c: c };
+
+        clearPeerNotes(r, c, val);
+
+        const conflicts = renderAll();
+        if (conflicts[r][c]) {
+          announce(formatSymbol(val) + ' creates a conflict in row, column, or box.');
+        }
+
+        if (checkWin(conflicts)) {
+          handleWin();
+        } else {
+          persistCurrentBoard();
+        }
+      }
+
+      function eraseSelected() {
+        if (state.completed) return;
+        const r = state.selected.r;
+        const c = state.selected.c;
+
+        if (state.puzzle.givens[r][c] !== 0) {
+          announce('Cannot erase a given clue.');
+          return;
+        }
+        if (state.grid[r][c] === 0 && state.notes[r][c].length === 0) return;
+
+        state.undoStack.push(cloneBoardSnapshot());
+        state.grid[r][c] = 0;
+        state.notes[r][c] = [];
+        state.hinted[r][c] = false;
+        persistCurrentBoard();
+        renderAll();
+        announce('Cell cleared.');
+      }
+
+      function undoLastMove() {
+        if (state.completed || state.undoStack.length === 0) return;
+        const prev = state.undoStack.pop();
+        state.grid = prev.grid;
+        state.notes = prev.notes;
+        persistCurrentBoard();
+        renderAll();
+        announce('Undid last move.');
+      }
+
+      function giveHint() {
+        if (state.completed) return;
+
+        let targetR = state.selected.r;
+        let targetC = state.selected.c;
+
+        if (
+          state.puzzle.givens[targetR][targetC] !== 0 ||
+          state.grid[targetR][targetC] === state.puzzle.solution[targetR][targetC]
+        ) {
+          const candidates = [];
+          for (let r = 0; r < 6; r++) {
+            for (let c = 0; c < 6; c++) {
+              if (state.grid[r][c] !== state.puzzle.solution[r][c]) {
+                candidates.push([r, c]);
+              }
+            }
+          }
+          if (candidates.length === 0) return;
+          const pick = candidates[Math.floor(Math.random() * candidates.length)];
+          targetR = pick[0];
+          targetC = pick[1];
+        }
+
+        state.undoStack.push(cloneBoardSnapshot());
+        const correctVal = state.puzzle.solution[targetR][targetC];
+        state.selected = { r: targetR, c: targetC };
+        state.grid[targetR][targetC] = correctVal;
+        state.notes[targetR][targetC] = [];
+        state.hinted[targetR][targetC] = true;
+        state.hintsUsed++;
+        state.lastAnimatedCell = { r: targetR, c: targetC };
+        state.lastHintedCell = { r: targetR, c: targetC };
+
+        clearPeerNotes(targetR, targetC, correctVal);
+
+        const conflicts = renderAll();
+        announce('Hint revealed ' + formatSymbol(correctVal) + ' at Row ' + (targetR + 1) + ', Column ' + (targetC + 1) + '.');
+
+        if (checkWin(conflicts)) {
+          handleWin();
+        } else {
+          persistCurrentBoard();
+        }
+      }
+
+      function setMode(newMode) {
+        if (state.mode === newMode) return;
+        state.mode = newMode;
+        safeSet(MODE_KEY, newMode);
+        renderAll();
+        announce('Switched to ' + (newMode === 'lakers' ? 'L-A-K-E-R-S' : '1 to 6') + ' mode.');
+      }
+
+      function toggleNotesMode() {
+        if (state.completed) return;
+        state.notesMode = !state.notesMode;
+        renderStatsAndToolbar();
+        renderInputPad();
+        announce('Pencil notes ' + (state.notesMode ? 'enabled' : 'disabled') + '.');
+      }
+
+      /* ===================================================================
+         Win Celebration, Wave Animation & Clipboard Share
+         =================================================================== */
+      function recordOfficialCompletion() {
+        if (preview.active || state.boardId === 'practice') return;
+        const id = state.boardId;
+        if (store.stats.solvedWeeks.indexOf(id) === -1) {
+          store.stats.solvedWeeks.push(id);
+          store.stats.totalHints += state.hintsUsed;
+        }
+        const prevBest = store.stats.bestTimes[id];
+        if (typeof prevBest !== 'number' || state.elapsedSec < prevBest) {
+          store.stats.bestTimes[id] = state.elapsedSec;
+        }
+        saveStore();
+        syncHubMarker(id, true);
+      }
+
+      function playWaveAnimation() {
+        if (prefersReducedMotion()) return;
+        const cells = gridEl.querySelectorAll('.sudoku-cell');
+        cells.forEach(function (cell) {
+          const r = parseInt(cell.dataset.row, 10);
+          const c = parseInt(cell.dataset.col, 10);
+          window.setTimeout(function () {
+            cell.classList.add('animate-wave');
+          }, (r + c) * 48);
+        });
+      }
+
+      function buildEmojiSummary() {
+        const lines = [];
+        for (let r = 0; r < 6; r++) {
+          let line = '';
+          for (let c = 0; c < 6; c++) {
+            if (state.puzzle.givens[r][c] !== 0) {
+              line += '\uD83D\uDFE6'; // 🟦 Given
+            } else if (state.hinted[r][c]) {
+              line += '\uD83D\uDCA1'; // 💡 Hint
+            } else {
+              line += '\u2744\uFE0F'; // ❄️ Solved
+            }
+          }
+          lines.push(line);
+        }
+        return lines.join('\n');
+      }
+
+      function buildShareText() {
+        const cfg = BOARD_CONFIG[state.boardId];
+        const modeText = (state.completedMode || state.mode) === 'lakers' ? 'L-A-K-E-R-S' : '1\u20136';
+        const header = cfg.id === 'practice'
+          ? 'FLCC Lakerdoku \u2014 Practice Mode'
+          : ('FLCC Lakerdoku \u2014 ' + cfg.label + ' (' + cfg.difficulty + ')');
+
+        return [
+          header,
+          '\u23F1\uFE0F ' + formatTime(state.elapsedSec) + ' | Mode: ' + modeText,
+          buildEmojiSummary(),
+          'https://thirdfloordoordle.com'
+        ].join('\n');
+      }
+
+      function handleWin() {
+        state.completed = true;
+        state.completedMode = state.mode;
+        persistCurrentBoard();
+        recordOfficialCompletion();
+        renderStatsAndToolbar();
+        renderInputPad();
+
+        playWaveAnimation();
+        announce('Congratulations! You solved FLCC Lakerdoku in ' + formatTime(state.elapsedSec) + '.');
+
+        window.setTimeout(function () {
+          openWinModal();
+        }, prefersReducedMotion() ? 100 : 760);
+      }
+
+      function openWinModal() {
+        const cfg = BOARD_CONFIG[state.boardId];
+        winSubtitleEl.textContent = cfg.id === 'practice'
+          ? 'Practice Mode solved!'
+          : (cfg.label + ' (' + cfg.difficulty + ') solved!');
+        winEmojiGridEl.textContent = buildEmojiSummary();
+        winStatTimeEl.textContent = formatTime(state.elapsedSec);
+        winStatHintsEl.textContent = String(state.hintsUsed);
+        winStatWeeksEl.textContent = store.stats.solvedWeeks.length + '/3';
+        shareFeedbackEl.textContent = '';
+
+        winPracticeBtn.style.display = state.boardId === 'practice' ? '' : 'none';
+        openModal(winModal, copyResultsBtn);
+      }
+
+      function copyToClipboard(text) {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          return navigator.clipboard.writeText(text).then(function () {
+            return true;
+          }).catch(function () {
+            return fallbackCopy(text);
+          });
+        }
+        return Promise.resolve(fallbackCopy(text));
+      }
+
+      function fallbackCopy(text) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          const ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          return ok;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      /* ===================================================================
+         Modals (Help, Week Picker / Archive, Win)
+         =================================================================== */
+      let lastFocused = null;
+
+      function openModal(modalEl, focusTarget) {
+        lastFocused = document.activeElement;
+        modalEl.classList.add('open');
+        if (focusTarget) focusTarget.focus();
+      }
+
+      function closeModal(modalEl) {
+        modalEl.classList.remove('open');
+        if (lastFocused && typeof lastFocused.focus === 'function') {
+          lastFocused.focus();
+        }
+      }
+
+      function openPickerModal() {
+        pickerListEl.innerHTML = '';
+
+        BOARD_ORDER.forEach(function (id) {
+          const cfg = BOARD_CONFIG[id];
+          const unlocked = isBoardUnlocked(id);
+          const saved = store.boards[id];
+          const isSolved = Boolean(
+            (saved && saved.completed) ||
+            (id !== 'practice' && store.stats.solvedWeeks.indexOf(id) !== -1)
+          );
+
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'picker-btn';
+          if (id === state.boardId) btn.classList.add('is-current');
+          btn.disabled = !unlocked;
+
+          const left = document.createElement('span');
+          const titleSpan = document.createElement('span');
+          titleSpan.className = 'picker-title';
+          titleSpan.textContent = id === 'practice' ? 'Practice Mode' : (cfg.label + ' \u2022 ' + cfg.difficulty);
+
+          const subSpan = document.createElement('span');
+          subSpan.className = 'picker-sub';
+          subSpan.textContent = id === 'practice'
+            ? 'Unlimited random boards'
+            : ('Unlocks ' + cfg.shortDate + ' EST');
+
+          left.appendChild(titleSpan);
+          left.appendChild(subSpan);
+
+          const badge = document.createElement('span');
+          badge.className = 'picker-badge';
+          if (!unlocked) {
+            badge.textContent = '\uD83D\uDD12 Locked';
+          } else if (isSolved && id !== 'practice') {
+            badge.textContent = '\u2713 Solved';
+          } else if (id === state.boardId) {
+            badge.textContent = 'Playing';
+          } else {
+            badge.textContent = 'Play \u2192';
+          }
+
+          btn.appendChild(left);
+          btn.appendChild(badge);
+
+          btn.addEventListener('click', function () {
+            loadBoard(id, false);
+            closeModal(pickerModal);
+          });
+
+          pickerListEl.appendChild(btn);
+        });
+
+        // Populate Official Stats
+        pickStatSolvedEl.textContent = store.stats.solvedWeeks.length + '/3';
+        const bestVals = Object.values(store.stats.bestTimes).filter(function (v) { return typeof v === 'number'; });
+        pickStatBestEl.textContent = bestVals.length > 0 ? formatTime(Math.min.apply(null, bestVals)) : '--:--';
+        pickStatHintsEl.textContent = String(store.stats.totalHints);
+
+        openModal(pickerModal, closePickerBtn);
+      }
+
+      /* ===================================================================
+         Event Listeners & Full Keyboard Navigation
+         =================================================================== */
+      weekPillBtn.addEventListener('click', openPickerModal);
+      closePickerBtn.addEventListener('click', function () { closeModal(pickerModal); });
+
+      helpBtn.addEventListener('click', function () { openModal(helpModal, closeHelpBtn); });
+      closeHelpBtn.addEventListener('click', function () { closeModal(helpModal); });
+      helpGotItBtn.addEventListener('click', function () { closeModal(helpModal); });
+
+      viewResultsPillBtn.addEventListener('click', openWinModal);
+      closeWinBtn.addEventListener('click', function () { closeModal(winModal); });
+
+      modeLakersBtn.addEventListener('click', function () { setMode('lakers'); });
+      modeNumbersBtn.addEventListener('click', function () { setMode('numbers'); });
+
+      newPracticeBtn.addEventListener('click', function () {
+        loadBoard('practice', true);
+        showToast('Fresh Practice board loaded!', 1400);
+      });
+
+      winPracticeBtn.addEventListener('click', function () {
+        closeModal(winModal);
+        loadBoard('practice', true);
+        showToast('Fresh Practice board loaded!', 1400);
+      });
+
+      undoBtn.addEventListener('click', undoLastMove);
+      eraseBtn.addEventListener('click', eraseSelected);
+      notesBtn.addEventListener('click', toggleNotesMode);
+      hintBtn.addEventListener('click', giveHint);
+
+      copyResultsBtn.addEventListener('click', function () {
+        const text = buildShareText();
+        copyToClipboard(text).then(function (ok) {
+          if (ok) {
+            shareFeedbackEl.textContent = 'Copied!';
+            showToast('Copied!', 1400);
+          } else {
+            shareFeedbackEl.textContent = 'Copy blocked \u2014 take a screenshot to share!';
+          }
+        });
+      });
+
+      [helpModal, pickerModal, winModal].forEach(function (m) {
+        m.addEventListener('click', function (e) {
+          if (e.target === m) closeModal(m);
+        });
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          if (helpModal.classList.contains('open')) closeModal(helpModal);
+          if (pickerModal.classList.contains('open')) closeModal(pickerModal);
+          if (winModal.classList.contains('open')) closeModal(winModal);
+          return;
+        }
+
+        if (
+          helpModal.classList.contains('open') ||
+          pickerModal.classList.contains('open') ||
+          winModal.classList.contains('open')
+        ) {
+          return;
+        }
+
+        // Ctrl/Cmd + Z Undo
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+          e.preventDefault();
+          undoLastMove();
+          return;
+        }
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+        const key = e.key;
+        const lower = key.toLowerCase();
+
+        if (key === 'ArrowUp') {
+          e.preventDefault();
+          selectCell((state.selected.r + 5) % 6, state.selected.c, true);
+        } else if (key === 'ArrowDown') {
+          e.preventDefault();
+          selectCell((state.selected.r + 1) % 6, state.selected.c, true);
+        } else if (key === 'ArrowLeft') {
+          e.preventDefault();
+          selectCell(state.selected.r, (state.selected.c + 5) % 6, true);
+        } else if (key === 'ArrowRight') {
+          e.preventDefault();
+          selectCell(state.selected.r, (state.selected.c + 1) % 6, true);
+        } else if (key >= '1' && key <= '6') {
+          e.preventDefault();
+          enterValue(parseInt(key, 10));
+        } else if (lower === 'l') { e.preventDefault(); enterValue(1); }
+        else if (lower === 'a')   { e.preventDefault(); enterValue(2); }
+        else if (lower === 'k')   { e.preventDefault(); enterValue(3); }
+        else if (lower === 'e')   { e.preventDefault(); enterValue(4); }
+        else if (lower === 'r')   { e.preventDefault(); enterValue(5); }
+        else if (lower === 's')   { e.preventDefault(); enterValue(6); }
+        else if (key === 'Backspace' || key === 'Delete' || key === '0') {
+          e.preventDefault();
+          eraseSelected();
+        } else if (lower === 'n') {
+          e.preventDefault();
+          toggleNotesMode();
+        } else if (lower === 'z') {
+          e.preventDefault();
+          undoLastMove();
+        }
+      });
+
+      /* ===================================================================
+         Initialize App
+         =================================================================== */
+      const savedTheme = safeGet(THEME_KEY);
+      applyTheme(savedTheme === 'dark' ? 'dark' : 'light', false);
+
+      // Preserve ?testDay=X on both homepage back links
+      if (preview.testDayParam !== null) {
+        const homeHref = '../?testDay=' + preview.testDayParam;
+        allGamesLink.setAttribute('href', homeHref);
+        winBackHomeBtn.setAttribute('href', homeHref);
+      }
+
+      if (preview.active) {
+        const previewBanner = document.getElementById('previewBanner');
+        document.getElementById('previewBannerText').textContent = preview.label;
+        previewBanner.classList.add('visible');
+        document.getElementById('dismissPreviewBtn').addEventListener('click', function () {
+          previewBanner.classList.remove('visible');
+        });
+      }
+
+      loadBoard(getDefaultBoardId(), false);
+    })();
+  </script>
+</body>
+</html>
