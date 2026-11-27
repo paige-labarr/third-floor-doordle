@@ -1,0 +1,2233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Play FLCC Wordle — a daily 5-letter holiday word puzzle for Finger Lakes Community College at thirdfloordoordle.com." />
+  <title>FLCC Wordle — Third Floor Doordle</title>
+
+  <!-- Snowflake Emoji Favicon via Inline SVG Data URI -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%E2%9D%84%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+
+  <!-- Google Fonts: Outfit (Headings), Lato (UI/Body), JetBrains Mono (Tiles, Keyboard, Stats) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Lato:wght@400;700;900&family=Outfit:wght@700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =====================================================================
+       Design Tokens — Light Mode (Default)
+       Shades of Blue Winter Palette | WCAG 2.2 AA+ & AAA Contrast Verified
+       ===================================================================== */
+    :root {
+      --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-body: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      /* Page & Surfaces */
+      --bg-page: #EEF6FD;
+      --bg-surface: #FFFFFF;
+      --bg-surface-alt: #DFEEFC;
+      --bg-control: #FFFFFF;
+      --bg-control-hover: #E1EFFC;
+
+      /* Typography (WCAG AAA) */
+      --text-primary: #091C38;
+      --text-secondary: #224268;
+      --text-muted: #3A5A7E;
+
+      /* Brand Accents */
+      --brand-blue: #0E4A99;
+      --brand-blue-hover: #083573;
+      --brand-pill-bg: #DCEBFB;
+      --brand-pill-border: #6DA4DF;
+      --brand-pill-text: #083573;
+
+      /* Borders */
+      --border-subtle: #C2DAF2;
+      --border-control: #6B8EB5;
+      --tile-border: #A9C4E0;
+      --tile-active-border: #0E4A99;
+      --tile-bg: #FFFFFF;
+
+      /* Classic Wordle Tile & Key Colors */
+      --color-correct: #538d4e;
+      --color-correct-text: #FFFFFF;
+      --color-present: #b59f3b;
+      --color-present-text: #FFFFFF;
+      --color-absent: #787c7e;
+      --color-absent-text: #FFFFFF;
+
+      /* On-Screen Keyboard */
+      --key-bg: #D5E5F5;
+      --key-hover: #C2DAF2;
+      --key-text: #091C38;
+
+      /* Toast & Preview Banner */
+      --toast-bg: #091C38;
+      --toast-text: #FFFFFF;
+      --preview-bg: #DBEAFE;
+      --preview-border: #0E4A99;
+      --preview-text: #091C38;
+
+      /* Focus Ring & Shadows */
+      --focus-ring: #0E4A99;
+      --shadow-sm: 0 2px 8px rgba(9, 28, 56, 0.08);
+      --shadow-md: 0 12px 32px rgba(9, 28, 56, 0.22);
+
+      /* Radii */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+    }
+
+    /* =====================================================================
+       Design Tokens — Dark Mode (Synced via 'thirdfloordoordle_theme')
+       ===================================================================== */
+    :root[data-theme="dark"] {
+      --bg-page: #071426;
+      --bg-surface: #0F2442;
+      --bg-surface-alt: #16335C;
+      --bg-control: #122B4E;
+      --bg-control-hover: #1B3D6E;
+
+      --text-primary: #F0F7FF;
+      --text-secondary: #BDD8F5;
+      --text-muted: #9BBEDF;
+
+      --brand-blue: #66B5FF;
+      --brand-blue-hover: #85C4FF;
+      --brand-pill-bg: #163661;
+      --brand-pill-border: #5C9FE6;
+      --brand-pill-text: #E6F2FF;
+
+      --border-subtle: #244778;
+      --border-control: #4E79AD;
+      --tile-border: #33588A;
+      --tile-active-border: #85C4FF;
+      --tile-bg: #0D203B;
+
+      --color-correct: #538d4e;
+      --color-correct-text: #FFFFFF;
+      --color-present: #b59f3b;
+      --color-present-text: #FFFFFF;
+      --color-absent: #3a4659;
+      --color-absent-text: #F0F7FF;
+
+      --key-bg: #1B3A63;
+      --key-hover: #264D80;
+      --key-text: #F0F7FF;
+
+      --toast-bg: #F0F7FF;
+      --toast-text: #071426;
+      --preview-bg: #132E57;
+      --preview-border: #66B5FF;
+      --preview-text: #F0F7FF;
+
+      --focus-ring: #85C4FF;
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.36);
+      --shadow-md: 0 14px 36px rgba(0, 0, 0, 0.6);
+    }
+
+    /* =====================================================================
+       High Contrast (Colorblind-Friendly) Mode Overrides
+       Swaps Correct -> Orange (#f5793a) and Present -> Sky Blue (#85c0f9)
+       with verified dark ink for strong WCAG contrast
+       ===================================================================== */
+    :root[data-contrast="high"] {
+      --color-correct: #f5793a;
+      --color-correct-text: #111827;
+      --color-present: #85c0f9;
+      --color-present-text: #06172E;
+    }
+
+    /* =====================================================================
+       Reset & Accessibility Primitives
+       ===================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      min-height: 100dvh;
+      height: 100dvh;
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.4;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .skip-link {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link:focus {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 600;
+      width: auto;
+      height: auto;
+      padding: 10px 16px;
+      clip: auto;
+      background-color: var(--text-primary);
+      color: var(--bg-page);
+      font-family: var(--font-display);
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* =====================================================================
+       Preview Mode Banner (?testDay=0..18)
+       ===================================================================== */
+    .preview-banner {
+      display: none;
+      width: 100%;
+      background-color: var(--preview-bg);
+      color: var(--preview-text);
+      border-bottom: 2px solid var(--preview-border);
+      padding: 5px 12px;
+      flex-shrink: 0;
+    }
+    .preview-banner.visible { display: block; }
+
+    .preview-banner-inner {
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .preview-dismiss {
+      min-width: 34px;
+      min-height: 34px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--preview-border);
+      background: transparent;
+      color: var(--preview-text);
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    /* =====================================================================
+       Floating Toast Notification
+       ===================================================================== */
+    .toast-slot {
+      position: fixed;
+      top: 76px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 350;
+      pointer-events: none;
+    }
+
+    .toast-msg {
+      background-color: var(--toast-bg);
+      color: var(--toast-text);
+      padding: 10px 18px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-display);
+      font-size: 0.92rem;
+      font-weight: 700;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      white-space: nowrap;
+    }
+    .toast-msg.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =====================================================================
+       Main App Shell — Mobile-First Viewport Fit (No Scroll Required)
+       ===================================================================== */
+    .app-shell {
+      width: 100%;
+      max-width: 500px;
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 6px 10px calc(10px + env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    /* =====================================================================
+       Top Header Bar & Mode/Archive Pill
+       ===================================================================== */
+    .top-header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-bottom: 6px;
+      border-bottom: 1.5px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+
+    .header-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .back-link {
+      min-height: 44px;
+      padding: 0 8px;
+      border-radius: var(--radius-sm);
+      color: var(--brand-blue);
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+    .back-link:hover { background-color: var(--bg-surface-alt); }
+
+    .title-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .game-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.18rem, 4.8vw, 1.42rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+
+    .icon-btn {
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border-control);
+      background-color: var(--bg-control);
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+    .icon-btn:hover { background-color: var(--bg-control-hover); }
+    .icon-btn:active { transform: scale(0.95); }
+    .icon-btn[aria-pressed="true"].hc-btn {
+      background-color: var(--brand-blue);
+      border-color: var(--brand-blue);
+      color: #FFFFFF;
+    }
+    :root[data-theme="dark"] .icon-btn[aria-pressed="true"].hc-btn {
+      color: #06172E;
+    }
+
+    /* Subtle Sub-Row: Date/Mode Pill (Opens Archive / Practice Picker) */
+    .mode-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .mode-pill-btn {
+      min-height: 32px;
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      background-color: var(--brand-pill-bg);
+      border: 1.5px solid var(--brand-pill-border);
+      color: var(--brand-pill-text);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .mode-pill-btn:hover {
+      border-color: var(--brand-blue);
+      background-color: var(--bg-surface-alt);
+    }
+
+    .results-shortcut-btn {
+      display: none;
+      min-height: 32px;
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      background-color: var(--brand-blue);
+      border: 1.5px solid var(--brand-blue);
+      color: #FFFFFF;
+      font-family: var(--font-display);
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    :root[data-theme="dark"] .results-shortcut-btn {
+      color: #06172E;
+    }
+    .results-shortcut-btn.visible { display: inline-flex; align-items: center; }
+
+    /* =====================================================================
+       6x5 Wordle Board — Responsive Viewport Fit
+       ===================================================================== */
+    .board-stage {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 0;
+    }
+
+    .wordle-board {
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+      gap: clamp(4px, 1.1vh, 7px);
+      width: min(100%, 332px, calc((100dvh - 305px) * 5 / 6));
+      min-width: 240px;
+      aspect-ratio: 5 / 6;
+    }
+
+    .wordle-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: clamp(4px, 1.1vh, 7px);
+    }
+
+    .wordle-tile {
+      width: 100%;
+      height: 100%;
+      border: 2px solid var(--tile-border);
+      border-radius: var(--radius-sm);
+      background-color: var(--tile-bg);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: clamp(1.35rem, 5.6vw, 1.95rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: border-color 0.12s ease, background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .wordle-tile.is-filled {
+      border-color: var(--tile-active-border);
+    }
+
+    .wordle-tile.state-correct {
+      background-color: var(--color-correct);
+      border-color: var(--color-correct);
+      color: var(--color-correct-text);
+    }
+    .wordle-tile.state-present {
+      background-color: var(--color-present);
+      border-color: var(--color-present);
+      color: var(--color-present-text);
+    }
+    .wordle-tile.state-absent {
+      background-color: var(--color-absent);
+      border-color: var(--color-absent);
+      color: var(--color-absent-text);
+    }
+
+    /* Tile Animations */
+    @keyframes tilePop {
+      0% { transform: scale(0.88); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .wordle-tile.animate-pop {
+      animation: tilePop 0.12s ease-out;
+    }
+
+    @keyframes tileFlip {
+      0% { transform: rotateX(0deg); }
+      49% { transform: rotateX(90deg); }
+      51% { transform: rotateX(90deg); }
+      100% { transform: rotateX(0deg); }
+    }
+    .wordle-tile.animate-flip {
+      animation: tileFlip 0.48s ease-in-out forwards;
+    }
+
+    @keyframes rowShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+    .wordle-row.animate-shake {
+      animation: rowShake 0.36s ease-in-out;
+    }
+
+    @keyframes tileBounce {
+      0%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-12px); }
+      70% { transform: translateY(3px); }
+    }
+    .wordle-tile.animate-bounce {
+      animation: tileBounce 0.45s ease-out;
+    }
+
+    /* =====================================================================
+       On-Screen QWERTY Keyboard
+       ===================================================================== */
+    .keyboard {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-shrink: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .kb-row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      width: 100%;
+    }
+
+    .kb-key {
+      flex: 1 1 0;
+      min-height: 50px;
+      max-width: 44px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background-color: var(--key-bg);
+      color: var(--key-text);
+      font-family: var(--font-mono);
+      font-size: clamp(0.86rem, 3.6vw, 1.02rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.14s ease, color 0.14s ease, transform 0.08s ease;
+    }
+
+    .kb-key:hover { background-color: var(--key-hover); }
+    .kb-key:active { transform: scale(0.94); }
+
+    .kb-key.is-wide {
+      flex: 1.55 1 0;
+      max-width: 68px;
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
+    }
+
+    .kb-key.state-correct {
+      background-color: var(--color-correct);
+      color: var(--color-correct-text);
+    }
+    .kb-key.state-present {
+      background-color: var(--color-present);
+      color: var(--color-present-text);
+    }
+    .kb-key.state-absent {
+      background-color: var(--color-absent);
+      color: var(--color-absent-text);
+    }
+
+    /* =====================================================================
+       Modals (How to Play, Archive/Picker, Stats, End-of-Game)
+       ===================================================================== */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      background-color: rgba(7, 20, 38, 0.76);
+      padding: 14px;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+
+    .modal-card {
+      width: 100%;
+      max-width: 430px;
+      max-height: 90dvh;
+      overflow-y: auto;
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      border: 2px solid var(--border-control);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.32rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Help Example Tiles */
+    .example-row {
+      display: flex;
+      gap: 5px;
+      margin: 2px 0;
+    }
+    .example-tile {
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      border: 2px solid var(--tile-border);
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+    }
+    .example-tile.correct { background: var(--color-correct); border-color: var(--color-correct); color: var(--color-correct-text); }
+    .example-tile.present { background: var(--color-present); border-color: var(--color-present); color: var(--color-present-text); }
+    .example-tile.absent  { background: var(--color-absent);  border-color: var(--color-absent);  color: var(--color-absent-text); }
+
+    /* Archive / Puzzle Picker Grid */
+    .archive-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .archive-btn {
+      min-height: 46px;
+      padding: 6px 6px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border-subtle);
+      background-color: var(--bg-surface-alt);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .archive-btn:hover:not(:disabled) { border-color: var(--brand-blue); }
+    .archive-btn.is-current {
+      background-color: var(--brand-blue);
+      border-color: var(--brand-blue);
+      color: #FFFFFF;
+    }
+    :root[data-theme="dark"] .archive-btn.is-current {
+      color: #06172E;
+    }
+    .archive-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .archive-status {
+      font-size: 0.66rem;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    /* Stats Summary & Distribution */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      text-align: center;
+    }
+
+    .stat-box {
+      padding: 10px 4px;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-surface-alt);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .stat-val {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stat-lbl {
+      font-size: 0.68rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+      line-height: 1.15;
+    }
+
+    .dist-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .dist-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .dist-bar-wrap {
+      flex: 1;
+      background-color: var(--bg-surface-alt);
+      border-radius: 6px;
+      overflow: hidden;
+      height: 22px;
+    }
+
+    .dist-bar {
+      height: 100%;
+      min-width: 24px;
+      padding: 0 7px;
+      background-color: var(--color-absent);
+      color: var(--color-absent-text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      border-radius: 6px;
+      font-size: 0.75rem;
+    }
+    .dist-bar.is-highlight {
+      background-color: var(--color-correct);
+      color: var(--color-correct-text);
+    }
+
+    /* FLCC Fact Box in End-of-Game Modal */
+    .answer-reveal-badge {
+      display: inline-block;
+      margin: 0 auto;
+      padding: 6px 16px;
+      border-radius: var(--radius-pill);
+      background-color: var(--color-correct);
+      color: var(--color-correct-text);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+    }
+
+    .flcc-fact-box {
+      padding: 13px 14px;
+      border-radius: var(--radius-md);
+      background-color: var(--bg-surface-alt);
+      border-left: 4px solid var(--brand-blue);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      line-height: 1.48;
+      text-align: left;
+    }
+
+    .flcc-fact-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--brand-blue);
+      margin-bottom: 4px;
+    }
+
+    .emoji-preview {
+      background-color: var(--bg-surface-alt);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      text-align: center;
+      font-size: 1.2rem;
+      line-height: 1.3;
+      letter-spacing: 0.1em;
+      white-space: pre-line;
+      user-select: all;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .primary-btn {
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background-color: var(--brand-blue);
+      color: #FFFFFF;
+      font-family: var(--font-display);
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+    .primary-btn:hover { background-color: var(--brand-blue-hover); }
+    :root[data-theme="dark"] .primary-btn {
+      color: #06172E;
+    }
+
+    .secondary-btn {
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border-control);
+      background-color: var(--bg-control);
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+    .secondary-btn:hover { background-color: var(--bg-control-hover); }
+
+    .share-feedback {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--brand-blue);
+      min-height: 1.2em;
+    }
+
+    /* =====================================================================
+       Reduced Motion Compliance (WCAG 2.3.3)
+       ===================================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .kb-key:active, .icon-btn:active {
+        transform: none !important;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .app-shell { padding: 4px 6px calc(8px + env(safe-area-inset-bottom)); }
+      .icon-btn { min-width: 40px; min-height: 40px; }
+      .back-link { font-size: 0.8rem; padding: 0 5px; }
+      .kb-key { min-height: 46px; }
+      .kb-row { gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#wordleBoard" class="skip-link">Skip to Wordle board</a>
+
+  <!-- Dismissible Preview Banner (?testDay=0..18) -->
+  <div id="previewBanner" class="preview-banner" role="status" aria-live="polite">
+    <div class="preview-banner-inner">
+      <span id="previewBannerText">Previewing Dec 1</span>
+      <button id="dismissPreviewBtn" class="preview-dismiss" type="button" aria-label="Dismiss preview banner">&times;</button>
+    </div>
+  </div>
+
+  <!-- Floating Toast -->
+  <div class="toast-slot" aria-hidden="true">
+    <div id="toastMsg" class="toast-msg"></div>
+  </div>
+
+  <div class="app-shell">
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="header-row">
+        <div class="header-left">
+          <a id="allGamesLink" href="../" class="back-link" aria-label="Back to All Games">
+            <span aria-hidden="true">&larr;</span> All Games
+          </a>
+        </div>
+
+        <div class="title-group">
+          <h1 class="game-title">FLCC Wordle</h1>
+        </div>
+
+        <div class="header-actions">
+          <button id="helpBtn" class="icon-btn" type="button" aria-label="How to play FLCC Wordle">?</button>
+          <button id="statsBtn" class="icon-btn" type="button" aria-label="View statistics">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </button>
+          <button id="hcToggleBtn" class="icon-btn hc-btn" type="button" aria-pressed="false" aria-label="Toggle high contrast colorblind-friendly colors" title="High Contrast">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"></path>
+            </svg>
+          </button>
+          <button id="themeToggleBtn" class="icon-btn" type="button" aria-pressed="false" aria-label="Switch to dark mode">
+            <span id="themeIcon" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Subtle Date / Mode Pill + Archive Picker Trigger -->
+      <div class="mode-bar">
+        <button id="modePillBtn" class="mode-pill-btn" type="button" aria-label="Choose Practice Mode or another unlocked December puzzle">
+          <span id="modePillText">Practice Mode</span>
+          <span aria-hidden="true">&#9662;</span>
+        </button>
+        <button id="viewResultsPillBtn" class="results-shortcut-btn" type="button">View Results</button>
+      </div>
+    </header>
+
+    <!-- 6x5 Wordle Grid -->
+    <main class="board-stage">
+      <div id="wordleBoard" class="wordle-board" role="region" aria-label="6 by 5 FLCC Wordle letter grid"></div>
+    </main>
+
+    <!-- On-Screen QWERTY Keyboard -->
+    <section id="keyboard" class="keyboard" aria-label="On-screen keyboard"></section>
+
+    <!-- Screen Reader Live Region -->
+    <div id="liveRegion" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+  <!-- How to Play Modal -->
+  <div id="helpModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="helpTitle" class="modal-title">How to Play FLCC Wordle</h2>
+        <button id="closeHelpBtn" class="icon-btn" type="button" aria-label="Close help dialog">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Guess the hidden 5-letter FLCC word in <strong>6 tries</strong>. Each guess can be any 5 letters (A&ndash;Z).</p>
+
+        <div>
+          <div class="example-row" aria-hidden="true">
+            <span class="example-tile correct">F</span>
+            <span class="example-tile">L</span>
+            <span class="example-tile">I</span>
+            <span class="example-tile">C</span>
+            <span class="example-tile">K</span>
+          </div>
+          <p><strong>Green</strong> (Orange in High Contrast): Letter is in the word and in the right spot.</p>
+        </div>
+
+        <div>
+          <div class="example-row" aria-hidden="true">
+            <span class="example-tile">C</span>
+            <span class="example-tile present">A</span>
+            <span class="example-tile">M</span>
+            <span class="example-tile">P</span>
+            <span class="example-tile">S</span>
+          </div>
+          <p><strong>Yellow</strong> (Blue in High Contrast): Letter is in the word, but in a different spot.</p>
+        </div>
+
+        <div>
+          <div class="example-row" aria-hidden="true">
+            <span class="example-tile">S</span>
+            <span class="example-tile">N</span>
+            <span class="example-tile">O</span>
+            <span class="example-tile absent">W</span>
+            <span class="example-tile">Y</span>
+          </div>
+          <p><strong>Gray</strong>: Letter is not in the word in any spot.</p>
+        </div>
+
+        <p style="font-size:0.84rem;">A new official puzzle unlocks daily from <strong>Dec 1&ndash;18</strong> at midnight Eastern Time. Tap the date pill above the board anytime to switch between Practice Mode and unlocked days.</p>
+      </div>
+      <div class="modal-actions">
+        <button id="helpGotItBtn" class="primary-btn" type="button">Let&rsquo;s Play</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Archive / Puzzle Picker Modal -->
+  <div id="archiveModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="archiveTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="archiveTitle" class="modal-title">Choose a Puzzle</h2>
+        <button id="closeArchiveBtn" class="icon-btn" type="button" aria-label="Close puzzle picker">&times;</button>
+      </div>
+      <div class="modal-body">
+        <button id="practiceSelectBtn" class="secondary-btn" type="button" style="width:100%;">
+          Practice Mode (Warmup)
+        </button>
+        <div id="archiveGrid" class="archive-grid" aria-label="December 1 to 18 puzzles"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Modal -->
+  <div id="statsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="statsTitle" class="modal-title">Your Wordle Stats</h2>
+        <button id="closeStatsBtn" class="icon-btn" type="button" aria-label="Close statistics dialog">&times;</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div id="statPlayed" class="stat-val">0</div>
+          <div class="stat-lbl">Played</div>
+        </div>
+        <div class="stat-box">
+          <div id="statWinPct" class="stat-val">0%</div>
+          <div class="stat-lbl">Win %</div>
+        </div>
+        <div class="stat-box">
+          <div id="statStreak" class="stat-val">0</div>
+          <div class="stat-lbl">Current Streak</div>
+        </div>
+        <div class="stat-box">
+          <div id="statMaxStreak" class="stat-val">0</div>
+          <div class="stat-lbl">Max Streak</div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <strong style="color:var(--text-primary); font-size:0.86rem;">Guess Distribution</strong>
+        <div id="statsDistList" class="dist-list"></div>
+        <p style="font-size:0.76rem; color:var(--text-muted); text-align:center;">Official stats track Dec 1&ndash;18 puzzles (Practice &amp; preview runs are excluded).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- End-of-Game Results & FLCC History Modal -->
+  <div id="resultsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="resultsTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="resultsTitle" class="modal-title">Splendid!</h2>
+        <button id="closeResultsBtn" class="icon-btn" type="button" aria-label="Close results dialog">&times;</button>
+      </div>
+
+      <div style="text-align:center;">
+        <span id="resultsWordBadge" class="answer-reveal-badge">FLICK</span>
+      </div>
+
+      <div class="flcc-fact-box">
+        <span class="flcc-fact-label">FLCC Connection &amp; History</span>
+        <p id="resultsFactText"></p>
+      </div>
+
+      <div id="resultsEmojiPreview" class="emoji-preview" aria-label="Your guess result emoji grid"></div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div id="resStatPlayed" class="stat-val">0</div>
+          <div class="stat-lbl">Played</div>
+        </div>
+        <div class="stat-box">
+          <div id="resStatWinPct" class="stat-val">0%</div>
+          <div class="stat-lbl">Win %</div>
+        </div>
+        <div class="stat-box">
+          <div id="resStatStreak" class="stat-val">0</div>
+          <div class="stat-lbl">Streak</div>
+        </div>
+        <div class="stat-box">
+          <div id="resStatMax" class="stat-val">0</div>
+          <div class="stat-lbl">Max</div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="copyResultsBtn" class="primary-btn" type="button">Copy Results to Clipboard</button>
+        <div id="shareFeedback" class="share-feedback" role="status" aria-live="polite"></div>
+        <button id="replayPracticeBtn" class="secondary-btn" type="button" style="display:none;">Play Practice Again</button>
+        <a id="resultsBackHomeBtn" href="../" class="secondary-btn">
+          <span aria-hidden="true">&larr;</span> Back to All Games
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ===================================================================
+         Storage Keys & Constants
+         =================================================================== */
+      const THEME_KEY = 'thirdfloordoordle_theme';
+      const HC_KEY = 'flcc_wordle_hc_v1';
+      const STORE_KEY = 'flcc_wordle_v1';
+      const MAX_GUESSES = 6;
+      const WORD_LEN = 5;
+
+      /* ===================================================================
+         Anti-Snooping Salted Positional Hashes (No Plaintext Answers)
+         hashPosition(day, pos, char) -> 4-char salted hex digest
+         =================================================================== */
+      const SALT_DIGESTS = [
+        '3f8a', '9c12', '5e4d', 'b720', '1a9f', 'd46b', '82e3', '47c9', 'f105',
+        '6b3e', '29d4', 'c857', '0e6a', 'a318', '74f2', 'e09c', '51b7', '8d43',
+        '2c6e', 'b901', '46a5', 'd28f', '17e4', '905b', '63c8', 'f83d'
+      ];
+
+      function hashPosition(day, pos, letter) {
+        const n = letter.charCodeAt(0) - 65;
+        const idx = (n + day * 3 + pos * 5 + 7) % 26;
+        return SALT_DIGESTS[idx];
+      }
+
+      // Day 0 = Practice, Days 1..18 = Dec 1..Dec 18
+      // Fact templates use {T} (Title Case) and {w} (lowercase) so no answer word appears in source.
+      const PUZZLES = {
+        0:  {
+          label: 'Practice Mode',
+          shortLabel: 'Practice',
+          hashes: ['0e6a', '905b', 'f83d', '63c8', 'c857'],
+          fact: 'Our favorite nickname for Finger Lakes Community College!'
+        },
+        1:  {
+          label: 'Dec 1 \u2022 Puzzle #1',
+          shortLabel: 'Dec 1',
+          hashes: ['d28f', 'e09c', '1a9f', 'b720', 'd28f'],
+          fact: 'Our campus identity and athletics pride. In fall 2009, FLCC even named a campus loop road {T} Lane in honor of its athletic teams.'
+        },
+        2:  {
+          label: 'Dec 2 \u2022 Puzzle #2',
+          shortLabel: 'Dec 2',
+          hashes: ['e09c', 'b720', '905b', '46a5', 'f83d'],
+          fact: "FLCC welcomed its first freshman {w} on February 1, 1968\u201485 full-time and 125 part-time 'storefront pioneers' in downtown Canandaigua."
+        },
+        3:  {
+          label: 'Dec 3 \u2022 Puzzle #3',
+          shortLabel: 'Dec 3',
+          hashes: ['c857', 'b720', 'a318', '6b3e', '5e4d'],
+          fact: 'FLCC launched Viticulture and Wine Technology in Fall 2009, planted a teaching vineyard in 2012, and opened its Geneva teaching winery in 2015.'
+        },
+        4:  {
+          label: 'Dec 4 \u2022 Puzzle #4',
+          shortLabel: 'Dec 4',
+          hashes: ['c857', '8d43', 'b720', '74f2', '8d43'],
+          fact: 'From campus events at {T} 14 to concerts right next door at CMAC, live performance is woven into FLCC campus life.'
+        },
+        5:  {
+          label: 'Dec 5 \u2022 Puzzle #5',
+          shortLabel: 'Dec 5',
+          hashes: ['6b3e', 'd28f', '905b', 'b720', '46a5'],
+          fact: "One of FLCC's cornerstone health programs, preparing generations of Finger Lakes registered {w}s through hands-on clinical training."
+        },
+        6:  {
+          label: 'Dec 6 \u2022 Puzzle #6',
+          shortLabel: 'Dec 6',
+          hashes: ['8d43', '905b', 'b720', '8d43', '8d43'],
+          fact: "Honors the Charles J. Meder Library\u2014named for FLCC's longtime president\u2014and {w} spaces across every campus center."
+        },
+        7:  {
+          label: 'Dec 7 \u2022 Puzzle #7',
+          shortLabel: 'Dec 7',
+          hashes: ['d28f', '63c8', '0e6a', 'f83d', '47c9'],
+          fact: 'When FLCC moved to its 250-acre Lincoln Hill campus in 1975, it gained wooded {w}s\u2014later joined by East Hill and Muller Field Station.'
+        },
+        8:  {
+          label: 'Dec 8 \u2022 Puzzle #8',
+          shortLabel: 'Dec 8',
+          hashes: ['d46b', '1a9f', '2c6e', '5e4d', 'a318'],
+          fact: "Celebrates FLCC's Music Recording Technology program, featuring campus recording studios, Pro Tools labs, and live sound reinforcement."
+        },
+        9:  {
+          label: 'Dec 9 \u2022 Puzzle #9',
+          shortLabel: 'Dec 9',
+          hashes: ['74f2', '1a9f', '2c6e', '0e6a', '82e3'],
+          fact: "Rooted in New York's premier wine region, FLCC turns local agriculture into applied science at the Viticulture and Wine Center in Geneva."
+        },
+        10: {
+          label: 'Dec 10 \u2022 Puzzle #10',
+          shortLabel: 'Dec 10',
+          hashes: ['47c9', '51b7', 'b901', 'a318', '6b3e'],
+          fact: "Highlights FLCC's four-county service area, bringing college access directly to {T} County residents through the Newark Campus Center."
+        },
+        11: {
+          label: 'Dec 11 \u2022 Puzzle #11',
+          shortLabel: 'Dec 11',
+          hashes: ['47c9', '29d4', '5e4d', '47c9', '3f8a'],
+          fact: 'Conservation and forestry have deep roots at FLCC, with outdoor labs spanning Lincoln Hill, East Hill in Naples, and Honeoye Lake.'
+        },
+        12: {
+          label: 'Dec 12 \u2022 Puzzle #12',
+          shortLabel: 'Dec 12',
+          hashes: ['d28f', '17e4', '2c6e', 'f83d', '2c6e'],
+          fact: "Spotlights FLCC's Environmental Science and Conservation programs, anchored by the 48-acre Muller Field Station on Honeoye Lake."
+        },
+        13: {
+          label: 'Dec 13 \u2022 Puzzle #13',
+          shortLabel: 'Dec 13',
+          hashes: ['d46b', 'f83d', '74f2', 'a318', '82e3'],
+          fact: 'Founded by Ontario County vote on September 16, 1965 as Community College of the Finger {T} (CCFL), adopting FLCC in 1992.'
+        },
+        14: {
+          label: 'Dec 14 \u2022 Puzzle #14',
+          shortLabel: 'Dec 14',
+          hashes: ['6b3e', '17e4', 'f83d', '46a5', 'b901'],
+          fact: "From {T} Theory and Master Composers to live student concerts, FLCC's {T} program blends classical foundations with modern production."
+        },
+        15: {
+          label: 'Dec 15 \u2022 Puzzle #15',
+          shortLabel: 'Dec 15',
+          hashes: ['5e4d', 'b901', 'a318', 'b901', '0e6a'],
+          fact: "A nod to FLCC's Computing Sciences programs\u2014including Computer Science, Computer Information Systems, and Game Programming and Design."
+        },
+        16: {
+          label: 'Dec 16 \u2022 Puzzle #16',
+          shortLabel: 'Dec 16',
+          hashes: ['e09c', 'f105', '82e3', 'f83d', 'e09c'],
+          fact: "The analytical backbone of FLCC's STEM, Engineering Science, and General Education courses, building problem-solvers across every discipline."
+        },
+        17: {
+          label: 'Dec 17 \u2022 Puzzle #17',
+          shortLabel: 'Dec 17',
+          hashes: ['8d43', 'e09c', '51b7', '0e6a', 'a318'],
+          fact: 'FLCC offered its first non-credit classes in September 1967 under Continuing Education\u2014starting nearly 60 years of lifelong {w}ing.'
+        },
+        18: {
+          label: 'Dec 18 \u2022 Puzzle #18',
+          shortLabel: 'Dec 18',
+          hashes: ['9c12', 'f105', '9c12', '8d43', '47c9'],
+          fact: 'Celebrates The {T}s at Laker Landing, the 356-bed residence hall adjacent to the Canandaigua campus.'
+        }
+      };
+
+      /**
+       * Resolves a puzzle's 5-letter target internally by matching each position's
+       * salted hash against A-Z. Used only during evaluation and end-of-game reveal.
+       */
+      function resolveWordFromHashes(day) {
+        const puzzle = PUZZLES[day];
+        if (!puzzle) return '';
+        let word = '';
+        for (let pos = 0; pos < WORD_LEN; pos++) {
+          const targetHash = puzzle.hashes[pos];
+          for (let code = 65; code <= 90; code++) {
+            const ch = String.fromCharCode(code);
+            if (hashPosition(day, pos, ch) === targetHash) {
+              word += ch;
+              break;
+            }
+          }
+        }
+        return word;
+      }
+
+      function formatFact(day, word) {
+        const puzzle = PUZZLES[day];
+        if (!puzzle) return '';
+        const lower = word.toLowerCase();
+        const title = word.charAt(0) + lower.slice(1);
+        return puzzle.fact
+          .replace(/\{T\}/g, title)
+          .replace(/\{w\}/g, lower)
+          .replace(/\{W\}/g, word);
+      }
+
+      /**
+       * Standard Wordle 2-pass evaluation (handles duplicate letters accurately).
+       */
+      function evaluateGuess(guess, day) {
+        const target = resolveWordFromHashes(day);
+        const result = ['absent', 'absent', 'absent', 'absent', 'absent'];
+        const remaining = {};
+
+        // Pass 1: exact positional matches
+        for (let i = 0; i < WORD_LEN; i++) {
+          if (guess[i] === target[i]) {
+            result[i] = 'correct';
+          } else {
+            remaining[target[i]] = (remaining[target[i]] || 0) + 1;
+          }
+        }
+
+        // Pass 2: present in wrong position
+        for (let i = 0; i < WORD_LEN; i++) {
+          if (result[i] === 'correct') continue;
+          const ch = guess[i];
+          if (remaining[ch] && remaining[ch] > 0) {
+            result[i] = 'present';
+            remaining[ch]--;
+          }
+        }
+
+        return result;
+      }
+
+      /* ===================================================================
+         Crash-Proof localStorage Helpers
+         =================================================================== */
+      function safeGet(key) {
+        try { return window.localStorage.getItem(key); } catch (e) { return null; }
+      }
+      function safeSet(key, val) {
+        try { window.localStorage.setItem(key, val); } catch (e) { /* ignore private browsing */ }
+      }
+
+      /* ===================================================================
+         Eastern Time (America/New_York) & ?testDay=0..18 Preview Logic
+         =================================================================== */
+      function getEasternDateParts() {
+        try {
+          const fmt = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/New_York',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+          });
+          const parts = fmt.formatToParts(new Date());
+          const year = parseInt(parts.find(function (p) { return p.type === 'year'; }).value, 10);
+          const month = parseInt(parts.find(function (p) { return p.type === 'month'; }).value, 10);
+          const day = parseInt(parts.find(function (p) { return p.type === 'day'; }).value, 10);
+          if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+            return { year: year, month: month, day: day };
+          }
+        } catch (e) { /* fallback below */ }
+        const now = new Date();
+        return { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
+      }
+
+      function getTestDayParam() {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const raw = params.get('testDay');
+          if (raw === null) return null;
+          const parsed = parseInt(raw, 10);
+          if (parsed >= 0 && parsed <= 18 && String(parsed) === raw.trim()) {
+            return parsed;
+          }
+        } catch (e) { /* ignore */ }
+        return null;
+      }
+
+      const est = getEasternDateParts();
+      const testDay = getTestDayParam();
+      const isPreview = testDay !== null;
+
+      function getMaxUnlockedDay() {
+        if (isPreview) return testDay;
+        if (est.month === 12) {
+          return Math.min(18, Math.max(0, est.day));
+        }
+        return 0; // Before December 1 -> Practice Mode only
+      }
+
+      function getDefaultDay() {
+        if (isPreview) return testDay;
+        if (est.month === 12) {
+          if (est.day >= 1 && est.day <= 18) return est.day;
+          if (est.day > 18) return 18;
+        }
+        return 0;
+      }
+
+      /* ===================================================================
+         State & Persistence
+         =================================================================== */
+      function createDefaultStore() {
+        return {
+          days: {},
+          stats: {
+            played: 0,
+            wins: 0,
+            currentStreak: 0,
+            maxStreak: 0,
+            lastCompletedDay: null,
+            dist: [0, 0, 0, 0, 0, 0],
+            countedDays: []
+          }
+        };
+      }
+
+      function loadStore() {
+        if (isPreview) return createDefaultStore();
+        const raw = safeGet(STORE_KEY);
+        if (!raw) return createDefaultStore();
+        try {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            const st = parsed.stats || {};
+            return {
+              days: parsed.days && typeof parsed.days === 'object' ? parsed.days : {},
+              stats: {
+                played: Number(st.played) || 0,
+                wins: Number(st.wins) || 0,
+                currentStreak: Number(st.currentStreak) || 0,
+                maxStreak: Number(st.maxStreak) || 0,
+                lastCompletedDay: typeof st.lastCompletedDay === 'number' ? st.lastCompletedDay : null,
+                dist: Array.isArray(st.dist) && st.dist.length === 6 ? st.dist : [0, 0, 0, 0, 0, 0],
+                countedDays: Array.isArray(st.countedDays) ? st.countedDays : []
+              }
+            };
+          }
+        } catch (e) { /* ignore corrupt JSON */ }
+        return createDefaultStore();
+      }
+
+      function saveStore() {
+        if (isPreview) return;
+        safeSet(STORE_KEY, JSON.stringify(store));
+      }
+
+      /**
+       * Saves a lightweight completion flag under doordle_<year>_dec_<day>
+       * so the landing page hub (index.html) can display "✓ Played Today".
+       */
+      function saveHubCompletionFlag(day, dayState) {
+        if (isPreview || day < 1 || day > 18) return;
+        const key = 'doordle_' + est.year + '_dec_' + day;
+        safeSet(key, JSON.stringify({
+          status: dayState.status,
+          completed: true,
+          gameOver: true,
+          won: dayState.status === 'won',
+          guessesCount: dayState.guesses.length
+        }));
+      }
+
+      let store = loadStore();
+      let activeDay = getDefaultDay();
+      let currentInput = '';
+      let isRevealing = false;
+      let toastTimer = null;
+
+      function getOrInitDayState(day) {
+        if (!store.days[day] || !Array.isArray(store.days[day].guesses)) {
+          store.days[day] = {
+            guesses: [],
+            status: 'playing' // 'playing' | 'won' | 'lost'
+          };
+          saveStore();
+        }
+        return store.days[day];
+      }
+
+      /* ===================================================================
+         DOM References
+         =================================================================== */
+      const rootEl = document.documentElement;
+      const allGamesLink = document.getElementById('allGamesLink');
+      const resultsBackHomeBtn = document.getElementById('resultsBackHomeBtn');
+      const modePillBtn = document.getElementById('modePillBtn');
+      const modePillText = document.getElementById('modePillText');
+      const viewResultsPillBtn = document.getElementById('viewResultsPillBtn');
+      const boardEl = document.getElementById('wordleBoard');
+      const keyboardEl = document.getElementById('keyboard');
+      const toastMsgEl = document.getElementById('toastMsg');
+      const liveRegionEl = document.getElementById('liveRegion');
+
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const themeIconEl = document.getElementById('themeIcon');
+      const hcToggleBtn = document.getElementById('hcToggleBtn');
+      const helpBtn = document.getElementById('helpBtn');
+      const statsBtn = document.getElementById('statsBtn');
+
+      const helpModal = document.getElementById('helpModal');
+      const closeHelpBtn = document.getElementById('closeHelpBtn');
+      const helpGotItBtn = document.getElementById('helpGotItBtn');
+
+      const archiveModal = document.getElementById('archiveModal');
+      const closeArchiveBtn = document.getElementById('closeArchiveBtn');
+      const practiceSelectBtn = document.getElementById('practiceSelectBtn');
+      const archiveGridEl = document.getElementById('archiveGrid');
+
+      const statsModal = document.getElementById('statsModal');
+      const closeStatsBtn = document.getElementById('closeStatsBtn');
+      const statPlayedEl = document.getElementById('statPlayed');
+      const statWinPctEl = document.getElementById('statWinPct');
+      const statStreakEl = document.getElementById('statStreak');
+      const statMaxStreakEl = document.getElementById('statMaxStreak');
+      const statsDistListEl = document.getElementById('statsDistList');
+
+      const resultsModal = document.getElementById('resultsModal');
+      const closeResultsBtn = document.getElementById('closeResultsBtn');
+      const resultsTitleEl = document.getElementById('resultsTitle');
+      const resultsWordBadgeEl = document.getElementById('resultsWordBadge');
+      const resultsFactTextEl = document.getElementById('resultsFactText');
+      const resultsEmojiPreviewEl = document.getElementById('resultsEmojiPreview');
+      const resStatPlayedEl = document.getElementById('resStatPlayed');
+      const resStatWinPctEl = document.getElementById('resStatWinPct');
+      const resStatStreakEl = document.getElementById('resStatStreak');
+      const resStatMaxEl = document.getElementById('resStatMax');
+      const copyResultsBtn = document.getElementById('copyResultsBtn');
+      const shareFeedbackEl = document.getElementById('shareFeedback');
+      const replayPracticeBtn = document.getElementById('replayPracticeBtn');
+
+      /* ===================================================================
+         Theme & High Contrast Persistence
+         =================================================================== */
+      const MOON_SVG = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+      const SUN_SVG = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+
+      function applyTheme(theme, persist) {
+        const isDark = theme === 'dark';
+        if (isDark) {
+          rootEl.setAttribute('data-theme', 'dark');
+          themeToggleBtn.setAttribute('aria-pressed', 'true');
+          themeToggleBtn.setAttribute('aria-label', 'Switch to light mode');
+          themeIconEl.innerHTML = SUN_SVG;
+        } else {
+          rootEl.removeAttribute('data-theme');
+          themeToggleBtn.setAttribute('aria-pressed', 'false');
+          themeToggleBtn.setAttribute('aria-label', 'Switch to dark mode');
+          themeIconEl.innerHTML = MOON_SVG;
+        }
+        if (persist) safeSet(THEME_KEY, theme);
+      }
+
+      function applyHighContrast(enabled, persist) {
+        if (enabled) {
+          rootEl.setAttribute('data-contrast', 'high');
+          hcToggleBtn.setAttribute('aria-pressed', 'true');
+        } else {
+          rootEl.removeAttribute('data-contrast');
+          hcToggleBtn.setAttribute('aria-pressed', 'false');
+        }
+        if (persist) safeSet(HC_KEY, enabled ? '1' : '0');
+        if (resultsModal.classList.contains('open')) {
+          resultsEmojiPreviewEl.textContent = buildEmojiGrid(getOrInitDayState(activeDay));
+        }
+      }
+
+      themeToggleBtn.addEventListener('click', function () {
+        applyTheme(rootEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
+      });
+
+      hcToggleBtn.addEventListener('click', function () {
+        const next = rootEl.getAttribute('data-contrast') !== 'high';
+        applyHighContrast(next, true);
+        showToast(next ? 'High Contrast ON' : 'High Contrast OFF', 1400);
+      });
+
+      /* ===================================================================
+         Helpers & Announcements
+         =================================================================== */
+      function prefersReducedMotion() {
+        try {
+          return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        } catch (e) { return false; }
+      }
+
+      function announce(msg) {
+        liveRegionEl.textContent = '';
+        window.setTimeout(function () {
+          liveRegionEl.textContent = msg;
+        }, 25);
+      }
+
+      function showToast(msg, durationMs) {
+        toastMsgEl.textContent = msg;
+        toastMsgEl.classList.add('visible');
+        announce(msg);
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(function () {
+          toastMsgEl.classList.remove('visible');
+        }, durationMs || 1800);
+      }
+
+      /* ===================================================================
+         Build Grid & QWERTY Keyboard
+         =================================================================== */
+      const KB_ROWS = [
+        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+        ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
+      ];
+
+      function buildBoardDOM() {
+        boardEl.innerHTML = '';
+        for (let r = 0; r < MAX_GUESSES; r++) {
+          const rowEl = document.createElement('div');
+          rowEl.className = 'wordle-row';
+          rowEl.dataset.row = String(r);
+          rowEl.setAttribute('role', 'group');
+          rowEl.setAttribute('aria-label', 'Row ' + (r + 1));
+
+          for (let c = 0; c < WORD_LEN; c++) {
+            const tile = document.createElement('div');
+            tile.className = 'wordle-tile';
+            tile.dataset.row = String(r);
+            tile.dataset.col = String(c);
+            rowEl.appendChild(tile);
+          }
+          boardEl.appendChild(rowEl);
+        }
+      }
+
+      function buildKeyboardDOM() {
+        keyboardEl.innerHTML = '';
+        KB_ROWS.forEach(function (rowKeys) {
+          const rowEl = document.createElement('div');
+          rowEl.className = 'kb-row';
+
+          rowKeys.forEach(function (keyVal) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'kb-key';
+            btn.dataset.key = keyVal;
+
+            if (keyVal === 'ENTER') {
+              btn.classList.add('is-wide');
+              btn.textContent = 'Enter';
+              btn.setAttribute('aria-label', 'Submit guess');
+            } else if (keyVal === 'BACK') {
+              btn.classList.add('is-wide');
+              btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path><line x1="18" y1="9" x2="12" y2="15"></line><line x1="12" y1="9" x2="18" y2="15"></line></svg>';
+              btn.setAttribute('aria-label', 'Backspace');
+            } else {
+              btn.textContent = keyVal;
+              btn.setAttribute('aria-label', keyVal);
+            }
+
+            btn.addEventListener('click', function () {
+              handleKeyInput(keyVal);
+            });
+
+            rowEl.appendChild(btn);
+          });
+
+          keyboardEl.appendChild(rowEl);
+        });
+      }
+
+      /* ===================================================================
+         Render Board & Keyboard State
+         =================================================================== */
+      const STATE_RANK = { absent: 1, present: 2, correct: 3 };
+
+      function renderDay() {
+        const dayState = getOrInitDayState(activeDay);
+        const puzzle = PUZZLES[activeDay];
+
+        modePillText.textContent = puzzle ? puzzle.label : 'Practice Mode';
+        viewResultsPillBtn.classList.toggle('visible', dayState.status !== 'playing');
+
+        // Reset keyboard colors
+        const keyStates = {};
+        const tiles = boardEl.querySelectorAll('.wordle-tile');
+        tiles.forEach(function (t) {
+          t.textContent = '';
+          t.className = 'wordle-tile';
+          t.removeAttribute('aria-label');
+        });
+
+        // Fill submitted guesses
+        dayState.guesses.forEach(function (guess, r) {
+          const evals = evaluateGuess(guess, activeDay);
+          for (let c = 0; c < WORD_LEN; c++) {
+            const tile = getTileEl(r, c);
+            const ch = guess[c];
+            const st = evals[c];
+            tile.textContent = ch;
+            tile.classList.add('is-filled', 'state-' + st);
+            tile.setAttribute('aria-label', ch + ', ' + st);
+
+            if (!keyStates[ch] || STATE_RANK[st] > STATE_RANK[keyStates[ch]]) {
+              keyStates[ch] = st;
+            }
+          }
+        });
+
+        // Fill active typing row if still playing
+        if (dayState.status === 'playing' && dayState.guesses.length < MAX_GUESSES) {
+          const activeRow = dayState.guesses.length;
+          for (let c = 0; c < WORD_LEN; c++) {
+            const tile = getTileEl(activeRow, c);
+            if (c < currentInput.length) {
+              tile.textContent = currentInput[c];
+              tile.classList.add('is-filled');
+            }
+          }
+        }
+
+        // Update keyboard key states
+        keyboardEl.querySelectorAll('.kb-key').forEach(function (btn) {
+          const k = btn.dataset.key;
+          btn.classList.remove('state-correct', 'state-present', 'state-absent');
+          if (keyStates[k]) {
+            btn.classList.add('state-' + keyStates[k]);
+          }
+        });
+      }
+
+      function getTileEl(r, c) {
+        return boardEl.querySelector('.wordle-tile[data-row="' + r + '"][data-col="' + c + '"]');
+      }
+
+      function getRowEl(r) {
+        return boardEl.querySelector('.wordle-row[data-row="' + r + '"]');
+      }
+
+      /* ===================================================================
+         Input Handling & Submission
+         =================================================================== */
+      function handleKeyInput(key) {
+        if (isRevealing) return;
+        const dayState = getOrInitDayState(activeDay);
+        if (dayState.status !== 'playing') return;
+
+        if (key === 'BACK') {
+          if (currentInput.length > 0) {
+            currentInput = currentInput.slice(0, -1);
+            renderCurrentTypingRow(-1);
+          }
+          return;
+        }
+
+        if (key === 'ENTER') {
+          submitCurrentGuess();
+          return;
+        }
+
+        if (/^[A-Z]$/.test(key) && currentInput.length < WORD_LEN) {
+          currentInput += key;
+          renderCurrentTypingRow(currentInput.length - 1);
+        }
+      }
+
+      function renderCurrentTypingRow(popIndex) {
+        const dayState = getOrInitDayState(activeDay);
+        const r = dayState.guesses.length;
+        if (r >= MAX_GUESSES) return;
+
+        for (let c = 0; c < WORD_LEN; c++) {
+          const tile = getTileEl(r, c);
+          tile.classList.remove('animate-pop');
+          if (c < currentInput.length) {
+            tile.textContent = currentInput[c];
+            tile.classList.add('is-filled');
+            if (c === popIndex && !prefersReducedMotion()) {
+              void tile.offsetWidth;
+              tile.classList.add('animate-pop');
+            }
+          } else {
+            tile.textContent = '';
+            tile.classList.remove('is-filled');
+          }
+        }
+      }
+
+      function shakeRow(r) {
+        const rowEl = getRowEl(r);
+        if (!rowEl || prefersReducedMotion()) return;
+        rowEl.classList.remove('animate-shake');
+        void rowEl.offsetWidth;
+        rowEl.classList.add('animate-shake');
+      }
+
+      function recordOfficialStats(day, won, guessCount) {
+        if (isPreview || day < 1 || day > 18) return;
+        if (store.stats.countedDays.indexOf(day) !== -1) return;
+
+        store.stats.countedDays.push(day);
+        store.stats.played++;
+        if (won) {
+          store.stats.wins++;
+          if (store.stats.lastCompletedDay === day - 1 || store.stats.lastCompletedDay === null) {
+            store.stats.currentStreak++;
+          } else {
+            store.stats.currentStreak = 1;
+          }
+          if (store.stats.currentStreak > store.stats.maxStreak) {
+            store.stats.maxStreak = store.stats.currentStreak;
+          }
+          if (guessCount >= 1 && guessCount <= 6) {
+            store.stats.dist[guessCount - 1]++;
+          }
+        } else {
+          store.stats.currentStreak = 0;
+        }
+        store.stats.lastCompletedDay = day;
+        saveStore();
+      }
+
+      function submitCurrentGuess() {
+        const dayState = getOrInitDayState(activeDay);
+        const rowIdx = dayState.guesses.length;
+
+        if (currentInput.length < WORD_LEN) {
+          shakeRow(rowIdx);
+          showToast('Not enough letters', 1300);
+          return;
+        }
+
+        if (!/^[A-Z]{5}$/.test(currentInput)) {
+          shakeRow(rowIdx);
+          showToast('Letters A\u2013Z only', 1300);
+          return;
+        }
+
+        const guess = currentInput;
+        const evals = evaluateGuess(guess, activeDay);
+        const won = evals.every(function (e) { return e === 'correct'; });
+        const lost = !won && (rowIdx + 1 >= MAX_GUESSES);
+
+        dayState.guesses.push(guess);
+        if (won) dayState.status = 'won';
+        else if (lost) dayState.status = 'lost';
+
+        currentInput = '';
+        saveStore();
+
+        if (won || lost) {
+          recordOfficialStats(activeDay, won, dayState.guesses.length);
+          saveHubCompletionFlag(activeDay, dayState);
+        }
+
+        // Build screen reader feedback for this row
+        const srSummary = guess.split('').map(function (ch, idx) {
+          return ch + ' ' + evals[idx];
+        }).join(', ');
+        announce('Row ' + (rowIdx + 1) + ': ' + srSummary + '.');
+
+        // Animate flip reveal
+        isRevealing = true;
+        const reduced = prefersReducedMotion();
+        const stepMs = reduced ? 0 : 210;
+
+        for (let c = 0; c < WORD_LEN; c++) {
+          (function (col) {
+            window.setTimeout(function () {
+              const tile = getTileEl(rowIdx, col);
+              if (!reduced) {
+                tile.classList.add('animate-flip');
+              }
+              window.setTimeout(function () {
+                tile.classList.add('state-' + evals[col]);
+                tile.setAttribute('aria-label', guess[col] + ', ' + evals[col]);
+              }, reduced ? 0 : 220);
+            }, col * stepMs);
+          })(c);
+        }
+
+        const totalRevealMs = reduced ? 40 : (WORD_LEN * stepMs + 340);
+        window.setTimeout(function () {
+          isRevealing = false;
+          renderDay();
+
+          if (won) {
+            const praises = ['Genius!', 'Magnificent!', 'Impressive!', 'Splendid!', 'Great!', 'Phew!'];
+            showToast(praises[dayState.guesses.length - 1] || 'Solved!', 1800);
+
+            if (!reduced) {
+              for (let c = 0; c < WORD_LEN; c++) {
+                (function (col) {
+                  window.setTimeout(function () {
+                    const t = getTileEl(rowIdx, col);
+                    if (t) t.classList.add('animate-bounce');
+                  }, col * 85);
+                })(c);
+              }
+            }
+
+            window.setTimeout(function () {
+              openResultsModal();
+            }, reduced ? 120 : 950);
+          } else if (lost) {
+            const answer = resolveWordFromHashes(activeDay);
+            showToast('The word was ' + answer, 2200);
+            window.setTimeout(function () {
+              openResultsModal();
+            }, reduced ? 120 : 1100);
+          }
+        }, totalRevealMs);
+      }
+
+      /* ===================================================================
+         Emoji Grid & Two-Tier Clipboard Share
+         =================================================================== */
+      function buildEmojiGrid(dayState) {
+        const isHC = rootEl.getAttribute('data-contrast') === 'high';
+        const isDark = rootEl.getAttribute('data-theme') === 'dark';
+        const emojiMap = {
+          correct: isHC ? '\uD83D\uDFE7' : '\uD83D\uDFE9', // 🟧 or 🟩
+          present: isHC ? '\uD83D\uDFE6' : '\uD83D\uDFE8', // 🟦 or 🟨
+          absent:  isDark ? '\u2B1B' : '\u2B1C'            // ⬛ or ⬜
+        };
+
+        return dayState.guesses.map(function (guess) {
+          const evals = evaluateGuess(guess, activeDay);
+          return evals.map(function (st) { return emojiMap[st]; }).join('');
+        }).join('\n');
+      }
+
+      function buildShareText(dayState) {
+        const puzzle = PUZZLES[activeDay];
+        const score = dayState.status === 'won' ? (dayState.guesses.length + '/6') : 'X/6';
+        const header = 'FLCC Wordle \u2014 ' + puzzle.shortLabel + ' ' + score;
+        return header + '\n\n' + buildEmojiGrid(dayState) + '\n\nhttps://thirdfloordoordle.com';
+      }
+
+      function copyToClipboard(text) {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          return navigator.clipboard.writeText(text).then(function () {
+            return true;
+          }).catch(function () {
+            return fallbackCopy(text);
+          });
+        }
+        return Promise.resolve(fallbackCopy(text));
+      }
+
+      function fallbackCopy(text) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          const ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          return ok;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      /* ===================================================================
+         Modals (Help, Archive Picker, Stats, Results)
+         =================================================================== */
+      let lastFocused = null;
+
+      function openModal(modalEl, focusTarget) {
+        lastFocused = document.activeElement;
+        modalEl.classList.add('open');
+        if (focusTarget) focusTarget.focus();
+      }
+
+      function closeModal(modalEl) {
+        modalEl.classList.remove('open');
+        if (lastFocused && typeof lastFocused.focus === 'function') {
+          lastFocused.focus();
+        }
+      }
+
+      function populateStatsSummary(playedEl, winEl, streakEl, maxEl) {
+        const s = store.stats;
+        const winPct = s.played > 0 ? Math.round((s.wins / s.played) * 100) : 0;
+        playedEl.textContent = String(s.played);
+        winEl.textContent = winPct + '%';
+        streakEl.textContent = String(s.currentStreak);
+        maxEl.textContent = String(s.maxStreak);
+      }
+
+      function openStatsModal() {
+        populateStatsSummary(statPlayedEl, statWinPctEl, statStreakEl, statMaxStreakEl);
+
+        const maxDist = Math.max.apply(null, [1].concat(store.stats.dist));
+        const dayState = getOrInitDayState(activeDay);
+        const highlightIdx = (dayState.status === 'won' && activeDay > 0) ? (dayState.guesses.length - 1) : -1;
+
+        statsDistListEl.innerHTML = '';
+        for (let i = 0; i < 6; i++) {
+          const count = store.stats.dist[i] || 0;
+          const pct = Math.max(8, Math.round((count / maxDist) * 100));
+
+          const row = document.createElement('div');
+          row.className = 'dist-row';
+
+          const lbl = document.createElement('span');
+          lbl.textContent = String(i + 1);
+
+          const wrap = document.createElement('div');
+          wrap.className = 'dist-bar-wrap';
+
+          const bar = document.createElement('div');
+          bar.className = 'dist-bar' + (i === highlightIdx ? ' is-highlight' : '');
+          bar.style.width = pct + '%';
+          bar.textContent = String(count);
+
+          wrap.appendChild(bar);
+          row.appendChild(lbl);
+          row.appendChild(wrap);
+          statsDistListEl.appendChild(row);
+        }
+
+        openModal(statsModal, closeStatsBtn);
+      }
+
+      function openResultsModal() {
+        const dayState = getOrInitDayState(activeDay);
+        const word = resolveWordFromHashes(activeDay);
+
+        resultsTitleEl.textContent = dayState.status === 'won'
+          ? 'Solved in ' + dayState.guesses.length + '/6!'
+          : 'Better Luck Tomorrow!';
+
+        resultsWordBadgeEl.textContent = word;
+        resultsFactTextEl.textContent = formatFact(activeDay, word);
+        resultsEmojiPreviewEl.textContent = buildEmojiGrid(dayState);
+        shareFeedbackEl.textContent = '';
+
+        populateStatsSummary(resStatPlayedEl, resStatWinPctEl, resStatStreakEl, resStatMaxEl);
+        replayPracticeBtn.style.display = activeDay === 0 ? '' : 'none';
+
+        openModal(resultsModal, copyResultsBtn);
+      }
+
+      function openArchiveModal() {
+        const maxDay = getMaxUnlockedDay();
+        archiveGridEl.innerHTML = '';
+
+        practiceSelectBtn.classList.toggle('is-current', activeDay === 0);
+
+        for (let d = 1; d <= 18; d++) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'archive-btn';
+          if (d === activeDay) btn.classList.add('is-current');
+
+          const unlocked = d <= maxDay;
+          btn.disabled = !unlocked;
+
+          const st = store.days[d];
+          let statusText = '\uD83D\uDD12 Locked';
+          if (unlocked) {
+            if (st && st.status === 'won') statusText = '\u2713 ' + st.guesses.length + '/6';
+            else if (st && st.status === 'lost') statusText = 'X/6';
+            else statusText = 'Play';
+          }
+
+          btn.innerHTML = '<span>Dec ' + d + '</span><span class="archive-status">' + statusText + '</span>';
+
+          (function (dayNum) {
+            btn.addEventListener('click', function () {
+              switchDay(dayNum);
+              closeModal(archiveModal);
+            });
+          })(d);
+
+          archiveGridEl.appendChild(btn);
+        }
+
+        openModal(archiveModal, closeArchiveBtn);
+      }
+
+      function switchDay(dayNum) {
+        if (isRevealing) return;
+        activeDay = dayNum;
+        currentInput = '';
+        getOrInitDayState(activeDay);
+        renderDay();
+        announce('Switched to ' + PUZZLES[activeDay].label);
+      }
+
+      /* ===================================================================
+         Event Listeners
+         =================================================================== */
+      helpBtn.addEventListener('click', function () { openModal(helpModal, closeHelpBtn); });
+      closeHelpBtn.addEventListener('click', function () { closeModal(helpModal); });
+      helpGotItBtn.addEventListener('click', function () { closeModal(helpModal); });
+
+      statsBtn.addEventListener('click', openStatsModal);
+      closeStatsBtn.addEventListener('click', function () { closeModal(statsModal); });
+
+      modePillBtn.addEventListener('click', openArchiveModal);
+      closeArchiveBtn.addEventListener('click', function () { closeModal(archiveModal); });
+      practiceSelectBtn.addEventListener('click', function () {
+        switchDay(0);
+        closeModal(archiveModal);
+      });
+
+      viewResultsPillBtn.addEventListener('click', openResultsModal);
+      closeResultsBtn.addEventListener('click', function () { closeModal(resultsModal); });
+
+      replayPracticeBtn.addEventListener('click', function () {
+        delete store.days[0];
+        saveStore();
+        closeModal(resultsModal);
+        switchDay(0);
+        showToast('Practice Mode reset!', 1400);
+      });
+
+      copyResultsBtn.addEventListener('click', function () {
+        const text = buildShareText(getOrInitDayState(activeDay));
+        copyToClipboard(text).then(function (ok) {
+          if (ok) {
+            shareFeedbackEl.textContent = 'Copied to clipboard!';
+            showToast('Copied!', 1400);
+          } else {
+            shareFeedbackEl.textContent = 'Copy blocked — take a screenshot to share!';
+          }
+        });
+      });
+
+      [helpModal, archiveModal, statsModal, resultsModal].forEach(function (modal) {
+        modal.addEventListener('click', function (e) {
+          if (e.target === modal) closeModal(modal);
+        });
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          if (helpModal.classList.contains('open')) closeModal(helpModal);
+          if (archiveModal.classList.contains('open')) closeModal(archiveModal);
+          if (statsModal.classList.contains('open')) closeModal(statsModal);
+          if (resultsModal.classList.contains('open')) closeModal(resultsModal);
+          return;
+        }
+
+        if (
+          helpModal.classList.contains('open') ||
+          archiveModal.classList.contains('open') ||
+          statsModal.classList.contains('open') ||
+          resultsModal.classList.contains('open')
+        ) {
+          return;
+        }
+
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          handleKeyInput('ENTER');
+        } else if (e.key === 'Backspace') {
+          e.preventDefault();
+          handleKeyInput('BACK');
+        } else if (/^[a-zA-Z]$/.test(e.key)) {
+          e.preventDefault();
+          handleKeyInput(e.key.toUpperCase());
+        }
+      });
+
+      /* ===================================================================
+         Initialize App
+         =================================================================== */
+      const savedTheme = safeGet(THEME_KEY);
+      applyTheme(savedTheme === 'dark' ? 'dark' : 'light', false);
+      applyHighContrast(safeGet(HC_KEY) === '1', false);
+
+      // Preserve ?testDay=X on both homepage back links
+      if (isPreview) {
+        const homeHref = '../?testDay=' + testDay;
+        allGamesLink.setAttribute('href', homeHref);
+        resultsBackHomeBtn.setAttribute('href', homeHref);
+
+        const previewBanner = document.getElementById('previewBanner');
+        const label = testDay === 0 ? 'Previewing Practice Mode (Stats not saved)' : ('Previewing Dec ' + testDay + ' (Stats not saved)');
+        document.getElementById('previewBannerText').textContent = label;
+        previewBanner.classList.add('visible');
+        document.getElementById('dismissPreviewBtn').addEventListener('click', function () {
+          previewBanner.classList.remove('visible');
+        });
+      }
+
+      buildBoardDOM();
+      buildKeyboardDOM();
+      getOrInitDayState(activeDay);
+      renderDay();
+    })();
+  </script>
+</body>
+</html>
