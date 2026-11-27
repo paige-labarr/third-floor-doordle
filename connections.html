@@ -1,0 +1,2081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Play FLCC Connections — sort 16 campus-themed words into 4 secret groups at thirdfloordoordle.com." />
+  <title>FLCC Connections — Third Floor Doordle</title>
+
+  <!-- Snowflake Emoji Favicon via Inline SVG Data URI -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%E2%9D%84%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+
+  <!-- Google Fonts: Outfit (Headings), Lato (Body), JetBrains Mono (Badges, Tiles, Buttons) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Lato:wght@400;700;900&family=Outfit:wght@700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =====================================================================
+       Design Tokens — Light Mode (Default)
+       Winter Shades of Blue | WCAG 2.2 AA+ & AAA Contrast Verified
+       ===================================================================== */
+    :root {
+      --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-body: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      /* Page & Surfaces */
+      --bg-page: #f0f6fc;
+      --bg-surface: #ffffff;
+      --bg-surface-alt: #e2eefb;
+      --bg-control: #ffffff;
+      --bg-control-hover: #dfecfa;
+
+      /* Typography (WCAG AAA) */
+      --text-primary: #0b2545;       /* ~14.8:1 on #f0f6fc */
+      --text-secondary: #26456b;     /* ~9.2:1 on #f0f6fc */
+      --text-muted: #415e80;         /* ~6.5:1 on #ffffff */
+
+      /* Brand Accents */
+      --brand-blue: #1d4ed8;         /* ~6.4:1 on #ffffff */
+      --brand-blue-hover: #1e40af;
+      --brand-pill-bg: #dbeafe;
+      --brand-pill-border: #60a5fa;
+      --brand-pill-text: #1e3a8a;
+
+      /* Borders */
+      --border-subtle: #c5daf0;
+      --border-control: #6b8db5;
+
+      /* Interactive Tiles */
+      --tile-bg: #ffffff;
+      --tile-hover-bg: #e2eefb;
+      --tile-border: #adc6e2;
+      --tile-text: #0b2545;
+      --tile-selected-bg: #1d4ed8;
+      --tile-selected-border: #1e3a8a;
+      --tile-selected-text: #ffffff;
+
+      /* Official Category Tier Banners (>7:1 AAA Contrast with #111827) */
+      --tier-0-bg: #f9df6d;          /* Yellow — ● */
+      --tier-0-border: #c9a61e;
+      --tier-1-bg: #a0c35a;          /* Green  — ▲ */
+      --tier-1-border: #5f7f24;
+      --tier-2-bg: #b0c4ef;          /* Blue   — ■ */
+      --tier-2-border: #4e73c2;
+      --tier-3-bg: #ba81c5;          /* Purple — ◆ */
+      --tier-3-border: #7c4287;
+      --tier-text: #111827;
+
+      /* Mistakes Dots */
+      --dot-active: #0b2545;
+      --dot-used-border: #8ba5c2;
+
+      /* Toast & Preview Banner */
+      --toast-bg: #0b2545;
+      --toast-text: #ffffff;
+      --preview-bg: #dbeafe;
+      --preview-border: #1d4ed8;
+      --preview-text: #0b2545;
+
+      /* Focus & Elevation */
+      --focus-ring: #1d4ed8;
+      --shadow-sm: 0 2px 8px rgba(11, 37, 69, 0.08);
+      --shadow-md: 0 12px 30px rgba(11, 37, 69, 0.2);
+
+      /* Radii */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+    }
+
+    /* =====================================================================
+       Design Tokens — Dark Mode (Synced via 'thirdfloordoordle_theme')
+       ===================================================================== */
+    :root[data-theme="dark"] {
+      --bg-page: #071426;
+      --bg-surface: #0f2342;
+      --bg-surface-alt: #163159;
+      --bg-control: #122a4d;
+      --bg-control-hover: #1b3c6b;
+
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+
+      --brand-blue: #60a5fa;
+      --brand-blue-hover: #93c5fd;
+      --brand-pill-bg: #16335c;
+      --brand-pill-border: #60a5fa;
+      --brand-pill-text: #e0f2fe;
+
+      --border-subtle: #23426e;
+      --border-control: #4e74a6;
+
+      --tile-bg: #0f2342;
+      --tile-hover-bg: #183663;
+      --tile-border: #2e5282;
+      --tile-text: #f1f5f9;
+      --tile-selected-bg: #60a5fa;
+      --tile-selected-border: #bfdbfe;
+      --tile-selected-text: #071426;
+
+      --dot-active: #60a5fa;
+      --dot-used-border: #486991;
+
+      --toast-bg: #f1f5f9;
+      --toast-text: #071426;
+      --preview-bg: #132d54;
+      --preview-border: #60a5fa;
+      --preview-text: #f1f5f9;
+
+      --focus-ring: #93c5fd;
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.36);
+      --shadow-md: 0 14px 36px rgba(0, 0, 0, 0.6);
+    }
+
+    /* =====================================================================
+       Reset & Accessibility Primitives
+       ===================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      min-height: 100dvh;
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .skip-link {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link:focus {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 600;
+      width: auto;
+      height: auto;
+      padding: 10px 16px;
+      clip: auto;
+      background-color: var(--text-primary);
+      color: var(--bg-page);
+      font-family: var(--font-display);
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* =====================================================================
+       Preview Mode Banner (?testDay=0..18 or ?testWeek=1..3)
+       ===================================================================== */
+    .preview-banner {
+      display: none;
+      width: 100%;
+      background-color: var(--preview-bg);
+      color: var(--preview-text);
+      border-bottom: 2px solid var(--preview-border);
+      padding: 6px 12px;
+    }
+    .preview-banner.visible { display: block; }
+
+    .preview-banner-inner {
+      max-width: 520px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .preview-dismiss {
+      min-width: 36px;
+      min-height: 36px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--preview-border);
+      background: transparent;
+      color: var(--preview-text);
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    /* =====================================================================
+       Floating Toast Notification
+       ===================================================================== */
+    .toast-slot {
+      position: fixed;
+      top: 78px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 350;
+      pointer-events: none;
+    }
+
+    .toast-msg {
+      background-color: var(--toast-bg);
+      color: var(--toast-text);
+      padding: 10px 18px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-display);
+      font-size: 0.92rem;
+      font-weight: 700;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      white-space: nowrap;
+    }
+    .toast-msg.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =====================================================================
+       App Shell
+       ===================================================================== */
+    .app-shell {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100dvh;
+      padding: 8px 12px calc(22px + env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* =====================================================================
+       Top Header Landmark
+       ===================================================================== */
+    .top-header {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid var(--border-subtle);
+    }
+
+    .header-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .back-link {
+      min-height: 44px;
+      padding: 0 8px;
+      border-radius: var(--radius-sm);
+      color: var(--brand-blue);
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.88rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+    .back-link:hover { background-color: var(--bg-surface-alt); }
+
+    .game-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.18rem, 4.8vw, 1.48rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      text-align: center;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border-control);
+      background-color: var(--bg-control);
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      font-size: 0.98rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+    .icon-btn:hover { background-color: var(--bg-control-hover); }
+    .icon-btn:active { transform: scale(0.95); }
+
+    /* Center Tappable Week / Status Pill */
+    .week-pill-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .week-pill-btn {
+      min-height: 36px;
+      padding: 5px 14px;
+      border-radius: var(--radius-pill);
+      background-color: var(--brand-pill-bg);
+      border: 1.5px solid var(--brand-pill-border);
+      color: var(--brand-pill-text);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .week-pill-btn:hover {
+      border-color: var(--brand-blue);
+      background-color: var(--bg-surface-alt);
+    }
+
+    /* =====================================================================
+       Prompt & Practice Replay Bar
+       ===================================================================== */
+    .instruction-text {
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .practice-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      background-color: var(--bg-surface-alt);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+    }
+    .practice-bar.visible { display: flex; }
+
+    .practice-reset-btn {
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--brand-blue);
+      background-color: var(--bg-surface);
+      color: var(--brand-blue);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      touch-action: manipulation;
+    }
+    .practice-reset-btn:hover { background-color: var(--bg-control-hover); }
+
+    /* =====================================================================
+       Main Board: Solved Banners + 4x4 Interactive Tile Grid
+       ===================================================================== */
+    .board-main {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .solved-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .solved-banner {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: var(--radius-md);
+      border: 2px solid transparent;
+      color: var(--tier-text);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-shadow: var(--shadow-sm);
+      animation: bannerPop 0.28s ease-out;
+    }
+
+    .solved-banner.tier-0 { background-color: var(--tier-0-bg); border-color: var(--tier-0-border); }
+    .solved-banner.tier-1 { background-color: var(--tier-1-bg); border-color: var(--tier-1-border); }
+    .solved-banner.tier-2 { background-color: var(--tier-2-bg); border-color: var(--tier-2-border); }
+    .solved-banner.tier-3 { background-color: var(--tier-3-bg); border-color: var(--tier-3-border); }
+
+    .solved-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      line-height: 1.2;
+    }
+
+    .solved-shape {
+      font-size: 0.92rem;
+      line-height: 1;
+    }
+
+    .solved-words {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      line-height: 1.3;
+    }
+
+    @keyframes bannerPop {
+      0% { opacity: 0; transform: scale(0.94); }
+      60% { transform: scale(1.02); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* 4x4 Tile Grid — Mobile-First (320px-430px Zero Overflow) */
+    .tile-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+      width: 100%;
+    }
+
+    .conn-tile {
+      min-height: 68px;
+      padding: 6px 3px;
+      border-radius: var(--radius-md);
+      border: 2px solid var(--tile-border);
+      background-color: var(--tile-bg);
+      color: var(--tile-text);
+      font-family: var(--font-mono);
+      font-size: clamp(0.66rem, 2.7vw, 0.88rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      white-space: nowrap;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: background-color 0.14s ease, color 0.14s ease, border-color 0.14s ease, transform 0.1s ease;
+    }
+
+    /* Dynamic Font Scaling for Long Words (9-10 chars & 11+ chars) */
+    .conn-tile.is-long {
+      font-size: clamp(0.54rem, 2.05vw, 0.75rem);
+      letter-spacing: -0.03em;
+    }
+
+    .conn-tile.is-xlong {
+      font-size: clamp(0.45rem, 1.7vw, 0.64rem);
+      letter-spacing: -0.045em;
+    }
+
+    .conn-tile:hover:not(:disabled) {
+      background-color: var(--tile-hover-bg);
+      border-color: var(--brand-blue);
+    }
+
+    .conn-tile:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    .conn-tile[aria-pressed="true"] {
+      background-color: var(--tile-selected-bg);
+      border-color: var(--tile-selected-border);
+      color: var(--tile-selected-text);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .conn-tile:disabled {
+      cursor: default;
+      opacity: 0.72;
+    }
+
+    @keyframes tileShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+    .conn-tile.is-shaking {
+      animation: tileShake 0.36s ease-in-out;
+    }
+
+    @keyframes tileBounce {
+      0%, 100% { transform: translateY(0); }
+      45% { transform: translateY(-8px); }
+    }
+    .conn-tile.is-bouncing {
+      animation: tileBounce 0.32s ease-out;
+    }
+
+    /* =====================================================================
+       Mistakes Remaining Tracker
+       ===================================================================== */
+    .mistakes-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 4px 0;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .mistakes-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .mistake-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: var(--dot-active);
+      border: 2px solid var(--dot-active);
+      transition: transform 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+    }
+
+    .mistake-dot.is-used {
+      background-color: transparent;
+      border-color: var(--dot-used-border);
+      opacity: 0.48;
+      transform: scale(0.82);
+    }
+
+    /* =====================================================================
+       Action Controls (Shuffle, Deselect All, Submit / View Results)
+       ===================================================================== */
+    .controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ctrl-btn {
+      min-height: 46px;
+      padding: 0 16px;
+      border-radius: var(--radius-pill);
+      border: 2px solid var(--border-control);
+      background-color: var(--bg-control);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+    }
+    .ctrl-btn:hover:not(:disabled) { background-color: var(--bg-control-hover); }
+    .ctrl-btn:active:not(:disabled) { transform: scale(0.96); }
+    .ctrl-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .ctrl-btn.is-primary {
+      background-color: var(--brand-blue);
+      border-color: var(--brand-blue);
+      color: #ffffff;
+      min-width: 116px;
+    }
+    .ctrl-btn.is-primary:hover:not(:disabled) {
+      background-color: var(--brand-blue-hover);
+      border-color: var(--brand-blue-hover);
+    }
+    :root[data-theme="dark"] .ctrl-btn.is-primary {
+      color: #071426;
+    }
+
+    /* =====================================================================
+       Modals (How to Play, Week Picker / Archive, Results)
+       ===================================================================== */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      background-color: rgba(7, 20, 38, 0.76);
+      padding: 14px;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+
+    .modal-card {
+      width: 100%;
+      max-width: 430px;
+      max-height: 90dvh;
+      overflow-y: auto;
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      border: 2px solid var(--border-control);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.32rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .help-list {
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tier-legend {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .legend-chip {
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--tier-text);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1.5px solid transparent;
+    }
+    .legend-chip.t0 { background: var(--tier-0-bg); border-color: var(--tier-0-border); }
+    .legend-chip.t1 { background: var(--tier-1-bg); border-color: var(--tier-1-border); }
+    .legend-chip.t2 { background: var(--tier-2-bg); border-color: var(--tier-2-border); }
+    .legend-chip.t3 { background: var(--tier-3-bg); border-color: var(--tier-3-border); }
+
+    /* Week Picker List */
+    .picker-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .picker-btn {
+      width: 100%;
+      min-height: 52px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border-subtle);
+      background-color: var(--bg-surface-alt);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      touch-action: manipulation;
+      text-align: left;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .picker-btn:hover:not(:disabled) {
+      border-color: var(--brand-blue);
+    }
+    .picker-btn.is-current {
+      background-color: var(--brand-blue);
+      border-color: var(--brand-blue);
+      color: #ffffff;
+    }
+    :root[data-theme="dark"] .picker-btn.is-current {
+      color: #071426;
+    }
+    .picker-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .picker-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      display: block;
+    }
+
+    .picker-sub {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      opacity: 0.88;
+      display: block;
+    }
+
+    .picker-badge {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* Stats Summary Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      text-align: center;
+    }
+
+    .stat-box {
+      padding: 10px 6px;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-surface-alt);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .stat-val {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stat-lbl {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* Emoji Results Box */
+    .emoji-grid-box {
+      background-color: var(--bg-surface-alt);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 12px;
+      text-align: center;
+      font-size: 1.4rem;
+      line-height: 1.38;
+      letter-spacing: 0.14em;
+      white-space: pre-line;
+      user-select: all;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .primary-modal-btn {
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background-color: var(--brand-blue);
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+    .primary-modal-btn:hover { background-color: var(--brand-blue-hover); }
+    :root[data-theme="dark"] .primary-modal-btn {
+      color: #071426;
+    }
+
+    .secondary-modal-btn {
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border-control);
+      background-color: var(--bg-control);
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+    .secondary-modal-btn:hover { background-color: var(--bg-control-hover); }
+
+    .share-feedback {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--brand-blue);
+      min-height: 1.2em;
+    }
+
+    /* =====================================================================
+       Reduced Motion Compliance (WCAG 2.3.3)
+       ===================================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .conn-tile:active, .ctrl-btn:active, .icon-btn:active {
+        transform: none !important;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .app-shell { padding: 6px 8px calc(18px + env(safe-area-inset-bottom)); }
+      .tile-grid { gap: 5px; }
+      .conn-tile { min-height: 60px; padding: 4px 2px; }
+      .ctrl-btn { padding: 0 13px; font-size: 0.8rem; }
+      .back-link { font-size: 0.8rem; padding: 0 5px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#mainBoard" class="skip-link">Skip to Connections board</a>
+
+  <!-- Dismissible Preview Banner (?testDay / ?testWeek) -->
+  <div id="previewBanner" class="preview-banner" role="status" aria-live="polite">
+    <div class="preview-banner-inner">
+      <span id="previewBannerText">Preview Mode</span>
+      <button id="dismissPreviewBtn" class="preview-dismiss" type="button" aria-label="Dismiss preview banner">&times;</button>
+    </div>
+  </div>
+
+  <!-- Floating Toast Feedback -->
+  <div class="toast-slot" aria-hidden="true">
+    <div id="toastMsg" class="toast-msg"></div>
+  </div>
+
+  <div class="app-shell">
+    <!-- Header Landmark -->
+    <header class="top-header">
+      <div class="header-row">
+        <div class="header-left">
+          <a id="allGamesLink" href="../" class="back-link" aria-label="Back to All Games">
+            <span aria-hidden="true">&larr;</span> All Games
+          </a>
+        </div>
+
+        <h1 class="game-title">FLCC Connections</h1>
+
+        <div class="header-actions">
+          <button id="helpBtn" class="icon-btn" type="button" aria-label="How to play FLCC Connections">?</button>
+          <button id="themeToggleBtn" class="icon-btn" type="button" aria-pressed="false" aria-label="Switch to dark mode">
+            <span id="themeIcon" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tappable Week / Status Pill (Opens Week Picker / Archive Modal) -->
+      <div class="week-pill-bar">
+        <button id="weekPillBtn" class="week-pill-btn" type="button" aria-label="Choose Practice Mode or an unlocked weekly board">
+          <span id="weekPillText">Practice Mode</span>
+          <span aria-hidden="true">&#9662;</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Practice Replay Bar -->
+    <div id="practiceBar" class="practice-bar">
+      <span>Practice board &mdash; warm up anytime!</span>
+      <button id="resetPracticeBtn" class="practice-reset-btn" type="button">Reset Practice</button>
+    </div>
+
+    <!-- Short Prompt -->
+    <p id="instructionText" class="instruction-text">Create four groups of four!</p>
+
+    <!-- Main Puzzle Landmark -->
+    <main id="mainBoard" class="board-main" aria-label="FLCC Connections puzzle board">
+      <div id="solvedStack" class="solved-stack" aria-label="Solved categories"></div>
+      <div id="tileGrid" class="tile-grid" role="group" aria-label="Unsolved word tiles"></div>
+    </main>
+
+    <!-- Mistakes Remaining Tracker -->
+    <div id="mistakesRow" class="mistakes-row" aria-live="polite">
+      <span id="mistakesLabel">Mistakes remaining: 4</span>
+      <div id="mistakesDots" class="mistakes-dots" aria-hidden="true">
+        <span class="mistake-dot"></span>
+        <span class="mistake-dot"></span>
+        <span class="mistake-dot"></span>
+        <span class="mistake-dot"></span>
+      </div>
+    </div>
+
+    <!-- Action Controls -->
+    <div class="controls-row" role="group" aria-label="Board controls">
+      <button id="shuffleBtn" class="ctrl-btn" type="button">Shuffle</button>
+      <button id="deselectBtn" class="ctrl-btn" type="button" disabled>Deselect All</button>
+      <button id="submitBtn" class="ctrl-btn is-primary" type="button" disabled>Submit</button>
+      <button id="viewResultsBtn" class="ctrl-btn is-primary" type="button" style="display:none;">View Results</button>
+    </div>
+
+    <!-- Polite Screen-Reader Live Region -->
+    <div id="liveRegion" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+  <!-- How to Play Modal -->
+  <div id="helpModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="helpTitle" class="modal-title">How to Play Connections</h2>
+        <button id="closeHelpBtn" class="icon-btn" type="button" aria-label="Close help dialog">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Find four hidden groups of four words that share an FLCC or wordplay connection.</p>
+        <ul class="help-list">
+          <li>Select <strong>4 tiles</strong> and tap <strong>Submit</strong> to check your group.</li>
+          <li>You have <strong>4 mistakes</strong> per board. Duplicate guesses won&rsquo;t cost a mistake.</li>
+          <li>Watch out for sneaky red herrings that seem to fit more than one category!</li>
+          <li>Official boards unlock at midnight EST on <strong>Dec 1</strong>, <strong>Dec 8</strong>, and <strong>Dec 15</strong>. Tap the week pill above the board to switch boards anytime.</li>
+        </ul>
+        <p style="font-weight:700; color:var(--text-primary); margin-top:2px;">Difficulty Tiers:</p>
+        <div class="tier-legend">
+          <span class="legend-chip t0"><span aria-hidden="true">&#9679;</span> Yellow &bull; Easy</span>
+          <span class="legend-chip t1"><span aria-hidden="true">&#9650;</span> Green &bull; Campus</span>
+          <span class="legend-chip t2"><span aria-hidden="true">&#9632;</span> Blue &bull; Trivia</span>
+          <span class="legend-chip t3"><span aria-hidden="true">&#9670;</span> Purple &bull; Tricky</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="helpGotItBtn" class="primary-modal-btn" type="button">Got It &mdash; Let&rsquo;s Play</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Week Picker / Archive & Stats Modal -->
+  <div id="pickerModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="pickerTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="pickerTitle" class="modal-title">Choose a Board</h2>
+        <button id="closePickerBtn" class="icon-btn" type="button" aria-label="Close board picker">&times;</button>
+      </div>
+      <div id="pickerList" class="picker-list"></div>
+      <div class="stats-grid" aria-label="Official Connections statistics">
+        <div class="stat-box">
+          <div id="pickStatPlayed" class="stat-val">0</div>
+          <div class="stat-lbl">Played</div>
+        </div>
+        <div class="stat-box">
+          <div id="pickStatWinPct" class="stat-val">0%</div>
+          <div class="stat-lbl">Win %</div>
+        </div>
+        <div class="stat-box">
+          <div id="pickStatPerfect" class="stat-val">0</div>
+          <div class="stat-lbl">Perfect</div>
+        </div>
+      </div>
+      <p style="font-size:0.76rem; color:var(--text-muted); text-align:center;">Stats track official Weeks 1&ndash;3 (Practice &amp; preview runs are excluded).</p>
+    </div>
+  </div>
+
+  <!-- Results & Share Modal -->
+  <div id="resultsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="resultsTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="resultsTitle" class="modal-title">You Solved It!</h2>
+        <button id="closeResultsBtn" class="icon-btn" type="button" aria-label="Close results dialog">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align:center;">
+        <p id="resultsSubtitle" style="font-weight:700; color:var(--text-primary); font-size:0.98rem;"></p>
+        <div id="resultsEmojiGrid" class="emoji-grid-box" aria-label="Your guess-by-guess emoji grid"></div>
+      </div>
+      <div class="stats-grid" aria-label="Official Connections statistics">
+        <div class="stat-box">
+          <div id="resStatPlayed" class="stat-val">0</div>
+          <div class="stat-lbl">Played</div>
+        </div>
+        <div class="stat-box">
+          <div id="resStatWinPct" class="stat-val">0%</div>
+          <div class="stat-lbl">Win %</div>
+        </div>
+        <div class="stat-box">
+          <div id="resStatPerfect" class="stat-val">0</div>
+          <div class="stat-lbl">Perfect</div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="copyResultsBtn" class="primary-modal-btn" type="button">Copy Results to Clipboard</button>
+        <div id="shareFeedback" class="share-feedback" role="status" aria-live="polite"></div>
+        <button id="playAnotherWeekBtn" class="secondary-modal-btn" type="button">Play Another Board</button>
+        <a id="resultsBackHomeBtn" href="../" class="secondary-modal-btn">
+          <span aria-hidden="true">&larr;</span> Back to All Games
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ===================================================================
+         Storage Keys & Tier Metadata
+         =================================================================== */
+      const THEME_KEY = 'thirdfloordoordle_theme';
+      const STORAGE_KEY = 'flcc_connections_v1';
+      const MAX_MISTAKES = 4;
+
+      const TIER_META = [
+        { tier: 0, name: 'Yellow', shape: '\u25CF', emoji: '\uD83D\uDFE8' }, // ● 🟨
+        { tier: 1, name: 'Green',  shape: '\u25B2', emoji: '\uD83D\uDFE9' }, // ▲ 🟩
+        { tier: 2, name: 'Blue',   shape: '\u25A0', emoji: '\uD83D\uDFE6' }, // ■ 🟦
+        { tier: 3, name: 'Purple', shape: '\u25C6', emoji: '\uD83D\uDFEA' }  // ◆ 🟪
+      ];
+
+      /* ===================================================================
+         Obfuscated Puzzle Data (Reversed + Letter-Shifted Cipher)
+         Decoded cleanly at runtime so View Source never spoils answers.
+         =================================================================== */
+      function decodeCipher(str) {
+        let out = '';
+        for (let i = str.length - 1; i >= 0; i--) {
+          const code = str.charCodeAt(i);
+          if (code >= 65 && code <= 90) {
+            out += String.fromCharCode(code === 65 ? 90 : code - 1);
+          } else if (code >= 97 && code <= 122) {
+            out += String.fromCharCode(code === 97 ? 122 : code - 1);
+          } else {
+            out += str[i];
+          }
+        }
+        return out;
+      }
+
+      const ENCODED_BOARDS = {
+        practice: {
+          id: 'practice',
+          label: 'Practice Mode',
+          pillLabel: 'Practice Mode',
+          shortDate: 'Always Open',
+          unlockDay: 0,
+          groups: [
+            { t: 0, n: 'TLOJSE SFUOJX',        w: ['BPDPD', 'SFEJD', 'FUUBM', 'JBID'] },
+            { t: 1, n: 'LTFE B OP THOJIU',     w: ['MJDOFQ', 'SFMQBUT', 'HVN', 'QNBM'] },
+            { t: 2, n: 'TFJUJWJUDB XPOT',      w: ['HOJJLT', 'HOJEEFMT', 'HOJUBLT', 'HOJCVU'] },
+            { t: 3, n: '___ UPI',              w: ['HPE', 'FDVBT', 'CVU', 'UPQT'] }
+          ]
+        },
+        week1: {
+          id: 'week1',
+          label: 'Week 1',
+          pillLabel: 'Week 1 \u2022 Dec 1',
+          shortDate: 'Dec 1',
+          unlockDay: 1,
+          groups: [
+            { t: 0, n: 'TSFUOFD TVQNBD DDMG',          w: ['BVHJBEOBOBD', 'LSBXFO', 'BWFOFH', 'SPUDJW'] },
+            { t: 1, n: 'ZBE ___',                      w: ['SFLBM', 'ZBN', 'IUSBF', 'XPOT'] },
+            { t: 2, n: '"LDJMG" GP THOJOBFN SFIUP',    w: ['FJWPN', 'QBU', 'QJMG', 'QBOT'] },
+            { t: 3, n: 'FSFI LSPX PIX FMQPFQ',         w: ['ITSBN', 'OFFSH', 'ZBSH', 'OPPN'] }
+          ]
+        },
+        week2: {
+          id: 'week2',
+          label: 'Week 2',
+          pillLabel: 'Week 2 \u2022 Dec 8',
+          shortDate: 'Dec 8',
+          unlockDay: 8,
+          groups: [
+            { t: 0, n: "TFJUOVPD FDJWSFT SVPG T'DDMG", w: ['PJSBUOP', 'FOZBX', 'TFUBZ', 'BDFOFT'] },
+            { t: 1, n: 'PJEVUT HOJESPDFS DJTVN FIU OJ', w: ['SFYJN', 'IUPPC', 'LDBSU', 'DJN'] },
+            { t: 2, n: 'TESPXAAVC TFDOFJDT HOJUVQNPD', w: ['OPIUZQ', 'BWBK', 'EVPMD', 'HVC'] },
+            { t: 3, n: ')TNBSHPSQ DDMG( FDOFJDT ___',  w: ['SFUVQNPD', 'MBUOFNOPJSWOF', 'HOJSFFOJHOF', 'IUMBFI'] }
+          ]
+        },
+        week3: {
+          id: 'week3',
+          label: 'Week 3',
+          pillLabel: 'Week 3 \u2022 Dec 15',
+          shortDate: 'Dec 15',
+          unlockDay: 15,
+          groups: [
+            { t: 0, n: 'SFUOFD FOJX & FSVUMVDJUJW FIU UB', w: ['HOJMTFJS', 'MFSSBC', 'ITVSD', 'SBMMFD'] },
+            { t: 1, n: 'OFIDUJL TUSB ZSBOJMVD FIU OJ',     w: ['LTJIX', 'OPSQB', 'UFMMJLT', 'FUVBT'] },
+            { t: 2, n: 'OPJUBUT EMFJG SFMMVN UB',          w: ['LBZBL', 'EOBMUFX', 'MJBSU', 'TTBQNPD'] },
+            { t: 3, n: '___ FLBM',                         w: ['UDFGGF', 'UOPSG', 'FTVPI', 'FSPIT'] }
+          ]
+        }
+      };
+
+      const BOARD_ORDER = ['practice', 'week1', 'week2', 'week3'];
+
+      function decodeBoard(boardId) {
+        const raw = ENCODED_BOARDS[boardId];
+        if (!raw) return null;
+        const groups = raw.groups.map(function (g) {
+          return {
+            tier: g.t,
+            title: decodeCipher(g.n),
+            words: g.w.map(decodeCipher)
+          };
+        });
+        const wordToTier = {};
+        const allWords = [];
+        groups.forEach(function (g) {
+          g.words.forEach(function (word) {
+            wordToTier[word] = g.tier;
+            allWords.push(word);
+          });
+        });
+        return {
+          id: raw.id,
+          label: raw.label,
+          pillLabel: raw.pillLabel,
+          shortDate: raw.shortDate,
+          unlockDay: raw.unlockDay,
+          groups: groups,
+          wordToTier: wordToTier,
+          allWords: allWords
+        };
+      }
+
+      /* ===================================================================
+         Crash-Proof localStorage Helpers
+         =================================================================== */
+      function safeGet(key) {
+        try { return window.localStorage.getItem(key); } catch (e) { return null; }
+      }
+      function safeSet(key, val) {
+        try { window.localStorage.setItem(key, val); } catch (e) { /* ignore private browsing */ }
+      }
+
+      /* ===================================================================
+         Eastern Time (America/New_York) & ?testDay / ?testWeek Preview Logic
+         =================================================================== */
+      function getEasternDateParts() {
+        try {
+          const fmt = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/New_York',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+          });
+          const parts = fmt.formatToParts(new Date());
+          const year = parseInt(parts.find(function (p) { return p.type === 'year'; }).value, 10);
+          const month = parseInt(parts.find(function (p) { return p.type === 'month'; }).value, 10);
+          const day = parseInt(parts.find(function (p) { return p.type === 'day'; }).value, 10);
+          if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+            return { year: year, month: month, day: day };
+          }
+        } catch (e) { /* fallback below */ }
+        const now = new Date();
+        return { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
+      }
+
+      function getPreviewConfig() {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const testWeekRaw = params.get('testWeek');
+          const testDayRaw = params.get('testDay');
+
+          if (testWeekRaw !== null) {
+            const w = parseInt(testWeekRaw, 10);
+            if (w >= 1 && w <= 3 && String(w) === testWeekRaw.trim()) {
+              const dayMap = { 1: 1, 2: 8, 3: 15 };
+              return {
+                active: true,
+                month: 12,
+                day: dayMap[w],
+                forcedBoard: 'week' + w,
+                testDayParam: null,
+                label: 'Preview Mode: Week ' + w + ' (Dec ' + dayMap[w] + ' EST) \u2014 Stats not saved'
+              };
+            }
+          }
+
+          if (testDayRaw !== null) {
+            const d = parseInt(testDayRaw, 10);
+            if (d >= 0 && d <= 18 && String(d) === testDayRaw.trim()) {
+              return {
+                active: true,
+                month: d === 0 ? 11 : 12,
+                day: d === 0 ? 30 : d,
+                forcedBoard: d === 0 ? 'practice' : null,
+                testDayParam: d,
+                label: d === 0
+                  ? 'Preview Mode: Practice Mode \u2014 Stats not saved'
+                  : 'Preview Mode: Simulating Dec ' + d + ' (EST) \u2014 Stats not saved'
+              };
+            }
+          }
+        } catch (e) { /* ignore */ }
+        return { active: false, month: null, day: null, forcedBoard: null, testDayParam: null, label: '' };
+      }
+
+      const preview = getPreviewConfig();
+      const est = getEasternDateParts();
+      const effectiveMonth = preview.active ? preview.month : est.month;
+      const effectiveDay = preview.active ? preview.day : est.day;
+
+      function isBoardUnlocked(boardId) {
+        const cfg = ENCODED_BOARDS[boardId];
+        if (!cfg) return false;
+        if (cfg.unlockDay === 0) return true;
+        return effectiveMonth === 12 && effectiveDay >= cfg.unlockDay;
+      }
+
+      function getDefaultBoardId() {
+        if (preview.forcedBoard && isBoardUnlocked(preview.forcedBoard)) {
+          return preview.forcedBoard;
+        }
+        if (isBoardUnlocked('week3')) return 'week3';
+        if (isBoardUnlocked('week2')) return 'week2';
+        if (isBoardUnlocked('week1')) return 'week1';
+        return 'practice';
+      }
+
+      /* ===================================================================
+         State & localStorage Persistence
+         =================================================================== */
+      function createDefaultStore() {
+        return {
+          boards: {},
+          stats: { played: 0, wins: 0, perfect: 0, countedBoards: [] }
+        };
+      }
+
+      function loadStore() {
+        if (preview.active) return createDefaultStore();
+        const raw = safeGet(STORAGE_KEY);
+        if (!raw) return createDefaultStore();
+        try {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            const st = parsed.stats || {};
+            return {
+              boards: parsed.boards && typeof parsed.boards === 'object' ? parsed.boards : {},
+              stats: {
+                played: Number(st.played) || 0,
+                wins: Number(st.wins) || 0,
+                perfect: Number(st.perfect) || 0,
+                countedBoards: Array.isArray(st.countedBoards) ? st.countedBoards : []
+              }
+            };
+          }
+        } catch (e) { /* ignore corrupt JSON */ }
+        return createDefaultStore();
+      }
+
+      function saveStore() {
+        if (preview.active) return;
+        safeSet(STORAGE_KEY, JSON.stringify(store));
+      }
+
+      let store = loadStore();
+      let currentBoardId = 'practice';
+      let currentBoard = null;
+      let selectedWords = [];
+      let isAnimating = false;
+      let toastTimer = null;
+
+      /* ===================================================================
+         DOM References
+         =================================================================== */
+      const rootEl = document.documentElement;
+      const allGamesLink = document.getElementById('allGamesLink');
+      const resultsBackHomeBtn = document.getElementById('resultsBackHomeBtn');
+      const weekPillBtn = document.getElementById('weekPillBtn');
+      const weekPillText = document.getElementById('weekPillText');
+      const practiceBarEl = document.getElementById('practiceBar');
+      const resetPracticeBtn = document.getElementById('resetPracticeBtn');
+      const instructionTextEl = document.getElementById('instructionText');
+      const solvedStackEl = document.getElementById('solvedStack');
+      const tileGridEl = document.getElementById('tileGrid');
+      const mistakesRowEl = document.getElementById('mistakesRow');
+      const mistakesLabelEl = document.getElementById('mistakesLabel');
+      const mistakesDotsEl = document.getElementById('mistakesDots');
+      const shuffleBtn = document.getElementById('shuffleBtn');
+      const deselectBtn = document.getElementById('deselectBtn');
+      const submitBtn = document.getElementById('submitBtn');
+      const viewResultsBtn = document.getElementById('viewResultsBtn');
+      const toastMsgEl = document.getElementById('toastMsg');
+      const liveRegionEl = document.getElementById('liveRegion');
+
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const themeIconEl = document.getElementById('themeIcon');
+      const helpBtn = document.getElementById('helpBtn');
+
+      const helpModal = document.getElementById('helpModal');
+      const closeHelpBtn = document.getElementById('closeHelpBtn');
+      const helpGotItBtn = document.getElementById('helpGotItBtn');
+
+      const pickerModal = document.getElementById('pickerModal');
+      const closePickerBtn = document.getElementById('closePickerBtn');
+      const pickerListEl = document.getElementById('pickerList');
+      const pickStatPlayedEl = document.getElementById('pickStatPlayed');
+      const pickStatWinPctEl = document.getElementById('pickStatWinPct');
+      const pickStatPerfectEl = document.getElementById('pickStatPerfect');
+
+      const resultsModal = document.getElementById('resultsModal');
+      const closeResultsBtn = document.getElementById('closeResultsBtn');
+      const resultsTitleEl = document.getElementById('resultsTitle');
+      const resultsSubtitleEl = document.getElementById('resultsSubtitle');
+      const resultsEmojiGridEl = document.getElementById('resultsEmojiGrid');
+      const resStatPlayedEl = document.getElementById('resStatPlayed');
+      const resStatWinPctEl = document.getElementById('resStatWinPct');
+      const resStatPerfectEl = document.getElementById('resStatPerfect');
+      const copyResultsBtn = document.getElementById('copyResultsBtn');
+      const shareFeedbackEl = document.getElementById('shareFeedback');
+      const playAnotherWeekBtn = document.getElementById('playAnotherWeekBtn');
+
+      /* ===================================================================
+         Synced Light / Dark Theme ('thirdfloordoordle_theme')
+         =================================================================== */
+      const MOON_SVG = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+      const SUN_SVG = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+
+      function applyTheme(theme, persist) {
+        const isDark = theme === 'dark';
+        if (isDark) {
+          rootEl.setAttribute('data-theme', 'dark');
+          themeToggleBtn.setAttribute('aria-pressed', 'true');
+          themeToggleBtn.setAttribute('aria-label', 'Switch to light mode');
+          themeIconEl.innerHTML = SUN_SVG;
+        } else {
+          rootEl.removeAttribute('data-theme');
+          themeToggleBtn.setAttribute('aria-pressed', 'false');
+          themeToggleBtn.setAttribute('aria-label', 'Switch to dark mode');
+          themeIconEl.innerHTML = MOON_SVG;
+        }
+        if (persist) safeSet(THEME_KEY, theme);
+      }
+
+      themeToggleBtn.addEventListener('click', function () {
+        applyTheme(rootEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
+      });
+
+      /* ===================================================================
+         Helpers
+         =================================================================== */
+      function prefersReducedMotion() {
+        try {
+          return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        } catch (e) { return false; }
+      }
+
+      function shuffleList(arr) {
+        const copy = arr.slice();
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = copy[i];
+          copy[i] = copy[j];
+          copy[j] = tmp;
+        }
+        return copy;
+      }
+
+      function announce(msg) {
+        liveRegionEl.textContent = '';
+        window.setTimeout(function () {
+          liveRegionEl.textContent = msg;
+        }, 25);
+      }
+
+      function showToast(msg, durationMs) {
+        toastMsgEl.textContent = msg;
+        toastMsgEl.classList.add('visible');
+        announce(msg);
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(function () {
+          toastMsgEl.classList.remove('visible');
+        }, durationMs || 1900);
+      }
+
+      function getOrInitBoardState(boardId, decodedBoard) {
+        let st = store.boards[boardId];
+        // Validate saved tileOrder matches current decoded board words
+        const validSaved = st &&
+          Array.isArray(st.tileOrder) &&
+          st.tileOrder.length === 16 &&
+          st.tileOrder.every(function (w) { return decodedBoard.allWords.indexOf(w) !== -1; });
+
+        if (!validSaved) {
+          st = {
+            solvedTiers: [],
+            guesses: [],
+            mistakesLeft: MAX_MISTAKES,
+            status: 'playing', // 'playing' | 'won' | 'lost'
+            won: false,
+            tileOrder: shuffleList(decodedBoard.allWords)
+          };
+          store.boards[boardId] = st;
+          saveStore();
+        }
+        return st;
+      }
+
+      /* ===================================================================
+         Rendering UI
+         =================================================================== */
+      function renderSolvedBanners(st) {
+        solvedStackEl.innerHTML = '';
+        st.solvedTiers.forEach(function (tierIdx) {
+          const group = currentBoard.groups.find(function (g) { return g.tier === tierIdx; });
+          if (!group) return;
+          const meta = TIER_META[tierIdx];
+
+          const banner = document.createElement('div');
+          banner.className = 'solved-banner tier-' + tierIdx;
+          banner.setAttribute('role', 'region');
+          banner.setAttribute('aria-label', meta.name + ' category: ' + group.title + '. Words: ' + group.words.join(', '));
+
+          const titleEl = document.createElement('div');
+          titleEl.className = 'solved-title';
+
+          const shapeSpan = document.createElement('span');
+          shapeSpan.className = 'solved-shape';
+          shapeSpan.setAttribute('aria-hidden', 'true');
+          shapeSpan.textContent = meta.shape;
+
+          const titleText = document.createElement('span');
+          titleText.textContent = group.title;
+
+          titleEl.appendChild(shapeSpan);
+          titleEl.appendChild(titleText);
+
+          const wordsEl = document.createElement('div');
+          wordsEl.className = 'solved-words';
+          wordsEl.textContent = group.words.join(', ');
+
+          banner.appendChild(titleEl);
+          banner.appendChild(wordsEl);
+          solvedStackEl.appendChild(banner);
+        });
+      }
+
+      function renderTileGrid(st) {
+        const solvedWordSet = new Set();
+        st.solvedTiers.forEach(function (tierIdx) {
+          const g = currentBoard.groups.find(function (grp) { return grp.tier === tierIdx; });
+          if (g) g.words.forEach(function (w) { solvedWordSet.add(w); });
+        });
+
+        const remainingWords = st.tileOrder.filter(function (w) { return !solvedWordSet.has(w); });
+        tileGridEl.innerHTML = '';
+
+        remainingWords.forEach(function (word) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'conn-tile';
+
+          if (word.length >= 11) {
+            btn.classList.add('is-xlong');
+          } else if (word.length >= 9) {
+            btn.classList.add('is-long');
+          }
+
+          btn.dataset.word = word;
+          btn.textContent = word;
+
+          const isSelected = selectedWords.indexOf(word) !== -1;
+          btn.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+          btn.disabled = (st.status !== 'playing');
+
+          btn.addEventListener('click', function () {
+            toggleTileSelection(word);
+          });
+
+          tileGridEl.appendChild(btn);
+        });
+      }
+
+      function renderControlsAndStatus(st) {
+        weekPillText.textContent = currentBoard.pillLabel;
+        practiceBarEl.classList.toggle('visible', currentBoardId === 'practice');
+
+        const isPlaying = st.status === 'playing';
+        mistakesRowEl.style.display = isPlaying ? 'flex' : 'none';
+        mistakesLabelEl.textContent = 'Mistakes remaining: ' + st.mistakesLeft;
+
+        const dots = mistakesDotsEl.querySelectorAll('.mistake-dot');
+        dots.forEach(function (dot, idx) {
+          dot.classList.toggle('is-used', idx >= st.mistakesLeft);
+        });
+
+        shuffleBtn.style.display = isPlaying ? '' : 'none';
+        deselectBtn.style.display = isPlaying ? '' : 'none';
+        submitBtn.style.display = isPlaying ? '' : 'none';
+        viewResultsBtn.style.display = isPlaying ? 'none' : '';
+
+        shuffleBtn.disabled = isAnimating || !isPlaying;
+        deselectBtn.disabled = isAnimating || !isPlaying || selectedWords.length === 0;
+        submitBtn.disabled = isAnimating || !isPlaying || selectedWords.length !== 4;
+
+        if (st.status === 'won') {
+          instructionTextEl.textContent = currentBoard.label + ' solved! Great job!';
+        } else if (st.status === 'lost') {
+          instructionTextEl.textContent = currentBoard.label + ' complete \u2014 all categories revealed.';
+        } else {
+          instructionTextEl.textContent = 'Create four groups of four!';
+        }
+      }
+
+      function renderAll() {
+        const st = getOrInitBoardState(currentBoardId, currentBoard);
+        renderSolvedBanners(st);
+        renderTileGrid(st);
+        renderControlsAndStatus(st);
+      }
+
+      /* ===================================================================
+         Gameplay Actions
+         =================================================================== */
+      function toggleTileSelection(word) {
+        const st = getOrInitBoardState(currentBoardId, currentBoard);
+        if (st.status !== 'playing' || isAnimating) return;
+
+        const idx = selectedWords.indexOf(word);
+        if (idx !== -1) {
+          selectedWords.splice(idx, 1);
+          announce(word + ' deselected. ' + selectedWords.length + ' of 4 selected.');
+        } else {
+          if (selectedWords.length >= 4) {
+            announce('4 tiles already selected. Deselect a tile first.');
+            return;
+          }
+          selectedWords.push(word);
+          announce(word + ' selected. ' + selectedWords.length + ' of 4 selected.');
+        }
+        renderTileGrid(st);
+        renderControlsAndStatus(st);
+      }
+
+      function deselectAll() {
+        if (isAnimating || selectedWords.length === 0) return;
+        selectedWords = [];
+        const st = getOrInitBoardState(currentBoardId, currentBoard);
+        renderTileGrid(st);
+        renderControlsAndStatus(st);
+        announce('All selections cleared.');
+      }
+
+      function shuffleTiles() {
+        const st = getOrInitBoardState(currentBoardId, currentBoard);
+        if (st.status !== 'playing' || isAnimating) return;
+        st.tileOrder = shuffleList(st.tileOrder);
+        saveStore();
+        renderTileGrid(st);
+        announce('Tiles shuffled.');
+      }
+
+      function recordOfficialOutcome(boardId, won, mistakesUsed) {
+        if (preview.active || boardId === 'practice') return;
+        if (store.stats.countedBoards.indexOf(boardId) !== -1) return;
+
+        store.stats.countedBoards.push(boardId);
+        store.stats.played++;
+        if (won) {
+          store.stats.wins++;
+          if (mistakesUsed === 0) store.stats.perfect++;
+        }
+        saveStore();
+      }
+
+      function submitGuess() {
+        const st = getOrInitBoardState(currentBoardId, currentBoard);
+        if (st.status !== 'playing' || isAnimating || selectedWords.length !== 4) return;
+
+        // Duplicate guess check (order-independent) — does not cost a mistake
+        const guessKey = selectedWords.slice().sort().join('|');
+        const isDuplicate = st.guesses.some(function (prev) {
+          return prev.slice().sort().join('|') === guessKey;
+        });
+
+        if (isDuplicate) {
+          showToast('Already guessed!', 1600);
+          return;
+        }
+
+        // Record guess
+        st.guesses.push(selectedWords.slice());
+
+        const tierCounts = [0, 0, 0, 0];
+        selectedWords.forEach(function (w) {
+          const t = currentBoard.wordToTier[w];
+          if (t >= 0 && t <= 3) tierCounts[t]++;
+        });
+
+        const matchedTier = tierCounts.indexOf(4);
+
+        if (matchedTier !== -1) {
+          // Correct category!
+          isAnimating = true;
+          const matchedGroup = currentBoard.groups.find(function (g) { return g.tier === matchedTier; });
+          const delay = prefersReducedMotion() ? 20 : 320;
+
+          selectedWords.forEach(function (w) {
+            const btn = tileGridEl.querySelector('[data-word="' + CSS.escape(w) + '"]');
+            if (btn) btn.classList.add('is-bouncing');
+          });
+
+          window.setTimeout(function () {
+            st.solvedTiers.push(matchedTier);
+            selectedWords = [];
+            isAnimating = false;
+
+            const solvedAll = st.solvedTiers.length === 4;
+            if (solvedAll) {
+              st.status = 'won';
+              st.won = true;
+              const mistakesUsed = MAX_MISTAKES - st.mistakesLeft;
+              recordOfficialOutcome(currentBoardId, true, mistakesUsed);
+            }
+
+            saveStore();
+            renderAll();
+
+            const meta = TIER_META[matchedTier];
+            announce('Solved ' + meta.name + ' category: ' + matchedGroup.title + '.');
+
+            if (solvedAll) {
+              const mistakesUsed = MAX_MISTAKES - st.mistakesLeft;
+              const praises = ['Perfect!', 'Splendid!', 'Great!', 'Phew!'];
+              showToast(praises[mistakesUsed] || 'Solved!', 1700);
+              window.setTimeout(function () {
+                openResultsModal();
+              }, prefersReducedMotion() ? 140 : 880);
+            }
+          }, delay);
+
+        } else {
+          // Incorrect guess
+          const isOneAway = tierCounts.indexOf(3) !== -1;
+          st.mistakesLeft = Math.max(0, st.mistakesLeft - 1);
+          saveStore();
+
+          isAnimating = true;
+          const shakeDelay = prefersReducedMotion() ? 20 : 380;
+
+          selectedWords.forEach(function (w) {
+            const btn = tileGridEl.querySelector('[data-word="' + CSS.escape(w) + '"]');
+            if (btn) btn.classList.add('is-shaking');
+          });
+
+          if (isOneAway && st.mistakesLeft > 0) {
+            showToast('One away...', 1800);
+          } else if (st.mistakesLeft > 0) {
+            showToast('Not quite \u2014 ' + st.mistakesLeft + (st.mistakesLeft === 1 ? ' mistake left' : ' mistakes left'), 1800);
+          } else {
+            showToast('Out of mistakes! Revealing categories...', 2200);
+          }
+
+          window.setTimeout(function () {
+            isAnimating = false;
+            if (st.mistakesLeft === 0) {
+              selectedWords = [];
+              st.status = 'lost';
+              st.won = false;
+              recordOfficialOutcome(currentBoardId, false, MAX_MISTAKES);
+              saveStore();
+              revealRemainingCategories(st);
+            } else {
+              renderTileGrid(st);
+              renderControlsAndStatus(st);
+            }
+          }, shakeDelay);
+        }
+      }
+
+      function revealRemainingCategories(st) {
+        const unsolved = [0, 1, 2, 3].filter(function (t) {
+          return st.solvedTiers.indexOf(t) === -1;
+        });
+
+        if (unsolved.length === 0) {
+          renderAll();
+          openResultsModal();
+          return;
+        }
+
+        const stepDelay = prefersReducedMotion() ? 0 : 440;
+        isAnimating = true;
+
+        function step(idx) {
+          if (idx >= unsolved.length) {
+            isAnimating = false;
+            saveStore();
+            renderAll();
+            window.setTimeout(function () {
+              openResultsModal();
+            }, prefersReducedMotion() ? 100 : 650);
+            return;
+          }
+          st.solvedTiers.push(unsolved[idx]);
+          renderAll();
+          window.setTimeout(function () {
+            step(idx + 1);
+          }, stepDelay);
+        }
+
+        step(0);
+      }
+
+      /* ===================================================================
+         Board Switching & Practice Reset
+         =================================================================== */
+      function loadBoard(boardId) {
+        if (!isBoardUnlocked(boardId)) return;
+        currentBoardId = boardId;
+        currentBoard = decodeBoard(boardId);
+        selectedWords = [];
+        isAnimating = false;
+        getOrInitBoardState(boardId, currentBoard);
+        renderAll();
+        announce('Loaded ' + currentBoard.pillLabel);
+      }
+
+      function resetPracticeBoard() {
+        if (isAnimating) return;
+        delete store.boards.practice;
+        saveStore();
+        loadBoard('practice');
+        showToast('Practice board reset!', 1400);
+      }
+
+      /* ===================================================================
+         Emoji Grid & Two-Tier Clipboard Share
+         =================================================================== */
+      function buildEmojiLines(st) {
+        return st.guesses.map(function (guess) {
+          return guess.map(function (w) {
+            const t = currentBoard.wordToTier[w];
+            return TIER_META[t] ? TIER_META[t].emoji : '\u2B1C';
+          }).join('');
+        });
+      }
+
+      function buildShareText(st) {
+        const lines = buildEmojiLines(st);
+        return [
+          'FLCC Connections \u2014 ' + currentBoard.label,
+          lines.join('\n'),
+          'https://thirdfloordoordle.com'
+        ].join('\n\n');
+      }
+
+      function copyToClipboard(text) {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          return navigator.clipboard.writeText(text).then(function () {
+            return true;
+          }).catch(function () {
+            return fallbackCopy(text);
+          });
+        }
+        return Promise.resolve(fallbackCopy(text));
+      }
+
+      function fallbackCopy(text) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          const ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          return ok;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      /* ===================================================================
+         Modals (Help, Week Picker, Results)
+         =================================================================== */
+      let lastFocused = null;
+
+      function openModal(modalEl, focusTarget) {
+        lastFocused = document.activeElement;
+        modalEl.classList.add('open');
+        if (focusTarget) focusTarget.focus();
+      }
+
+      function closeModal(modalEl) {
+        modalEl.classList.remove('open');
+        if (lastFocused && typeof lastFocused.focus === 'function') {
+          lastFocused.focus();
+        }
+      }
+
+      function populateStats(playedEl, winEl, perfectEl) {
+        const played = store.stats.played;
+        const wins = store.stats.wins;
+        const perfect = store.stats.perfect;
+        const winPct = played > 0 ? Math.round((wins / played) * 100) : 0;
+
+        playedEl.textContent = String(played);
+        winEl.textContent = winPct + '%';
+        perfectEl.textContent = String(perfect);
+      }
+
+      function openPickerModal() {
+        pickerListEl.innerHTML = '';
+
+        BOARD_ORDER.forEach(function (id) {
+          const cfg = ENCODED_BOARDS[id];
+          const unlocked = isBoardUnlocked(id);
+          const st = store.boards[id];
+
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'picker-btn';
+          if (id === currentBoardId) btn.classList.add('is-current');
+          btn.disabled = !unlocked;
+
+          const left = document.createElement('span');
+          const titleSpan = document.createElement('span');
+          titleSpan.className = 'picker-title';
+          titleSpan.textContent = cfg.label;
+
+          const subSpan = document.createElement('span');
+          subSpan.className = 'picker-sub';
+          subSpan.textContent = id === 'practice' ? 'Warmup Board' : ('Unlocks ' + cfg.shortDate + ' EST');
+
+          left.appendChild(titleSpan);
+          left.appendChild(subSpan);
+
+          const badge = document.createElement('span');
+          badge.className = 'picker-badge';
+          if (!unlocked) {
+            badge.textContent = '\uD83D\uDD12 Locked';
+          } else if (st && st.status === 'won') {
+            badge.textContent = '\u2713 Solved';
+          } else if (st && st.status === 'lost') {
+            badge.textContent = 'Finished';
+          } else if (id === currentBoardId) {
+            badge.textContent = 'Playing';
+          } else {
+            badge.textContent = 'Play \u2192';
+          }
+
+          btn.appendChild(left);
+          btn.appendChild(badge);
+
+          btn.addEventListener('click', function () {
+            loadBoard(id);
+            closeModal(pickerModal);
+          });
+
+          pickerListEl.appendChild(btn);
+        });
+
+        populateStats(pickStatPlayedEl, pickStatWinPctEl, pickStatPerfectEl);
+        openModal(pickerModal, closePickerBtn);
+      }
+
+      function openResultsModal() {
+        const st = getOrInitBoardState(currentBoardId, currentBoard);
+        const mistakesUsed = MAX_MISTAKES - st.mistakesLeft;
+
+        resultsTitleEl.textContent = st.status === 'won' ? 'You Solved It!' : 'Next Time!';
+        resultsSubtitleEl.textContent = currentBoard.pillLabel + ' \u2022 ' +
+          (st.status === 'won'
+            ? (mistakesUsed === 0 ? 'Perfect solve (0 mistakes)!' : 'Solved with ' + mistakesUsed + (mistakesUsed === 1 ? ' mistake.' : ' mistakes.'))
+            : 'All 4 categories revealed.');
+
+        resultsEmojiGridEl.textContent = buildEmojiLines(st).join('\n');
+        shareFeedbackEl.textContent = '';
+
+        populateStats(resStatPlayedEl, resStatWinPctEl, resStatPerfectEl);
+
+        // Offer direct Practice reset if only Practice is unlocked, otherwise open Week Picker
+        const anyWeekUnlocked = isBoardUnlocked('week1') || isBoardUnlocked('week2') || isBoardUnlocked('week3');
+        playAnotherWeekBtn.textContent = anyWeekUnlocked ? 'Play Another Board' : 'Play Practice Again';
+
+        openModal(resultsModal, copyResultsBtn);
+      }
+
+      /* ===================================================================
+         Event Listeners
+         =================================================================== */
+      weekPillBtn.addEventListener('click', openPickerModal);
+      closePickerBtn.addEventListener('click', function () { closeModal(pickerModal); });
+
+      helpBtn.addEventListener('click', function () { openModal(helpModal, closeHelpBtn); });
+      closeHelpBtn.addEventListener('click', function () { closeModal(helpModal); });
+      helpGotItBtn.addEventListener('click', function () { closeModal(helpModal); });
+
+      closeResultsBtn.addEventListener('click', function () { closeModal(resultsModal); });
+      viewResultsBtn.addEventListener('click', openResultsModal);
+
+      shuffleBtn.addEventListener('click', shuffleTiles);
+      deselectBtn.addEventListener('click', deselectAll);
+      submitBtn.addEventListener('click', submitGuess);
+      resetPracticeBtn.addEventListener('click', resetPracticeBoard);
+
+      playAnotherWeekBtn.addEventListener('click', function () {
+        closeModal(resultsModal);
+        const anyWeekUnlocked = isBoardUnlocked('week1') || isBoardUnlocked('week2') || isBoardUnlocked('week3');
+        if (anyWeekUnlocked) {
+          openPickerModal();
+        } else {
+          resetPracticeBoard();
+        }
+      });
+
+      copyResultsBtn.addEventListener('click', function () {
+        const st = getOrInitBoardState(currentBoardId, currentBoard);
+        const text = buildShareText(st);
+        copyToClipboard(text).then(function (ok) {
+          if (ok) {
+            shareFeedbackEl.textContent = 'Copied!';
+            showToast('Copied!', 1400);
+          } else {
+            shareFeedbackEl.textContent = 'Copy blocked \u2014 take a screenshot to share!';
+          }
+        });
+      });
+
+      [helpModal, pickerModal, resultsModal].forEach(function (modal) {
+        modal.addEventListener('click', function (e) {
+          if (e.target === modal) closeModal(modal);
+        });
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          if (helpModal.classList.contains('open')) closeModal(helpModal);
+          if (pickerModal.classList.contains('open')) closeModal(pickerModal);
+          if (resultsModal.classList.contains('open')) closeModal(resultsModal);
+        }
+      });
+
+      /* ===================================================================
+         Initialize Application
+         =================================================================== */
+      const savedTheme = safeGet(THEME_KEY);
+      applyTheme(savedTheme === 'dark' ? 'dark' : 'light', false);
+
+      // Preserve ?testDay=X on both homepage back links
+      if (preview.testDayParam !== null) {
+        const homeHref = '../?testDay=' + preview.testDayParam;
+        allGamesLink.setAttribute('href', homeHref);
+        resultsBackHomeBtn.setAttribute('href', homeHref);
+      }
+
+      if (preview.active) {
+        const previewBanner = document.getElementById('previewBanner');
+        document.getElementById('previewBannerText').textContent = preview.label;
+        previewBanner.classList.add('visible');
+        document.getElementById('dismissPreviewBtn').addEventListener('click', function () {
+          previewBanner.classList.remove('visible');
+        });
+      }
+
+      loadBoard(getDefaultBoardId());
+    })();
+  </script>
+</body>
+</html>
